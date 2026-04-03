@@ -1,0 +1,150 @@
+// Tab Bar
+"tab_cards" = "Карточки";
+"tab_solve" = "Изучение";
+"tab_profile" = "Профиль";
+
+// Groups Screen
+"groups_title" = "Группы";
+"add_new_group" = "Добавить группу";
+
+// Add Group Sheet
+"create_new_group" = "Создать группу";
+"add_new_group_description" = "Добавьте новую группу для организации карточек";
+"group_name" = "Название группы";
+"enter_group_name" = "Введите название";
+"create_group" = "Создать";
+"cancel" = "Отмена";
+
+// Add Card Screen
+"new_card" = "Новая карточка";
+"original_word" = "Слово";
+"enter_word" = "Введите слово";
+"translation" = "Перевод";
+"enter_translation" = "Введите перевод";
+"selected_groups" = "Выбранные группы";
+"available_groups" = "Доступные группы";
+"save_card" = "Сохранить";
+
+// Edit Card Screen
+"edit_card" = "Редактирование";
+"card_info" = "Информация";
+"creation_date" = "Дата создания";
+"answer_statistics" = "Статистика ответов";
+"correct" = "Правильно";
+"wrong" = "Неправильно";
+"total_attempts" = "Всего попыток";
+"success_rate" = "Процент успеха";
+"save_changes" = "Сохранить";
+"delete_card" = "Удалить карточку";
+"delete_card_confirmation" = "Удалить карточку?";
+"delete_card_message" = "Карточка будет удалена из всех групп. Это действие нельзя отменить.";
+"delete" = "Удалить";
+
+// Edit Group Screen
+"group_settings" = "Настройки группы";
+"group_name_label" = "Название группы";
+"enter_new_name" = "Введите новое название";
+"save" = "Сохранить";
+"edit" = "Изменить";
+"average_progress_all_time" = "Средний прогресс за всё время";
+"reset_statistics" = "Сбросить статистику";
+"reset_statistics_confirmation" = "Сбросить статистику?";
+"reset_statistics_message" = "Вся история прохождений для этой группы будет удалена.";
+"reset" = "Сбросить";
+"delete_group" = "Удалить группу";
+"delete_group_confirmation" = "Удалить группу?";
+"delete_group_message" = "Группа будет удалена навсегда. Карточки останутся в других группах.";
+
+// Solve Screen
+"choose_group" = "Выберите группу";
+"continue_session" = "Продолжить: %d/%d";
+"continue_session_question" = "Продолжить изучение?";
+"continue_session_message" = "У вас есть незавершённая сессия. Вы решили %d из %d карточек. Хотите продолжить с того места, где остановились?";
+"start_over" = "Начать сначала";
+"continue" = "Продолжить";
+"already_know" = "Уже знаю";
+"still_learning" = "Ещё изучаю";
+"your_progress" = "Ваш прогресс";
+"know" = "Знаю";
+"still_learning_short" = "Изучаю";
+"repeat_mistakes" = "Повторить ошибки";
+"start_over_button" = "Начать сначала";
+
+// Profile Screen
+"profile_title" = "Профиль";
+"your_progress_today" = "Твой прогресс сегодня";
+"daily_goal" = "ежедневная цель";
+"streak" = "Серия";
+"days_in_row" = "дней подряд";
+"goal_progress" = "Прогресс цели";
+"left_to_goal" = "Осталось до цели";
+"halfway_to_goal" = "Отлично! Ты на полпути к цели!";
+"almost_there" = "Совсем немного осталось! Дерзай!";
+"congrats_goal_completed" = "Поздравляю! Ты выполнил(а) дневную цель! 🎉";
+"tap_to_change_goal" = "Нажмите, чтобы изменить цель";
+"activity_calendar" = "Календарь активности";
+"statistics" = "Статистика";
+"total_cards" = "Всего карточек";
+"groups_count" = "Групп";
+"favorites" = "В избранном";
+"total_solved" = "Всего решено";
+"achievements" = "Достижения";
+"beginner" = "Новичок";
+"days_7" = "7 дней";
+"days_30" = "30 дней";
+"goal_reached" = "Цель";
+"cards_100" = "100 карточек";
+"active_day" = "Активный день";
+"inactive_day" = "Неактивный день";
+"today" = "Сегодня";
+"you_studied_on_this_day" = "Вы занимались в этот день! 🎉";
+"no_study_on_this_day" = "В этот день занятий не было 📚";
+"keep_it_up" = "Продолжайте в том же духе!";
+"start_learning_today" = "Начните учить слова сегодня!";
+"close" = "Закрыть";
+
+// Calendar
+"calendar_mon" = "Пн";
+"calendar_tue" = "Вт";
+"calendar_wed" = "Ср";
+"calendar_thu" = "Чт";
+"calendar_fri" = "Пт";
+"calendar_sat" = "Сб";
+"calendar_sun" = "Вс";
+
+// Group View
+"add_new_card" = "Добавить карточку";
+"delete_from_group" = "Удалить из \"%@\"";
+"delete_completely" = "Удалить полностью";
+"delete_card_choice_message" = "Выберите, как удалить карточку";
+"delete_group_message_format" = "Удалить группу \"%@\"? Карточки останутся в других группах.";
+
+// Settings Screen
+"settings_title" = "Настройки";
+"settings_description" = "Настройте приложение под себя";
+"appearance" = "Внешний вид";
+"language" = "Язык";
+"language_description" = "Выберите предпочитаемый язык";
+"data" = "Данные";
+"storage_size" = "Размер данных";
+"reset_statistics_short" = "Сбросить статистику";
+"reset_statistics_description" = "Очистить историю решённых карточек, но сохранить карточки";
+"delete_all_data" = "Удалить все данные";
+"delete_all_data_description" = "Безвозвратно удалить все карточки, группы и прогресс";
+"about" = "О приложении";
+"version" = "Версия";
+"license" = "Лицензия";
+"close_button" = "Закрыть";
+
+// Alerts
+"reset_statistics_alert_title" = "Сбросить статистику?";
+"reset_statistics_alert_message" = "Вся история прохождений и статистика будут удалены. Карточки и группы останутся нетронутыми.";
+"delete_all_alert_title" = "Удалить все данные?";
+"delete_all_alert_message" = "Все карточки, группы и статистика будут безвозвратно удалены. Это действие нельзя отменить.";
+"cancel_button" = "Отмена";
+"delete_button" = "Удалить";
+
+// Language change alert
+"change_language_title" = "Сменить язык?";
+"change_language_message" = "Вы уверены что хотите сменить язык? Приложение будет перезапущено.";
+"change" = "Сменить";
