@@ -60,7 +60,7 @@ final class CardTests: XCTestCase {
     // MARK: - Equatable Tests
     func testEquatable() {
         let card2 = Card(origin: "apple", translate: "яблоко")
-        XCTAssertEqual(card, card2)
+        XCTAssertEqual(card!, card2)
         
         let card3 = Card(origin: "banana", translate: "банан")
         XCTAssertNotEqual(card, card3)
