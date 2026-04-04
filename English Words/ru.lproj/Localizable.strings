@@ -148,3 +148,7 @@
 "change_language_title" = "Сменить язык?";
 "change_language_message" = "Вы уверены что хотите сменить язык? Приложение будет перезапущено.";
 "change" = "Сменить";
+
+// About changes
+"release_notes" = "История изменений";
+"release_notes_description" = "Что нового в каждой версии";

@@ -14,6 +14,7 @@ struct SettingsScreen: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var storageSize: String = "Вычисление..."
+    @State private var showReleaseNotesSheet = false
     @State private var showResetStatsAlert = false
     @State private var showDeleteAllAlert = false
     @State private var showLanguageChangeAlert = false
@@ -138,14 +139,18 @@ struct SettingsScreen: View {
                     SettingsInfoRow(
                         icon: "info.circle",
                         title: "version".localized(),
-                        value: "1.3.0"
+                        value: "1.0.0"
                     )
                     
-                    SettingsInfoRow(
-                        icon: "doc.text",
-                        title: "license".localized(),
-                        value: "MIT"
-                    )
+                    SettingsRow(
+                        icon: "clock.arrow.circlepath",
+                        title: "release_notes".localized(),
+                        description: "release_notes_description".localized(),
+                        color: themeManager.colors.accent
+                    ) {
+                        showReleaseNotesSheet = true
+                    }
+                    
                 }
                 
                 Spacer(minLength: 100)
@@ -166,6 +171,9 @@ struct SettingsScreen: View {
         }
         .onAppear {
             updateStorageSize()
+        }
+        .sheet(isPresented: $showReleaseNotesSheet) {
+            ReleaseNotesSheet()
         }
         .alert("reset_statistics_alert_title".localized(), isPresented: $showResetStatsAlert) {
             Button("cancel_button".localized(), role: .cancel) { }

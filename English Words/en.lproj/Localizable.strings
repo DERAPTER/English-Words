@@ -149,3 +149,7 @@
 "change_language_title" = "Change Language?";
 "change_language_message" = "Are you sure you want to change the language? The app will be restarted.";
 "change" = "Change";
+
+// About changes
+"release_notes" = "Release Notes";
+"release_notes_description" = "What's new in each version";
