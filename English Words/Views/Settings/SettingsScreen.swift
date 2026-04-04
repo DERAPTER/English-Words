@@ -228,34 +228,9 @@ struct SettingsScreen: View {
         DataManager.shared.clearAllData()
         
         cardsManager.groups.removeAll()
+        
         cardsManager.addNewGroup(name: "All Cards")
         cardsManager.addNewGroup(name: "Favourites")
-        cardsManager.addNewGroup(name: "Animals")
-        
-        let allCards = cardsManager.getGroup(by: "All Cards")!
-        let favourites = cardsManager.getGroup(by: "Favourites")!
-        let animals = cardsManager.getGroup(by: "Animals")!
-        
-        let card1 = Card(origin: "apple", translate: "яблоко")
-        let card2 = Card(origin: "thunder", translate: "гром")
-        let card3 = Card(origin: "dog", translate: "собака")
-        let card4 = Card(origin: "milk", translate: "молоко")
-        let card5 = Card(origin: "cat", translate: "кошка")
-        let card6 = Card(origin: "snake", translate: "змея")
-        
-        allCards.addCard(card: card1)
-        allCards.addCard(card: card2)
-        allCards.addCard(card: card3)
-        allCards.addCard(card: card4)
-        allCards.addCard(card: card5)
-        allCards.addCard(card: card6)
-        
-        favourites.addCard(card: card1)
-        favourites.addCard(card: card2)
-        
-        animals.addCard(card: card3)
-        animals.addCard(card: card5)
-        animals.addCard(card: card6)
         
         cardsManager.streak = 0
         cardsManager.totalSolved = 0
@@ -264,18 +239,13 @@ struct SettingsScreen: View {
         cardsManager.dailyGoal = 20
         
         DataManager.shared.saveData(groups: cardsManager.groups)
+    
         updateStorageSize()
+        cardsManager.objectWillChange.send()
     }
     
     private func changeLanguage(to language: AppLanguage) {
         languageManager.setLanguage(language)
-        
-        // Перезапускаем приложение
-        /*
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            UIApplication.shared.windows.first?.rootViewController = UIHostingController(rootView: ContentView())
-        }
-        */
     }
 }
 

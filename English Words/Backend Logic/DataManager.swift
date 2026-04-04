@@ -66,11 +66,19 @@ class DataManager {
         do {
             if FileManager.default.fileExists(atPath: url.path) {
                 try FileManager.default.removeItem(at: url)
-                print("🗑️ Все данные удалены")
+                print("🗑️ Все данные удалены из файла")
             }
         } catch {
             print("❌ Ошибка удаления данных: \(error.localizedDescription)")
         }
+        
+        // Очищаем UserDefaults для статистики
+        let defaults = UserDefaults.standard
+        let keys = ["dailyGoal", "todaySolved", "lastActiveDate", "streak", "totalSolved", "activityHistory"]
+        for key in keys {
+            defaults.removeObject(forKey: key)
+        }
+        defaults.synchronize()
     }
     
     // MARK: - Save Statistics (UserDefaults)
