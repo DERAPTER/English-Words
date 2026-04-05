@@ -162,3 +162,14 @@
 // About changes
 "release_notes" = "Release Notes";
 "release_notes_description" = "What's new in each version";
+
+// Empty group
+"empty_group_title" = "Empty Group";
+"empty_group_message" = "The group \"%@\" has no cards yet. Add your first card to start learning!";
+"add_first_card" = "Add First Card";
+"back_to_groups" = "Back to Groups";
+"add_first_card_title" = "Add Your First Card";
+"add_first_card_subtitle" = "Add a card to the group \"%@\" to start learning";
+"save_and_start" = "Save & Start Learning";
+"card_added_success" = "Card added successfully!";
+"add_card" = "Add Card";

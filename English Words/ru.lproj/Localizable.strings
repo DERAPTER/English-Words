@@ -161,3 +161,14 @@
 // About changes
 "release_notes" = "История изменений";
 "release_notes_description" = "Что нового в каждой версии";
+
+// Empty group
+"empty_group_title" = "Пустая группа";
+"empty_group_message" = "В группе \"%@\" пока нет карточек. Добавьте первую карточку, чтобы начать изучение!";
+"add_first_card" = "Добавить первую карточку";
+"back_to_groups" = "Назад к группам";
+"add_first_card_title" = "Добавьте первую карточку";
+"add_first_card_subtitle" = "Добавьте карточку в группу \"%@\", чтобы начать изучение";
+"save_and_start" = "Сохранить и начать";
+"card_added_success" = "Карточка успешно добавлена!";
+"add_card" = "Добавить карточку";

@@ -12,6 +12,7 @@ enum SolvingCardCases {
     case fullRestart
     case mistakesRestart
     case error
+    case empty
 }
 
 struct SolveCardsGroup: View {
@@ -31,7 +32,10 @@ struct SolveCardsGroup: View {
     private let colorThreshold: CGFloat = 30
     
     var curSolvingState: SolvingCardCases {
-        cards.checkCurrentState()
+        if cards.cardsArr.isEmpty {
+            return .empty
+        }
+        return cards.checkCurrentState()
     }
     
     var currentCard: Card {
@@ -64,6 +68,9 @@ struct SolveCardsGroup: View {
                         onRestart: { cards.restartSolve() },
                         onRestartMistakes: { cards.restartSolveWithMistakes() }
                     )
+                case .empty:
+                    // НОВОЕ: экран для пустой группы
+                    EmptyGroupView(cardsManager: cardsManager, groupName: getGroupName())
                 case .error:
                     Text("ERROR")
                         .foregroundColor(.textPrimary)
@@ -71,7 +78,7 @@ struct SolveCardsGroup: View {
             }
         }
         .onAppear {
-            if !cards.hasAppeared {
+            if !cards.hasAppeared && curSolvingState != .empty {
                 if cards.hasUnfinishedSession && !cards.isSessionCompleted && !hasCheckedSession {
                     showUnfinishedSessionAlert = true
                 } else if !cards.hasUnfinishedSession {
@@ -91,6 +98,15 @@ struct SolveCardsGroup: View {
         } message: {
             Text(String(format: "continue_session_message".localized(), cards.success.count + cards.fail.count, cards.cardsArr.count))
         }
+    }
+    
+    private func getGroupName() -> String {
+        for group in cardsManager.groups {
+            if group.cards.id == cards.id {
+                return group.name
+            }
+        }
+        return "group".localized()
     }
     
     // MARK: - Solving Screen
@@ -128,7 +144,7 @@ struct SolveCardsGroup: View {
         .padding(.top, 20)
     }
     
-    // MARK: - Counter Views (ИСПРАВЛЕНЫ - более насыщенные цвета)
+    // MARK: - Counter Views
     private var counterCorrectsAndMistakes: some View {
         HStack {
             counterMistakes
@@ -276,6 +292,187 @@ struct SolveCardsGroup: View {
         cardsManager.recordSolvedCard()
         DataManager.shared.saveData(groups: cardsManager.groups)
         offsetOfCardX = 0
+    }
+}
+
+// MARK: - Empty Group View (НОВЫЙ КОМПОНЕНТ)
+struct EmptyGroupView: View {
+    @ObservedObject var cardsManager: CardsManager
+    let groupName: String
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+            
+            // Иконка
+            Image(systemName: "folder.badge.questionmark")
+                .font(.system(size: 80))
+                .foregroundColor(.accent)
+                .padding(.bottom, 8)
+            
+            // Заголовок
+            Text("empty_group_title".localized())
+                .font(.largeTitleCustom)
+                .foregroundColor(.textPrimary)
+                .multilineTextAlignment(.center)
+            
+            // Сообщение
+            Text(String(format: "empty_group_message".localized(), groupName))
+                .font(.bodyCustom)
+                .foregroundColor(.textSecondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            
+            // Кнопка "Добавить карточки"
+            NavigationLink(destination:
+                AddFirstCardScreen(cardsManager: cardsManager, groupName: groupName)
+            ) {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title2)
+                    Text("add_first_card".localized())
+                        .font(.bodyCustom.weight(.semibold))
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.accent)
+                .cornerRadius(16)
+            }
+            .padding(.horizontal, 32)
+            .padding(.top, 16)
+            
+            // Кнопка "Назад"
+            Button(action: {
+                dismiss()
+            }) {
+                Text("back_to_groups".localized())
+                    .font(.bodyCustom)
+                    .foregroundColor(.accent)
+            }
+            .padding(.top, 8)
+            
+            Spacer()
+        }
+        .background(Color.appBackground.ignoresSafeArea())
+        .navigationBarHidden(true)
+    }
+}
+
+// MARK: - Add First Card Screen (НОВЫЙ ЭКРАН ДЛЯ БЫСТРОГО ДОБАВЛЕНИЯ)
+struct AddFirstCardScreen: View {
+    @ObservedObject var cardsManager: CardsManager
+    let groupName: String
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var originWord = ""
+    @State private var translatedWord = ""
+    @State private var showSuccessMessage = false
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("add_first_card_title".localized())
+                .font(.largeTitleCustom)
+                .foregroundColor(.textPrimary)
+                .padding(.top, 40)
+            
+            Text(String(format: "add_first_card_subtitle".localized(), groupName))
+                .font(.bodyCustom)
+                .foregroundColor(.textSecondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            VStack(alignment: .leading, spacing: 16) {
+                // Оригинал
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("original_word".localized())
+                        .font(.bodyCustom)
+                        .foregroundColor(.textSecondary)
+                    TextField("enter_word".localized(), text: $originWord)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .padding()
+                        .background(Color.cardBackground)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.stroke, lineWidth: 1)
+                        )
+                }
+                
+                // Перевод
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("translation".localized())
+                        .font(.bodyCustom)
+                        .foregroundColor(.textSecondary)
+                    TextField("enter_translation".localized(), text: $translatedWord)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .padding()
+                        .background(Color.cardBackground)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.stroke, lineWidth: 1)
+                        )
+                }
+            }
+            .padding(.horizontal)
+            
+            // Кнопка сохранения
+            Button(action: saveCard) {
+                Text("save_and_start".localized())
+                    .font(.bodyCustom.weight(.semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(originWord.isEmpty || translatedWord.isEmpty ? Color.gray : Color.accent)
+                    .cornerRadius(16)
+            }
+            .disabled(originWord.isEmpty || translatedWord.isEmpty)
+            .padding(.horizontal)
+            
+            if showSuccessMessage {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.correct)
+                    Text("card_added_success".localized())
+                        .font(.captionCustom)
+                        .foregroundColor(.correct)
+                }
+                .transition(.opacity)
+            }
+            
+            Spacer()
+        }
+        .background(Color.appBackground.ignoresSafeArea())
+        .navigationTitle("add_card".localized())
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("cancel".localized()) {
+                    dismiss()
+                }
+            }
+        }
+    }
+    
+    private func saveCard() {
+        let card = Card(origin: originWord, translate: translatedWord)
+        
+        // Добавляем в группу
+        cardsManager.addCardToGroup(card: card, groupName: groupName)
+        
+        // Также добавляем в "All Cards"
+        cardsManager.addCardToGroup(card: card, groupName: "All Cards")
+        
+        withAnimation {
+            showSuccessMessage = true
+        }
+        
+        // Через 1.5 секунды возвращаемся к списку групп
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            dismiss()
+        }
     }
 }
 
