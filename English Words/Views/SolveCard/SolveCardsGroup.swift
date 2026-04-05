@@ -27,6 +27,9 @@ struct SolveCardsGroup: View {
     @State private var showUnfinishedSessionAlert = false
     @State private var hasCheckedSession = false
     
+    private let swipeThreshold: CGFloat = 60
+    private let colorThreshold: CGFloat = 30
+    
     var curSolvingState: SolvingCardCases {
         cards.checkCurrentState()
     }
@@ -69,7 +72,6 @@ struct SolveCardsGroup: View {
         }
         .onAppear {
             if !cards.hasAppeared {
-                // Показываем алерт только если есть незавершённая сессия И сессия не завершена
                 if cards.hasUnfinishedSession && !cards.isSessionCompleted && !hasCheckedSession {
                     showUnfinishedSessionAlert = true
                 } else if !cards.hasUnfinishedSession {
@@ -126,7 +128,7 @@ struct SolveCardsGroup: View {
         .padding(.top, 20)
     }
     
-    // MARK: - Counter Views
+    // MARK: - Counter Views (ИСПРАВЛЕНЫ - более насыщенные цвета)
     private var counterCorrectsAndMistakes: some View {
         HStack {
             counterMistakes
@@ -164,18 +166,24 @@ struct SolveCardsGroup: View {
                     .foregroundColor(.white)
                     .offset(x: 5)
             }
-            .opacity(findWrongOpacity(percentage: percentageOfMove))
-            .animation(.easeInOut(duration: 0.3), value: percentageOfMove)
+            .opacity(min(findWrongOpacity(percentage: percentageOfMove), 1.0))
+            .animation(.easeInOut(duration: 0.2), value: percentageOfMove)
         }
         .offset(x: -45)
     }
     
     private func findCorrectOpacity(percentage: Double) -> Double {
-        percentage > 0 ? percentage : 0
+        if percentage > 0 {
+            return min(percentage * 1.5, 1.0)
+        }
+        return 0
     }
     
     private func findWrongOpacity(percentage: Double) -> Double {
-        percentage < 0 ? -percentage : 0
+        if percentage < 0 {
+            return min((-percentage) * 1.5, 1.0)
+        }
+        return 0
     }
     
     private var counterCorrects: some View {
@@ -206,8 +214,8 @@ struct SolveCardsGroup: View {
                     .foregroundColor(.white)
                     .offset(x: -5)
             }
-            .opacity(findCorrectOpacity(percentage: percentageOfMove))
-            .animation(.easeInOut(duration: 0.3), value: percentageOfMove)
+            .opacity(min(findCorrectOpacity(percentage: percentageOfMove), 1.0))
+            .animation(.easeInOut(duration: 0.2), value: percentageOfMove)
         }
         .offset(x: 45)
     }
@@ -220,10 +228,12 @@ struct SolveCardsGroup: View {
         offsetOfCardX = translation
         offsetOfCardY = translationY
         
-        if translation < -50 {
-            percentageOfMove = max(-1, (translation + 50) / 100)
-        } else if translation > 50 {
-            percentageOfMove = min(1, (translation - 50) / 100)
+        if translation < -colorThreshold {
+            percentageOfMove = max(-1, (translation + colorThreshold) / 70)
+        } else if translation > colorThreshold {
+            percentageOfMove = min(1, (translation - colorThreshold) / 70)
+        } else {
+            percentageOfMove = 0
         }
     }
     
@@ -235,10 +245,10 @@ struct SolveCardsGroup: View {
             offsetOfCardY = 0
         }
         
-        if translation < -100 || predictedEnd < -100 {
+        if translation < -swipeThreshold || predictedEnd < -swipeThreshold {
             percentageOfMove = 0
             leftSwipe()
-        } else if translation > 100 || predictedEnd > 100 {
+        } else if translation > swipeThreshold || predictedEnd > swipeThreshold {
             percentageOfMove = 0
             rightSwipe()
         } else {

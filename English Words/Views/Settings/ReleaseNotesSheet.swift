@@ -115,7 +115,58 @@ struct ReleaseNotesSheet: View {
                         }
                     }
                     */
-                    // Первая версия
+                    
+                    // v1.0.2
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(themeManager.colors.textSecondary)
+                            Text("Version 1.0.2")
+                                .font(.title3)
+                                .foregroundColor(themeManager.colors.textPrimary)
+                        }
+                        
+                        Text("Предыдущая версия")
+                            .font(.captionCustom)
+                            .foregroundColor(themeManager.colors.textSecondary)
+                        
+                        Divider()
+                            .background(themeManager.colors.stroke)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлена локализация при нарешивании карточек")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлено поведение карточки при нарешивании")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлен цвет ссылок навигации")
+                            ReleaseNoteItem(icon: "plus.circle", text: "В меню настроек убрана дублированная кнопка выхода")
+                        }
+                    }
+                    
+                    // v1.0.1
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(themeManager.colors.textSecondary)
+                            Text("Version 1.0.1")
+                                .font(.title3)
+                                .foregroundColor(themeManager.colors.textPrimary)
+                        }
+                        
+                        Text("Предыдущая версия")
+                            .font(.captionCustom)
+                            .foregroundColor(themeManager.colors.textSecondary)
+                        
+                        Divider()
+                            .background(themeManager.colors.stroke)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлен отчет об изменениях в новых версиях")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлено: при полной очистке данных тестовые карточки и группы не удалялись")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Визуально улучшен свайп карточки для редактирования")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Системные группы больше нельзя удалять и редактировать, с целью безопасности")
+                        }
+                    }
+                    
+                    // Первая версия v1.0.0
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Image(systemName: "flag.fill")
@@ -142,11 +193,11 @@ struct ReleaseNotesSheet: View {
                             ReleaseNoteItem(icon: "plus.circle", text: "Возможность увидеть успешность нарешивания группы")
                             ReleaseNoteItem(icon: "plus.circle", text: "Возможность повторить только ошибки или перепройти группу полностью")
                             ReleaseNoteItem(icon: "plus.circle", text: "Возможность установить ежедневную цель")
-                            ReleaseNoteItem(icon: "calendar", text: "Возможность отследить активные дни")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Возможность отследить активные дни")
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлены достижения")
                             ReleaseNoteItem(icon: "plus.circle", text: "Сохранение данных в постоянную память")
-                            ReleaseNoteItem(icon: "paintpalette", text: "Возможность выбрать одну из 4 цветовых тем")
-                            ReleaseNoteItem(icon: "globe", text: "Возможность выбрать один из языков: Русский/Английский")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Возможность выбрать одну из 4 цветовых тем")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Возможность выбрать один из языков: Русский/Английский")
                             ReleaseNoteItem(icon: "plus.circle", text: "Возможность обнулить всю статистику")
                             ReleaseNoteItem(icon: "plus.circle", text: "Возможность удалить все данные")
                         }

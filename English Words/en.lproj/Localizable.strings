@@ -70,6 +70,8 @@
 "still_learning_short" = "Still learning";
 "repeat_mistakes" = "Repeat mistakes";
 "start_over_button" = "Start over";
+"already_know" = "Already know";
+"still_learning" = "Still learning";
 
 // Profile Screen
 "profile_title" = "Profile";

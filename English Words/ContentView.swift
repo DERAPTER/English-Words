@@ -47,6 +47,7 @@ struct ContentView: View {
         .onAppear {
             themeManager.applyNavigationBarAppearance()
         }
+        .tint(themeManager.colors.accent)
     }
 }
 

@@ -69,6 +69,8 @@
 "still_learning_short" = "Изучаю";
 "repeat_mistakes" = "Повторить ошибки";
 "start_over_button" = "Начать сначала";
+"already_know" = "Уже знаю";
+"still_learning" = "Ещё изучаю";
 
 // Profile Screen
 "profile_title" = "Профиль";

@@ -56,29 +56,33 @@ struct CardView: View {
                         .stroke(Color.stroke, lineWidth: 1)
                 )
             VStack {
-                // Текст "Уже знаю"
-                if percentageOfMove > 0 {
-                    Text("Уже знаю")
-                        .font(.title2.bold())
-                        .foregroundColor(.correct)
-                        .padding(8)
-                        .background(Color.cardBackground.opacity(0.9))
-                        .cornerRadius(12)
+                ZStack {
+                    // Текст "Уже знаю"
+                    if percentageOfMove > 0 {
+                        Text("already_know".localized())
+                            .font(.title2.bold())
+                            .foregroundColor(.correct)
+                            .padding(8)
+                            .background(Color.cardBackground.opacity(0.9))
+                            .cornerRadius(12)
                         //.position(x: 220, y: 120)
-                        .opacity(percentageOfMove)
-                }
-                
-                // Текст "Ещё изучаю"
-                if percentageOfMove < 0 {
-                    Text("Ещё изучаю")
-                        .font(.title2.bold())
-                        .foregroundColor(.wrong)
-                        .padding(8)
-                        .background(Color.cardBackground.opacity(0.9))
-                        .cornerRadius(12)
+                            .opacity(percentageOfMove)
+                    }
+                    
+                    // Текст "Ещё изучаю"
+                    if percentageOfMove < 0 {
+                        Text("still_learning".localized())
+                            .font(.title2.bold())
+                            .foregroundColor(.wrong)
+                            .padding(8)
+                            .background(Color.cardBackground.opacity(0.9))
+                            .cornerRadius(12)
                         //.position(x: 80, y: 120)
-                        .opacity(-percentageOfMove)
+                            .opacity(-percentageOfMove)
+                    }
                 }
+                .frame(height: 30)
+                .padding(.top, -30)
                 
                 Text(card.originWord)
                     .font(.largeTitleCustom)
@@ -110,29 +114,33 @@ struct CardView: View {
                         .stroke(Color.stroke, lineWidth: 1)
                 )
             VStack {
-                // Текст "Уже знаю"
-                if percentageOfMove > 0 {
-                    Text("Уже знаю")
-                        .font(.title2.bold())
-                        .foregroundColor(.correct)
-                        .padding(8)
-                        .background(Color.cardBackground.opacity(0.9))
-                        .cornerRadius(12)
+                ZStack {
+                    // Текст "Уже знаю"
+                    if percentageOfMove > 0 {
+                        Text("already_know".localized())
+                            .font(.title2.bold())
+                            .foregroundColor(.correct)
+                            .padding(8)
+                            .background(Color.cardBackground.opacity(0.9))
+                            .cornerRadius(12)
                         //.position(x: 220, y: 120)
-                        .opacity(percentageOfMove)
-                }
-                
-                // Текст "Ещё изучаю"
-                if percentageOfMove < 0 {
-                    Text("Ещё изучаю")
-                        .font(.title2.bold())
-                        .foregroundColor(.wrong)
-                        .padding(8)
-                        .background(Color.cardBackground.opacity(0.9))
-                        .cornerRadius(12)
+                            .opacity(percentageOfMove)
+                    }
+                    
+                    // Текст "Ещё изучаю"
+                    if percentageOfMove < 0 {
+                        Text("still_learning".localized())
+                            .font(.title2.bold())
+                            .foregroundColor(.wrong)
+                            .padding(8)
+                            .background(Color.cardBackground.opacity(0.9))
+                            .cornerRadius(12)
                         //.position(x: 80, y: 120)
-                        .opacity(-percentageOfMove)
+                            .opacity(-percentageOfMove)
+                    }
                 }
+                .frame(height: 30)
+                .padding(.top, -30)
                 
                 Text(card.translatedWord)
                     .font(.largeTitleCustom)

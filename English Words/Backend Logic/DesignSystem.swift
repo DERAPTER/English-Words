@@ -69,6 +69,13 @@ extension Color {
     }
 }
 
+// MARK: - Navigation Link Color Customization
+extension View {
+    func customNavigationLinkColor() -> some View {
+        self.tint(ThemeManager.shared.colors.accent)
+    }
+}
+
 // MARK: - Navigation Bar Customization
 extension UINavigationBar {
     static func customizeAppearance(with colors: ThemeColors) {

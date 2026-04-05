@@ -139,7 +139,7 @@ struct SettingsScreen: View {
                     SettingsInfoRow(
                         icon: "info.circle",
                         title: "version".localized(),
-                        value: "1.0.0"
+                        value: "1.0.2"
                     )
                     
                     SettingsRow(
@@ -161,14 +161,6 @@ struct SettingsScreen: View {
         .background(themeManager.colors.background.ignoresSafeArea())
         .navigationTitle("settings_title".localized())
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("close_button".localized()) {
-                    dismiss()
-                }
-                .foregroundColor(themeManager.colors.accent)
-            }
-        }
         .onAppear {
             updateStorageSize()
         }
