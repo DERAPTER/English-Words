@@ -244,6 +244,10 @@ class CardsManager: ObservableObject {
         }
     }
     
+    func isSystemGroup(_ group: CardsGroup) -> Bool {
+        return group.name == "All Cards" || group.name == "Favourites"
+    }
+    
     func deleteCard(_ card: Card) {
         for group in groups {
             group.cards.removeCard(card)
@@ -252,6 +256,8 @@ class CardsManager: ObservableObject {
     }
     
     func deleteGroup(_ group: CardsGroup) {
+        guard !isSystemGroup(group) else { return }
+        
         groups.removeAll { $0.id == group.id }
         for card in group.cards.cardsArr {
             card.removeGroup(groupName: group.name)
@@ -260,6 +266,8 @@ class CardsManager: ObservableObject {
     }
     
     func renameGroup(_ group: CardsGroup, to newName: String) {
+        guard !isSystemGroup(group) else { return }
+        
         if let index = groups.firstIndex(where: { $0.id == group.id }) {
             let oldName = groups[index].name
             groups[index].name = newName

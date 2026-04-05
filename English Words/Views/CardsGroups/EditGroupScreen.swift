@@ -17,6 +17,13 @@ struct EditGroupScreen: View {
     @State private var showDeleteConfirmation = false
     @State private var showResetConfirmation = false
     
+    @State private var showSystemGroupAlert = false
+    @State private var systemAlertMessage = ""
+    
+    private var isSystemGroup: Bool {
+        cardsManager.isSystemGroup(group)
+    }
+    
     private var averageProgressAllTime: Double {
         group.cards.resultOfAllTime
     }
@@ -41,6 +48,11 @@ struct EditGroupScreen: View {
                         .disabled(!isEditingName)
                     
                     Button(action: {
+                        if isSystemGroup {
+                            systemAlertMessage = "system_group_cannot_rename".localized()
+                            showSystemGroupAlert = true
+                            return
+                        }
                         if isEditingName {
                             if !newGroupName.isEmpty {
                                 cardsManager.renameGroup(group, to: newGroupName)
@@ -86,7 +98,14 @@ struct EditGroupScreen: View {
             .padding(.horizontal)
             
             // Удалить группу
-            Button(action: { showDeleteConfirmation = true }) {
+            Button(action: {
+                if isSystemGroup {
+                    systemAlertMessage = "system_group_cannot_delete".localized()
+                    showSystemGroupAlert = true
+                } else {
+                    showDeleteConfirmation = true
+                }
+            }) {
                 HStack {
                     Image(systemName: "trash.fill")
                         .font(.title2)
@@ -126,6 +145,11 @@ struct EditGroupScreen: View {
             }
         } message: {
             Text("delete_group_message".localized())
+        }
+        .alert("system_group".localized(), isPresented: $showSystemGroupAlert) {
+            Button("ok".localized(), role: .cancel) { }
+        } message: {
+            Text(systemAlertMessage)
         }
     }
 }

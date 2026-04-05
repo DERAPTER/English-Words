@@ -14,7 +14,7 @@ enum SwipedItem: Equatable {
     case card(id: UUID)
 }
 
-// MARK: - Delete Type Enum
+// MARK: - Delete Type Enum (НОВЫЙ - добавляем сюда)
 enum DeleteType {
     case fromGroup
     case completely
@@ -29,32 +29,33 @@ struct SwipeableGroupHeader: View {
     var onEdit: () -> Void
     var onDelete: () -> Void
     
-    var isSystemGroup: Bool {
-        guard cardsManager.groups.count >= 2 else { return false }
-        return group.id == cardsManager.groups[0].id || group.id == cardsManager.groups[1].id
-    }
+    // НОВОЕ: алерт для системной группы
+    @State private var showSystemGroupAlert = false
+    @State private var systemAlertMessage = ""
 
     var body: some View {
         ZStack(alignment: .trailing) {
             if swipedItem == .group(id: group.id) {
                 HStack(spacing: 12) {
                     editButton
-                    if !isSystemGroup {
-                        deleteButton
-                    }
+                    deleteButton
                 }
                 .padding(.trailing, 8)
             }
 
             groupContent
-                .offset(x: swipedItem == .group(id: group.id) ? (isSystemGroup ? -75 : -135) : 0)
+                .offset(x: swipedItem == .group(id: group.id) ? -135 : 0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: swipedItem == .group(id: group.id))
         }
-        .languageAware()
         .contentShape(Rectangle())
         .gesture(swipeGesture)
         .onTapGesture {
             handleTap()
+        }
+        .alert("system_group".localized(), isPresented: $showSystemGroupAlert) {
+            Button("ok".localized(), role: .cancel) { }
+        } message: {
+            Text(systemAlertMessage)
         }
     }
 
@@ -99,7 +100,13 @@ struct SwipeableGroupHeader: View {
         Button(action: {
             withAnimation {
                 swipedItem = .none
-                onDelete()
+                // НОВОЕ: проверка на системную группу
+                if cardsManager.isSystemGroup(group) {
+                    systemAlertMessage = "system_group_cannot_delete".localized()
+                    showSystemGroupAlert = true
+                } else {
+                    onDelete()
+                }
             }
         }) {
             Image(systemName: "trash")
@@ -202,7 +209,7 @@ struct SwipeableCardRow: View {
             }
 
             CardInListView(card: card, cardsManager: cardsManager)
-                .offset(x: swipedItem == .card(id: card.id) ? -115 : 0)
+                .offset(x: swipedItem == .card(id: card.id) ? -135 : 0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: swipedItem == .card(id: card.id))
         }
         .contentShape(Rectangle())
@@ -320,7 +327,7 @@ struct SwipeableCardRow: View {
     }
 }
 
-// MARK: - Main GroupView
+// MARK: - Main GroupView (без изменений в основной структуре)
 struct GroupView: View {
     @ObservedObject var cardsManager: CardsManager
     let group: CardsGroup

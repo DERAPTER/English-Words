@@ -31,8 +31,6 @@ struct CardInListView: View {
                     .font(.title3)
                     .foregroundColor(card.isFavourite ? .accent : .textSecondary)
             }
-            //.padding(16),
-            //alignment: .topTrailing
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)

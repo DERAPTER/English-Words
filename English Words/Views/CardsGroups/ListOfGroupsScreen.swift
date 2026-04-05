@@ -18,6 +18,7 @@ struct ListOfGroupsScreenView: View {
             GeometryReader { geometry in
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 16) {
+                        VStack{}.frame(height: 6)
                         // Группы
                         ForEach(cardsManager.groups) { group in
                             GroupView(group: group, cardsManager: cardsManager)

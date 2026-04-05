@@ -149,6 +149,13 @@
 "change_language_message" = "Вы уверены что хотите сменить язык? Приложение будет перезапущено.";
 "change" = "Сменить";
 
+// System group alerts
+"system_group" = "Системная группа";
+"system_group_cannot_delete" = "Эта группа является системной, ее невозможно удалить.";
+"system_group_cannot_rename" = "Эта группа является системной, ее невозможно переименовать.";
+"system_group_cannot_edit" = "Эта группа является системной, ее невозможно редактировать.";
+"ok" = "Хорошо";
+
 // About changes
 "release_notes" = "История изменений";
 "release_notes_description" = "Что нового в каждой версии";

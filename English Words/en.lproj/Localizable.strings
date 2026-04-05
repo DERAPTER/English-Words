@@ -150,6 +150,13 @@
 "change_language_message" = "Are you sure you want to change the language? The app will be restarted.";
 "change" = "Change";
 
+// System group alerts
+"system_group" = "System Group";
+"system_group_cannot_delete" = "This group is a system group and cannot be deleted.";
+"system_group_cannot_rename" = "This group is a system group and cannot be renamed.";
+"system_group_cannot_edit" = "This group is a system group and cannot be edited.";
+"ok" = "OK";
+
 // About changes
 "release_notes" = "Release Notes";
 "release_notes_description" = "What's new in each version";
