@@ -134,7 +134,7 @@ struct ReleaseNotesSheet: View {
                             .background(themeManager.colors.stroke)
                         
                         VStack(alignment: .leading, spacing: 8) {
-                            ReleaseNoteItem(icon: "plus.circle", text: "")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Измененное имя группы теперь сразу применяется")
                         }
                     }
                     

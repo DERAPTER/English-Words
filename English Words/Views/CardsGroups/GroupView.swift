@@ -327,23 +327,23 @@ struct SwipeableCardRow: View {
     }
 }
 
-// MARK: - Main GroupView (без изменений в основной структуре)
+// MARK: - Main GroupView
 struct GroupView: View {
     @ObservedObject var cardsManager: CardsManager
     let group: CardsGroup
     @ObservedObject var cards: Cards
+    
+    // НОВОЕ: для отслеживания обновлений
+    @State private var refreshTrigger = false
 
     @State private var isExpanded = false
     @State private var swipedItem: SwipedItem = .none
     
     @State private var showSheet = false
-
     @State private var groupToDelete: CardsGroup?
     @State private var showDeleteGroupAlert = false
-    
     @State private var cardToDelete: Card?
     @State private var deleteType: DeleteType?
-
     @State private var groupToEdit: CardsGroup?
     @State private var cardToEdit: Card?
 
@@ -401,11 +401,12 @@ struct GroupView: View {
                 .padding(.leading, 16)
             }
         }
+        .id(refreshTrigger) // НОВОЕ: принудительное обновление при изменении
         .sheet(isPresented: $showSheet) {
             AddNewCardScreen(group: group, cardsManager: cardsManager, showSheet: $showSheet)
         }
         .sheet(item: $groupToEdit) { group in
-            EditGroupScreen(cardsManager: cardsManager, group: group)
+            EditGroupScreen(cardsManager: cardsManager, groupId: group.id)
         }
         .sheet(item: $cardToEdit) { card in
             EditCardScreen(cardsManager: cardsManager, card: card)
@@ -426,8 +427,12 @@ struct GroupView: View {
                 Text(String(format: "delete_group_message_format".localized(), group.name))
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("GroupNameChanged"))) { _ in
+            // НОВОЕ: обновляем UI при получении уведомления
+            refreshTrigger.toggle()
+        }
     }
-
+    
     // MARK: - Actions
     private func closeSwipe() {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {

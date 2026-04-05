@@ -69,6 +69,7 @@ struct ListOfGroupsScreenView: View {
             .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("groups_title".localized())
             .navigationBarTitleDisplayMode(.inline)
+            .id(cardsManager.groups.map { $0.name }.joined())
             .sheet(isPresented: $showAddGroupSheet) {
                 AddGroupSheet(cardsManager: cardsManager, isPresented: $showAddGroupSheet)
             }

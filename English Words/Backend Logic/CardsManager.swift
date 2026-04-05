@@ -286,6 +286,7 @@ class CardsManager: ObservableObject {
                     card.groups[groupIndex] = trimmedName
                 }
             }
+            objectWillChange.send()
             saveToFile()
         }
     }
