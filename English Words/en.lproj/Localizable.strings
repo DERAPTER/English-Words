@@ -173,3 +173,7 @@
 "save_and_start" = "Save & Start Learning";
 "card_added_success" = "Card added successfully!";
 "add_card" = "Add Card";
+
+// Edit group screen
+"unsaved_changes" = "Unsaved changes";
+"group_name_already_exists" = "A group with this name already exists";

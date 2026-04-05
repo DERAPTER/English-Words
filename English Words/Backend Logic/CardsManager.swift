@@ -268,12 +268,22 @@ class CardsManager: ObservableObject {
     func renameGroup(_ group: CardsGroup, to newName: String) {
         guard !isSystemGroup(group) else { return }
         
+        let trimmedName = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else { return }
+        
+        // Проверка на дубликат имени
+        if groups.contains(where: { $0.name == trimmedName && $0.id != group.id }) {
+            return
+        }
+        
         if let index = groups.firstIndex(where: { $0.id == group.id }) {
             let oldName = groups[index].name
-            groups[index].name = newName
+            groups[index].name = trimmedName
+            
+            // Обновляем название группы у всех карточек
             for card in groups[index].cards.cardsArr {
                 if let groupIndex = card.groups.firstIndex(of: oldName) {
-                    card.groups[groupIndex] = newName
+                    card.groups[groupIndex] = trimmedName
                 }
             }
             saveToFile()

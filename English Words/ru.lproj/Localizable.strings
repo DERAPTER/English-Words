@@ -172,3 +172,7 @@
 "save_and_start" = "Сохранить и начать";
 "card_added_success" = "Карточка успешно добавлена!";
 "add_card" = "Добавить карточку";
+
+// Edit group screen
+"unsaved_changes" = "Несохранённые изменения";
+"group_name_already_exists" = "Группа с таким названием уже существует";

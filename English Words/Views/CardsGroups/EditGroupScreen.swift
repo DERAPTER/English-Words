@@ -12,8 +12,7 @@ struct EditGroupScreen: View {
     @ObservedObject var cardsManager: CardsManager
     var group: CardsGroup
     
-    @State private var newGroupName: String = ""
-    @State private var isEditingName = false
+    @State private var groupName: String = ""
     @State private var showDeleteConfirmation = false
     @State private var showResetConfirmation = false
     
@@ -36,40 +35,71 @@ struct EditGroupScreen: View {
                 .foregroundColor(.textPrimary)
                 .padding(.top, 20)
             
-            // Изменить название
+            // Изменить название (НОВОЕ: всегда активное поле для ввода)
             VStack(alignment: .leading, spacing: 8) {
                 Text("group_name_label".localized())
                     .font(.bodyCustom)
                     .foregroundColor(.textSecondary)
                 
-                HStack {
-                    TextField("enter_new_name".localized(), text: $newGroupName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .disabled(!isEditingName)
+                if isSystemGroup {
+                    // Для системных групп — только для чтения
+                    Text(group.name)
+                        .font(.bodyCustom)
+                        .foregroundColor(.textPrimary)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.cardBackground)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.stroke, lineWidth: 1)
+                        )
                     
-                    Button(action: {
-                        if isSystemGroup {
-                            systemAlertMessage = "system_group_cannot_rename".localized()
-                            showSystemGroupAlert = true
-                            return
+                    Text("system_group_cannot_rename".localized())
+                        .font(.captionCustom)
+                        .foregroundColor(.textSecondary)
+                        .padding(.leading, 4)
+                } else {
+                    // Для обычных групп — активное текстовое поле
+                    TextField("enter_group_name".localized(), text: $groupName)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .padding()
+                        .background(Color.cardBackground)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.stroke, lineWidth: 1)
+                        )
+                        .onSubmit {
+                            saveGroupName()
                         }
-                        if isEditingName {
-                            if !newGroupName.isEmpty {
-                                cardsManager.renameGroup(group, to: newGroupName)
+                    
+                    // Индикатор изменений и кнопка сохранения
+                    if groupName != group.name && !groupName.isEmpty {
+                        HStack {
+                            Text("unsaved_changes".localized())
+                                .font(.captionCustom)
+                                .foregroundColor(.accent)
+                            
+                            Spacer()
+                            
+                            Button(action: saveGroupName) {
+                                Text("save".localized())
+                                    .font(.captionCustom)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 6)
+                                    .background(Color.accent)
+                                    .cornerRadius(8)
                             }
-                            isEditingName = false
-                        } else {
-                            newGroupName = group.name
-                            isEditingName = true
                         }
-                    }) {
-                        Text(isEditingName ? "save".localized() : "edit".localized())
-                            .font(.bodyCustom)
-                            .foregroundColor(.accent)
+                        .padding(.horizontal, 4)
+                        .transition(.opacity)
                     }
                 }
             }
             .padding(.horizontal)
+            .animation(.easeInOut, value: groupName != group.name)
             
             // Средний процент прохождения за всё время
             StatsRow(title: "average_progress_all_time".localized(),
@@ -112,7 +142,7 @@ struct EditGroupScreen: View {
                     Text("delete_group".localized())
                         .font(.bodyCustom)
                 }
-                .foregroundColor(.red)
+                .foregroundColor(isSystemGroup ? .gray : .red)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color.cardBackground)
@@ -122,14 +152,17 @@ struct EditGroupScreen: View {
                         .stroke(Color.stroke, lineWidth: 1)
                 )
             }
+            .disabled(isSystemGroup)
             .padding(.horizontal)
             
             Spacer()
         }
-        .languageAware()
         .background(Color.appBackground.ignoresSafeArea())
         .navigationTitle("group_settings".localized())
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            groupName = group.name
+        }
         .alert("reset_statistics_confirmation".localized(), isPresented: $showResetConfirmation) {
             Button("cancel".localized(), role: .cancel) { }
             Button("reset".localized(), role: .destructive) {
@@ -152,9 +185,34 @@ struct EditGroupScreen: View {
             Text(systemAlertMessage)
         }
     }
+    
+    // MARK: - Actions
+    private func saveGroupName() {
+        let trimmedName = groupName.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Проверка на пустое имя
+        guard !trimmedName.isEmpty else {
+            groupName = group.name
+            return
+        }
+        
+        // Проверка на дубликат имени
+        if cardsManager.groups.contains(where: { $0.name == trimmedName && $0.id != group.id }) {
+            systemAlertMessage = "group_name_already_exists".localized()
+            showSystemGroupAlert = true
+            groupName = group.name
+            return
+        }
+        
+        // Сохраняем новое имя
+        cardsManager.renameGroup(group, to: trimmedName)
+        
+        // Обновляем локальное состояние
+        groupName = trimmedName
+    }
 }
 
-// MARK: - StatsRow
+// MARK: - StatsRow (без изменений)
 struct StatsRow: View {
     let title: String
     let value: String

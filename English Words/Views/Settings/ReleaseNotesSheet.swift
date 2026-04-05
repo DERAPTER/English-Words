@@ -116,7 +116,29 @@ struct ReleaseNotesSheet: View {
                     }
                     */
                     
-                    // v1.0.2
+                    // v1.0.4
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(themeManager.colors.textSecondary)
+                            Text("Version 1.0.4")
+                                .font(.title3)
+                                .foregroundColor(themeManager.colors.textPrimary)
+                        }
+                        
+                        Text("Предыдущая версия")
+                            .font(.captionCustom)
+                            .foregroundColor(themeManager.colors.textSecondary)
+                        
+                        Divider()
+                            .background(themeManager.colors.stroke)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            ReleaseNoteItem(icon: "plus.circle", text: "")
+                        }
+                    }
+                    
+                    // v1.0.3
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Image(systemName: "clock.fill")
@@ -135,6 +157,7 @@ struct ReleaseNotesSheet: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлен отдельный экран для пустой группы")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлено редактирование имени группы")
                         }
                     }
                     
