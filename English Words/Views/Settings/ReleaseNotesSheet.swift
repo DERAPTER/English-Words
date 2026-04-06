@@ -135,6 +135,8 @@ struct ReleaseNotesSheet: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             ReleaseNoteItem(icon: "plus.circle", text: "Измененное имя группы теперь сразу применяется")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлено дублирование карточек при добавлении через первую группу")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлена логика счетчика серии активности")
                         }
                     }
                     

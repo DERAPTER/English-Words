@@ -53,6 +53,7 @@ class CardsManager: ObservableObject {
     @AppStorage("streak") var streak: Int = 0
     @AppStorage("totalSolved") var totalSolved: Int = 0
     @AppStorage("activityHistory") private var activityHistoryRaw: String = "{}"
+    @AppStorage("dailyGoalRewarded") private var dailyGoalRewarded: Bool = false
     
     var activityHistory: [String: Bool] {
         get {
@@ -92,12 +93,9 @@ class CardsManager: ObservableObject {
         let calendar = Calendar.current
         
         if !calendar.isDateInToday(lastDate) {
-            if calendar.isDateInYesterday(lastDate) && todaySolvedRaw > 0 {
-                streak += 1
-            } else if !calendar.isDateInYesterday(lastDate) && todaySolvedRaw > 0 {
-                streak = 1
-            }
+            // Сбрасываем счётчик и флаг награды при переходе на новый день
             todaySolvedRaw = 0
+            dailyGoalRewarded = false
             lastActiveDate = Date().timeIntervalSince1970
             saveToFile()
         }
@@ -108,12 +106,39 @@ class CardsManager: ObservableObject {
         todaySolvedRaw += 1
         totalSolved += 1
         
+        if todaySolvedRaw >= dailyGoal && !dailyGoalRewarded {
+            updateStreakOnGoalCompleted()
+            dailyGoalRewarded = true
+        }
+        
         let today = Date()
         let dateString = formatDate(today)
         var history = activityHistory
         history[dateString] = true
         activityHistory = history
         saveToFile()
+    }
+    
+    private func updateStreakOnGoalCompleted() {
+        let lastDate = Date(timeIntervalSince1970: lastActiveDate)
+        let calendar = Calendar.current
+        let today = Date()
+        
+        // Получаем дату вчерашнего дня
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return }
+        
+        if calendar.isDate(lastDate, inSameDayAs: yesterday) {
+            // Последняя активность была вчера, увеличиваем серию
+            streak += 1
+        } else if !calendar.isDate(lastDate, inSameDayAs: today) {
+            // Не было активности сегодня и не было вчера, начинаем новую серию
+            streak = 1
+        } else if streak == 0 {
+            // Если серии не было, начинаем новую
+            streak = 1
+        }
+        
+        print("🎉 Дневная цель выполнена! Серия: \(streak) дней")
     }
     
     func updateDailyGoal(_ newGoal: Int) {
