@@ -12,8 +12,8 @@ struct ProfileScreen: View {
     @State private var showingGoalEditor = false
     @State private var tempGoal: Int = 20
     @State private var isStatisticsExpanded = false
-    @State private var isCalendarExpanded = true
-    @State private var isAchievementsExpanded = true
+    @State private var isCalendarExpanded = false
+    @State private var isAchievementsExpanded = false
     
     var body: some View {
         NavigationStack {
