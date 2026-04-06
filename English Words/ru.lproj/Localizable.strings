@@ -176,3 +176,7 @@
 // Edit group screen
 "unsaved_changes" = "Несохранённые изменения";
 "group_name_already_exists" = "Группа с таким названием уже существует";
+
+"duplicate_card_title" = "Карточка уже существует";
+"duplicate_card_message" = "Карточка с таким словом и переводом уже существует в группе.";
+"ok" = "OK";

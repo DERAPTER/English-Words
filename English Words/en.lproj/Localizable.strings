@@ -177,3 +177,7 @@
 // Edit group screen
 "unsaved_changes" = "Unsaved changes";
 "group_name_already_exists" = "A group with this name already exists";
+
+"duplicate_card_title" = "Card already exists";
+"duplicate_card_message" = "A card with the same word and translation already exists in the group.";
+"ok" = "OK";

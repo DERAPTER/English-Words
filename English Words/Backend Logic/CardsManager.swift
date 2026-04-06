@@ -220,11 +220,23 @@ class CardsManager: ObservableObject {
     }
     
     func addCardToGroup(card: Card, groupName: String) {
-        if let index = groups.firstIndex(where: { $0.name == groupName }) {
-            groups[index].cards.addCard(card: card)
-            card.addNewGroup(groupName: groupName)
-            saveToFile()
+        guard let index = groups.firstIndex(where: { $0.name == groupName }) else { return }
+        
+        // Проверяем, существует ли уже такая карточка в группе
+        let cardExists = groups[index].cards.cardsArr.contains { existingCard in
+            existingCard.originWord.lowercased() == card.originWord.lowercased() &&
+            existingCard.translatedWord.lowercased() == card.translatedWord.lowercased()
         }
+        
+        // Если карточка уже существует, не добавляем её
+        if cardExists {
+            print("⚠️ Карточка '\(card.originWord)' уже существует в группе '\(groupName)'")
+            return
+        }
+        
+        groups[index].cards.addCard(card: card)
+        card.addNewGroup(groupName: groupName)
+        saveToFile()
     }
     
     func removeCardFromGroup(card: Card, groupName: String) {

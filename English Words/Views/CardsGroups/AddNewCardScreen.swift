@@ -16,6 +16,7 @@ struct AddNewCardScreen: View {
     @State private var translatedWord = ""
     @State private var selectedGroups: [CardsGroup] = []
     @State private var unselectedGroups: [CardsGroup] = []
+    @State private var showDuplicateAlert = false
 
     var body: some View {
         NavigationView {
@@ -94,7 +95,7 @@ struct AddNewCardScreen: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.accent)
+                            .background(originWord.isEmpty || translatedWord.isEmpty ? Color.gray : Color.accent)
                             .cornerRadius(16)
                     }
                     .disabled(originWord.isEmpty || translatedWord.isEmpty)
@@ -111,26 +112,41 @@ struct AddNewCardScreen: View {
                 }
             }
         }
-        .languageAware()
         .onAppear {
             selectedGroups = [cardsManager.groups[0], group]
-            unselectedGroups = cardsManager.groups.filter { group in
-                !selectedGroups.contains(where: { $0.id == group.id })
+            unselectedGroups = cardsManager.groups.filter { grp in
+                !selectedGroups.contains(where: { $0.id == grp.id })
             }
+        }
+        .alert("duplicate_card_title".localized(), isPresented: $showDuplicateAlert) {
+            Button("ok".localized(), role: .cancel) { }
+        } message: {
+            Text("duplicate_card_message".localized())
         }
     }
 
     private func saveCard() {
+        // Проверяем, существует ли уже такая карточка
+        let allCardsGroup = cardsManager.getGroup(by: "All Cards")
+        let cardExists = allCardsGroup?.cardsArr.contains { existingCard in
+            existingCard.originWord.lowercased() == originWord.lowercased() &&
+            existingCard.translatedWord.lowercased() == translatedWord.lowercased()
+        } ?? false
+        
+        if cardExists {
+            showDuplicateAlert = true
+            return
+        }
+        
         let card = Card(origin: originWord, translate: translatedWord)
         for grp in selectedGroups {
-            card.addNewGroup(groupName: grp.name)
             cardsManager.addCardToGroup(card: card, groupName: grp.name)
         }
         showSheet = false
     }
 }
 
-// Чипс для группы
+// MARK: - GroupChip
 struct GroupChip: View {
     let name: String
     let isSelected: Bool
