@@ -141,4 +141,18 @@ final class CardsTests: XCTestCase {
     }
     
     // MARK: - Codable Tests
+    func testCodable() throws {
+        cards.solveSuccess(card: card1)
+        cards.solveFail(card: card2)
+        
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(cards)
+        
+        let decoder = JSONDecoder()
+        let decodedCards = try decoder.decode(Cards.self, from: data)
+        
+        XCTAssertEqual(decodedCards.cardsArr.count, cards.cardsArr.count)
+        XCTAssertEqual(decodedCards.resultOfAllTime, cards.resultOfAllTime)
+        XCTAssertEqual(decodedCards.countOfAttemps, cards.countOfAttemps)
+    }
 }

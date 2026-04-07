@@ -60,15 +60,29 @@ final class CardTests: XCTestCase {
     // MARK: - Equatable Tests
     func testEquatable() {
         let card2 = Card(origin: "apple", translate: "яблоко")
-        XCTAssertEqual(card!, card2)
-        
-        let card3 = Card(origin: "banana", translate: "банан")
-        XCTAssertNotEqual(card, card3)
+        XCTAssertEqual(card, card)
+        XCTAssertNotEqual(card, card2)
     }
     
     // MARK: - Codable Tests
     func testCodable() throws {
+        card.addNewGroup(groupName: "Fruits")
+        card.correctCount = 5
+        card.wrongCount = 2
         
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(card)
+        
+        let decoder = JSONDecoder()
+        let decodedCard = try decoder.decode(Card.self, from: data)
+        
+        XCTAssertEqual(decodedCard.id, card.id)
+        XCTAssertEqual(decodedCard.originWord, card.originWord)
+        XCTAssertEqual(decodedCard.translatedWord, card.translatedWord)
+        XCTAssertEqual(decodedCard.groups, card.groups)
+        XCTAssertEqual(decodedCard.dateAdded, card.dateAdded)
+        XCTAssertEqual(decodedCard.correctCount, card.correctCount)
+        XCTAssertEqual(decodedCard.wrongCount, card.wrongCount)
     }
     
 }

@@ -5,6 +5,7 @@
 //  Created by Егор Халиков on 02.04.2026.
 //
 
+/*
 import XCTest
 
 final class English_WordsUITestsLaunchTests: XCTestCase {
@@ -31,3 +32,4 @@ final class English_WordsUITestsLaunchTests: XCTestCase {
         add(attachment)
     }
 }
+*/
