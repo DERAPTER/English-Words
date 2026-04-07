@@ -165,7 +165,7 @@ struct SolveCardsGroup: View {
                         .stroke(Color.wrong, lineWidth: 2)
                 )
             Text(" \(cards.fail.count)")
-                .font(.bodyCustom)
+                .font(.titleCustom)
                 .foregroundColor(.textPrimary)
                 .offset(x: 5)
             
@@ -178,7 +178,7 @@ struct SolveCardsGroup: View {
                             .stroke(Color.wrong, lineWidth: 2)
                     )
                 Text("+1")
-                    .font(.bodyCustom)
+                    .font(.titleCustom)
                     .foregroundColor(.white)
                     .offset(x: 5)
             }
@@ -213,7 +213,7 @@ struct SolveCardsGroup: View {
                         .stroke(Color.correct, lineWidth: 2)
                 )
             Text("\(cards.success.count)")
-                .font(.bodyCustom)
+                .font(.titleCustom)
                 .foregroundColor(.textPrimary)
                 .offset(x: -5)
             
@@ -226,7 +226,7 @@ struct SolveCardsGroup: View {
                             .stroke(Color.correct, lineWidth: 2)
                     )
                 Text("+1")
-                    .font(.bodyCustom)
+                    .font(.titleCustom)
                     .foregroundColor(.white)
                     .offset(x: -5)
             }

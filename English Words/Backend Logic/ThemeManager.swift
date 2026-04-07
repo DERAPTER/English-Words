@@ -84,8 +84,8 @@ class ThemeManager: ObservableObject {
                 accent: Color(red: 0.8, green: 0.65, blue: 0.45),
                 stroke: Color(red: 0.8, green: 0.76, blue: 0.7),
                 shadowColor: Color.black.opacity(0.1),
-                correct: Color.green.opacity(0.7),
-                wrong: Color.red.opacity(0.7)
+                correct: Color.green,
+                wrong: Color.red
             )
             
         case .green:
@@ -99,8 +99,8 @@ class ThemeManager: ObservableObject {
                 accent: Color(hex: "#235347"),
                 stroke: Color(hex: "#163832"),
                 shadowColor: Color.black.opacity(0.25),
-                correct: Color(hex: "#8EB69B").opacity(0.9),
-                wrong: Color(hex: "#235347").opacity(0.8)
+                correct: Color(hex: "#8EB69B"),
+                wrong: Color(hex: "#235347")
             )
             
         case .blue:
@@ -112,8 +112,8 @@ class ThemeManager: ObservableObject {
                 accent: Color(hex: "#548383"),
                 stroke: Color(hex: "#7DA0CA").opacity(0.5),
                 shadowColor: Color.black.opacity(0.25),
-                correct: Color.green.opacity(0.8),
-                wrong: Color(hex: "#FEA38E").opacity(0.8)
+                correct: Color.green,
+                wrong: Color(hex: "#FEA38E")
             )
             
         case .pink:
@@ -125,8 +125,8 @@ class ThemeManager: ObservableObject {
                 accent: Color(hex: "#FBA2AB"),
                 stroke: Color(hex: "#F3B5A0"),
                 shadowColor: Color(hex: "#FEA38E").opacity(0.3),
-                correct: Color.green.opacity(0.7),
-                wrong: Color(hex: "#FEA38E").opacity(0.8)
+                correct: Color.green,
+                wrong: Color(hex: "#FEA38E")
             )
         }
     }

@@ -135,6 +135,7 @@ struct ReleaseNotesSheet: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             ReleaseNoteItem(icon: "plus.circle", text: "Системная группа больше не отображается при создании новой карточки")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Улучшен визуал счетчика правильных/неправильных ответов")
                         }
                     }
                     
