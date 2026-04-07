@@ -113,16 +113,29 @@ struct AddNewCardScreen: View {
             }
         }
         .onAppear {
-            selectedGroups = [cardsManager.groups[0], group]
-            unselectedGroups = cardsManager.groups.filter { grp in
-                !selectedGroups.contains(where: { $0.id == grp.id })
-            }
+            setupGroups()
         }
         .alert("duplicate_card_title".localized(), isPresented: $showDuplicateAlert) {
             Button("ok".localized(), role: .cancel) { }
         } message: {
             Text("duplicate_card_message".localized())
         }
+    }
+    
+    private func setupGroups() {
+        let allNonSystemGroups = cardsManager.groups.filter {$0.name != "All Cards"}
+        
+        var selected: [CardsGroup] = []
+        if group.name != "All Cards" {
+            selected.append(group)
+        }
+        
+        selectedGroups = selected
+        
+        unselectedGroups = allNonSystemGroups.filter { nonSystemGroup in
+            !selectedGroups.contains(where: {$0.id == nonSystemGroup.id})
+        }
+        
     }
 
     private func saveCard() {
@@ -139,6 +152,9 @@ struct AddNewCardScreen: View {
         }
         
         let card = Card(origin: originWord, translate: translatedWord)
+        
+        cardsManager.addCardToGroup(card: card, groupName: "All Cards")
+        
         for grp in selectedGroups {
             cardsManager.addCardToGroup(card: card, groupName: grp.name)
         }
