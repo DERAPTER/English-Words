@@ -142,6 +142,12 @@ struct SettingsScreen: View {
                         value: "1.0.5"
                     )
                     
+                    SettingsInfoRow(
+                        icon: "person",
+                        title: "developer".localized(),
+                        value: "tg: @DERAPTER"
+                    )
+                    
                     SettingsRow(
                         icon: "clock.arrow.circlepath",
                         title: "release_notes".localized(),
@@ -394,7 +400,7 @@ struct SettingsRow: View {
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 16) {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
                     .font(.title2)
                     .foregroundColor(color)
@@ -434,7 +440,7 @@ struct SettingsInfoRow: View {
     @ObservedObject private var themeManager = ThemeManager.shared
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(themeManager.colors.textSecondary)
