@@ -209,6 +209,7 @@
 "release_notes_1_0_6_1" = "Fixed theme switching, now applies instantly to all elements";
 "release_notes_1_0_6_2" = "Added localization of the list of changes";
 "release_notes_1_0_6_3" = "Added localization of color theme names";
+"release_notes_1_0_6_4" = "System group names are now translated when you change the language";
 "release_notes_1_0_6_4" = "Added app icon";
 
 // Release Notes v1.0.5
@@ -256,3 +257,7 @@
 "release_notes_1_0_0_14" = "Ability to choose language: English/Русский";
 "release_notes_1_0_0_15" = "Ability to reset all statistics";
 "release_notes_1_0_0_16" = "Ability to delete all data";
+
+// System Groups
+"all_cards" = "All Cards";
+"favourites" = "Favourites";

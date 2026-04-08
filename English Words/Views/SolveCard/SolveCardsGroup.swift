@@ -301,6 +301,15 @@ struct EmptyGroupView: View {
     let groupName: String
     @Environment(\.dismiss) var dismiss
     
+    private var displayGroupName: String {
+        if groupName == "All Cards" {
+            return "all_cards".localized()
+        } else if groupName == "Favourites" {
+            return "favourites".localized()
+        }
+        return groupName
+    }
+    
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
@@ -318,7 +327,7 @@ struct EmptyGroupView: View {
                 .multilineTextAlignment(.center)
             
             // Сообщение
-            Text(String(format: "empty_group_message".localized(), groupName))
+            Text(String(format: "empty_group_message".localized(), displayGroupName))
                 .font(.bodyCustom)
                 .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
@@ -370,6 +379,15 @@ struct AddFirstCardScreen: View {
     @State private var translatedWord = ""
     @State private var showSuccessMessage = false
     
+    private var displayGroupName: String {
+        if groupName == "All Cards" {
+            return "all_cards".localized()
+        } else if groupName == "Favourites" {
+            return "favourites".localized()
+        }
+        return groupName
+    }
+    
     var body: some View {
         VStack(spacing: 24) {
             Text("add_first_card_title".localized())
@@ -377,7 +395,7 @@ struct AddFirstCardScreen: View {
                 .foregroundColor(.textPrimary)
                 .padding(.top, 40)
             
-            Text(String(format: "add_first_card_subtitle".localized(), groupName))
+            Text(String(format: "add_first_card_subtitle".localized(), displayGroupName))
                 .font(.bodyCustom)
                 .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)

@@ -38,6 +38,7 @@ struct ReleaseNotesSheet: View {
                             ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_0_6_2".localized())
                             ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_0_6_3".localized())
                             ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_0_6_4".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_0_6_5".localized())
                         }
                     }
                     

@@ -37,7 +37,7 @@ struct EditGroupScreen: View {
             if let group = group {
                 VStack(spacing: 24) {
                     // Заголовок
-                    Text(group.name)
+                    Text(group.displayName)
                         .font(.largeTitleCustom)
                         .foregroundColor(.textPrimary)
                         .padding(.top, 20)
@@ -50,7 +50,7 @@ struct EditGroupScreen: View {
                         
                         if isSystemGroup {
                             // Для системных групп — только для чтения
-                            Text(group.name)
+                            Text(group.displayName)
                                 .font(.bodyCustom)
                                 .foregroundColor(.textPrimary)
                                 .padding()

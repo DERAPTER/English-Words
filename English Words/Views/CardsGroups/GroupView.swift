@@ -61,7 +61,7 @@ struct SwipeableGroupHeader: View {
 
     private var groupContent: some View {
         HStack {
-            Text(group.name)
+            Text(group.displayName)
                 .font(.titleCustom)
                 .foregroundColor(.textPrimary)
             Spacer()

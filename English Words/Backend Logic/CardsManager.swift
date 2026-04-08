@@ -12,6 +12,15 @@ struct CardsGroup: Identifiable, Hashable, Codable {
     var name: String
     var cards: Cards
     
+    var displayName: String {
+        if name == "All Cards" {
+            return "all_cards".localized()
+        } else if name == "Favourites" {
+            return "favourites".localized()
+        }
+        return name
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

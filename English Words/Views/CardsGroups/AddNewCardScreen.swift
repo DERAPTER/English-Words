@@ -167,10 +167,19 @@ struct GroupChip: View {
     let name: String
     let isSelected: Bool
     let action: () -> Void
+    
+    private var displayName: String {
+        if name == "All Cards" {
+            return "all_cards".localized()
+        } else if name == "Favourites" {
+            return "favourites".localized()
+        }
+        return name
+    }
 
     var body: some View {
         Button(action: action) {
-            Text(name)
+            Text(displayName)
                 .font(.captionCustom)
                 .foregroundColor(isSelected ? .white : .textPrimary)
                 .padding(.horizontal, 16)

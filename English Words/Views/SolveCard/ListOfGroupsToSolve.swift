@@ -45,7 +45,7 @@ struct GroupSolveCard: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            Text(group.name)
+            Text(group.displayName)
                 .font(.titleCustom)
                 .foregroundColor(.textPrimary)
                 .multilineTextAlignment(.center)
