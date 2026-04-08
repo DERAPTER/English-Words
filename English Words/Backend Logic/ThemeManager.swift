@@ -56,6 +56,8 @@ class ThemeManager: ObservableObject {
         didSet {
             selectedThemeRaw = currentTheme.rawValue
             applyNavigationBarAppearance()
+            objectWillChange.send()
+            NotificationCenter.default.post(name: NSNotification.Name("ThemeChanged"), object: nil)
         }
     }
     
@@ -172,6 +174,28 @@ struct ThemeModifier: ViewModifier {
         content
             .environmentObject(themeManager)
             .preferredColorScheme(themeManager.currentTheme == .beige || themeManager.currentTheme == .pink ? .light : .dark)
+    }
+}
+
+// MARK: - View Modifier для автоматического обновления при смене темы
+struct ThemeAwareViewModifier: ViewModifier {
+    @ObservedObject private var themeManager = ThemeManager.shared
+    @State private var refreshTrigger = false
+    
+    func body(content: Content) -> some View {
+        content
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ThemeChanged"))) { _ in
+                // Принудительно обновляем view при смене темы
+                refreshTrigger.toggle()
+            }
+            .id(refreshTrigger)
+            .preferredColorScheme(themeManager.currentTheme == .beige || themeManager.currentTheme == .pink ? .light : .dark)
+    }
+}
+
+extension View {
+    func themeAware() -> some View {
+        modifier(ThemeAwareViewModifier())
     }
 }
 

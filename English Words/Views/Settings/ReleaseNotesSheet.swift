@@ -116,6 +116,29 @@ struct ReleaseNotesSheet: View {
                     }
                     */
                     
+                    // v1.0.6 - Current
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                                .foregroundColor(.accent)
+                            Text("Version 1.0.6")
+                                .font(.titleCustom)
+                                .foregroundColor(themeManager.colors.textPrimary)
+                        }
+                        
+                        Text("Current version")
+                            .font(.captionCustom)
+                            .foregroundColor(themeManager.colors.textSecondary)
+                        
+                        Divider()
+                            .background(themeManager.colors.stroke)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлено переключение цветовых тем, теперь применяется моментально ко всем элементам")
+                        }
+                    }
+
+                    
                     // v1.0.5
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {

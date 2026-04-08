@@ -12,6 +12,7 @@ struct ContentView: View {
     @StateObject private var themeManager = ThemeManager.shared
     @StateObject private var languageManager = LanguageManager.shared
     @State private var selectedTab: TabItem = AppScreen.solveCards.tabItem
+    @State private var refreshTrigger = false
     private var tabs: [TabItem] { AppScreen.allTabItems }
 
     var body: some View {
@@ -24,18 +25,23 @@ struct ContentView: View {
             }
             .ignoresSafeArea()
             .overlay(BackgroundLines())
+            .id(refreshTrigger)
 
             Group {
                 switch selectedTab.screen {
                 case .cardsGroups:
                     ListOfGroupsScreenView(cardsManager: cardsManager)
+                        .id(refreshTrigger)
                 case .solveCards:
                     ListOfGroupsToSolve(cardsManager: cardsManager)
+                        .id(refreshTrigger)
                 case .profile:
                     ProfileScreen(cardsManager: cardsManager)
+                        .id(refreshTrigger)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .themeAware()
 
             CustomTabBar(tabs: tabs, selectedTab: $selectedTab)
                 .padding(.horizontal, 20)
