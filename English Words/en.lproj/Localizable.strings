@@ -3,6 +3,12 @@
 "tab_solve" = "Solve";
 "tab_profile" = "Profile";
 
+// Theme Names
+"theme_beige" = "Beige";
+"theme_green" = "Green";
+"theme_blue" = "Blue";
+"theme_pink" = "Pink";
+
 // Groups Screen
 "groups_title" = "Groups";
 "add_new_group" = "Add New Group";
@@ -201,6 +207,9 @@
 
 // Release Notes v1.0.6
 "release_notes_1_0_6_1" = "Fixed theme switching, now applies instantly to all elements";
+"release_notes_1_0_6_2" = "Added localization of the list of changes";
+"release_notes_1_0_6_3" = "Added localization of color theme names";
+"release_notes_1_0_6_4" = "Added app icon";
 
 // Release Notes v1.0.5
 "release_notes_1_0_5_1" = "System group no longer appears when creating a new card";
@@ -222,6 +231,7 @@
 "release_notes_1_0_2_2" = "Fixed card behavior during learning";
 "release_notes_1_0_2_3" = "Fixed navigation link color";
 "release_notes_1_0_2_4" = "Removed duplicate exit button in settings menu";
+
 
 // Release Notes v1.0.1
 "release_notes_1_0_1_1" = "Added release notes for new versions";

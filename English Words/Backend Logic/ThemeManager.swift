@@ -16,10 +16,10 @@ enum AppTheme: String, CaseIterable {
     
     var displayName: String {
         switch self {
-        case .beige: return "Бежевая"
-        case .green: return "Зелёная"
-        case .blue: return "Синяя"
-        case .pink: return "Розовая"
+        case .beige: return "theme_beige".localized()
+        case .green: return "theme_green".localized()
+        case .blue: return "theme_blue".localized()
+        case .pink: return "theme_pink".localized()
         }
     }
     
