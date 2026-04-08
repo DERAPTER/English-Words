@@ -29,6 +29,7 @@ struct ListOfGroupsToSolve: View {
             }
             .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("choose_group".localized())
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

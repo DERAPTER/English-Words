@@ -137,6 +137,7 @@ struct ReleaseNotesSheet: View {
                             ReleaseNoteItem(icon: "plus.circle", text: "Системная группа больше не отображается при создании новой карточки")
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлена информация о самом умном, гениальном, талантливом, а самое главное - скромном, разработчике")
                             ReleaseNoteItem(icon: "plus.circle", text: "Улучшен визуал счетчика правильных/неправильных ответов")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Исправлена шапка навигации")
                         }
                     }
                     
