@@ -183,3 +183,66 @@
 "ok" = "OK";
 
 "developer" = "Feedback:";
+
+// Release Notes Screen
+"release_notes" = "Release Notes";
+"current_version" = "Current version";
+"previous_version" = "Previous version";
+"initial_release" = "Initial release";
+
+// Versions
+"version_1_0_6" = "Version 1.0.6";
+"version_1_0_5" = "Version 1.0.5";
+"version_1_0_4" = "Version 1.0.4";
+"version_1_0_3" = "Version 1.0.3";
+"version_1_0_2" = "Version 1.0.2";
+"version_1_0_1" = "Version 1.0.1";
+"version_1_0_0" = "Version 1.0.0";
+
+// Release Notes v1.0.6
+"release_notes_1_0_6_1" = "Fixed theme switching, now applies instantly to all elements";
+
+// Release Notes v1.0.5
+"release_notes_1_0_5_1" = "System group no longer appears when creating a new card";
+"release_notes_1_0_5_2" = "Added information about the smartest, most genius, talented, and most importantly - modest developer";
+"release_notes_1_0_5_3" = "Improved visual of correct/wrong answers counter";
+"release_notes_1_0_5_4" = "Fixed navigation bar";
+
+// Release Notes v1.0.4
+"release_notes_1_0_4_1" = "Changed group name now applies immediately";
+"release_notes_1_0_4_2" = "Fixed card duplication when adding through the first group";
+"release_notes_1_0_4_3" = "Fixed activity streak counter logic";
+
+// Release Notes v1.0.3
+"release_notes_1_0_3_1" = "Added separate screen for empty group";
+"release_notes_1_0_3_2" = "Fixed group name editing";
+
+// Release Notes v1.0.2
+"release_notes_1_0_2_1" = "Fixed localization during card learning";
+"release_notes_1_0_2_2" = "Fixed card behavior during learning";
+"release_notes_1_0_2_3" = "Fixed navigation link color";
+"release_notes_1_0_2_4" = "Removed duplicate exit button in settings menu";
+
+// Release Notes v1.0.1
+"release_notes_1_0_1_1" = "Added release notes for new versions";
+"release_notes_1_0_1_2" = "Fixed: test cards and groups were not deleted when clearing all data";
+"release_notes_1_0_1_3" = "Visually improved card swipe for editing";
+"release_notes_1_0_1_4" = "System groups can no longer be deleted or edited for safety";
+
+// Release Notes v1.0.0 (Initial Release)
+"release_notes_1_0_0_1" = "Ability to add your own cards";
+"release_notes_1_0_0_2" = "Ability to add your own groups";
+"release_notes_1_0_0_3" = "Ability to edit and delete cards";
+"release_notes_1_0_0_4" = "Ability to edit and delete groups";
+"release_notes_1_0_0_5" = "Ability to select a group for learning";
+"release_notes_1_0_0_6" = "Ability to learn group cards";
+"release_notes_1_0_0_7" = "Ability to see group learning success rate";
+"release_notes_1_0_0_8" = "Ability to repeat only mistakes or restart the group completely";
+"release_notes_1_0_0_9" = "Ability to set a daily goal";
+"release_notes_1_0_0_10" = "Ability to track active days";
+"release_notes_1_0_0_11" = "Added achievements";
+"release_notes_1_0_0_12" = "Data persistence to permanent storage";
+"release_notes_1_0_0_13" = "Ability to choose from 4 color themes";
+"release_notes_1_0_0_14" = "Ability to choose language: English/Русский";
+"release_notes_1_0_0_15" = "Ability to reset all statistics";
+"release_notes_1_0_0_16" = "Ability to delete all data";
