@@ -264,3 +264,11 @@
 "groups_management" = "Управление группами";
 "selected_groups" = "Выбранные группы";
 "available_groups" = "Доступные группы";
+
+// Add Card Screen - Existing Cards
+"add_card_mode" = "Режим добавления";
+"create_new" = "Создать новую";
+"choose_existing" = "Выбрать существующую";
+"choose_card" = "Выбор карточки";
+"search_card" = "Поиск карточки...";
+"no_cards_found" = "Карточки не найдены";

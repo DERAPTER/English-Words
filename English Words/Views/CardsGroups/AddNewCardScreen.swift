@@ -17,22 +17,61 @@ struct AddNewCardScreen: View {
     @State private var selectedGroups: [CardsGroup] = []
     @State private var unselectedGroups: [CardsGroup] = []
     @State private var showDuplicateAlert = false
+    
+    // НОВЫЕ СОСТОЯНИЯ для выбора существующей карточки
+    @State private var addMode: AddCardMode = .createNew
+    @State private var existingCards: [Card] = []
+    @State private var searchText = ""
+    
+    enum AddCardMode {
+        case createNew
+        case chooseExisting
+    }
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
-                    originWordField
-                    translatedWordField
-                    //infoMessage
-                    selectedGroupsSection
-                    availableGroupsSection
-                    saveButton
+            VStack(spacing: 0) {
+                // Переключатель между созданием новой и выбором существующей
+                Picker("add_card_mode".localized(), selection: $addMode) {
+                    Text("create_new".localized()).tag(AddCardMode.createNew)
+                    Text("choose_existing".localized()).tag(AddCardMode.chooseExisting)
                 }
-                .padding()
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.top, 12)
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        if addMode == .createNew {
+                            // Режим создания новой карточки
+                            VStack(spacing: 16) {
+                                originWordField
+                                translatedWordField
+                            }
+                            
+                            infoMessage
+                            
+                        } else {
+                            // Режим выбора существующей карточки
+                            existingCardsContent
+                        }
+                        
+                        // Выбранные группы
+                        selectedGroupsSection
+                        
+                        // Доступные группы
+                        availableGroupsSection
+                        
+                        // Кнопка сохранения (только для режима создания новой)
+                        if addMode == .createNew {
+                            saveButton
+                        }
+                    }
+                    .padding()
+                }
             }
             .background(Color.appBackground.ignoresSafeArea())
-            .navigationTitle("new_card".localized())
+            .navigationTitle(addMode == .createNew ? "new_card".localized() : "choose_card".localized())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -42,6 +81,7 @@ struct AddNewCardScreen: View {
         }
         .onAppear {
             setupGroups()
+            loadExistingCards()
         }
         .alert("duplicate_card_title".localized(), isPresented: $showDuplicateAlert) {
             Button("ok".localized(), role: .cancel) { }
@@ -50,7 +90,7 @@ struct AddNewCardScreen: View {
         }
     }
     
-    // MARK: - UI Components
+    // MARK: - Новая карточка
     
     private var originWordField: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -86,7 +126,85 @@ struct AddNewCardScreen: View {
         }
     }
     
-    /*
+    // MARK: - Выбор существующей карточки
+    
+    @ViewBuilder
+    private var existingCardsContent: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Поле поиска
+            TextField("search_card".localized(), text: $searchText)
+                .textFieldStyle(PlainTextFieldStyle())
+                .padding()
+                .background(Color.cardBackground)
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.stroke, lineWidth: 1)
+                )
+            
+            // Список существующих карточек (без вложенного ScrollView)
+            if filteredExistingCards.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "tray")
+                        .font(.largeTitle)
+                        .foregroundColor(.textSecondary)
+                    Text("no_cards_found".localized())
+                        .font(.bodyCustom)
+                        .foregroundColor(.textSecondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
+            } else {
+                LazyVStack(spacing: 8) {
+                    ForEach(filteredExistingCards) { card in
+                        ExistingCardRow(
+                            card: card,
+                            isSelected: isCardSelected(card),
+                            onSelect: { selectExistingCard(card) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadExistingCards() {
+        // Загружаем все карточки из группы "All Cards"
+        if let allCardsGroup = cardsManager.getGroup(by: "All Cards") {
+            existingCards = allCardsGroup.cardsArr
+        }
+    }
+    
+    private var filteredExistingCards: [Card] {
+        if searchText.isEmpty {
+            return existingCards
+        }
+        return existingCards.filter { card in
+            card.originWord.localizedCaseInsensitiveContains(searchText) ||
+            card.translatedWord.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+    
+    private func isCardSelected(_ card: Card) -> Bool {
+        // Проверяем, есть ли карточка уже в целевой группе
+        let targetGroup = cardsManager.getGroup(by: group.name)
+        return targetGroup?.cardsArr.contains(where: { $0.id == card.id }) ?? false
+    }
+    
+    private func selectExistingCard(_ card: Card) {
+        // Добавляем существующую карточку в текущую группу
+        cardsManager.addCardToGroup(card: card, groupName: group.name)
+        
+        // Также добавляем в выбранные пользователем группы
+        for grp in selectedGroups where grp.name != group.name {
+            cardsManager.addCardToGroup(card: card, groupName: grp.name)
+        }
+        
+        showSheet = false
+    }
+    
+    // MARK: - Общие компоненты
+    
     private var infoMessage: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -100,7 +218,6 @@ struct AddNewCardScreen: View {
             .padding(.horizontal, 4)
         }
     }
-     */
     
     @ViewBuilder
     private var selectedGroupsSection: some View {
@@ -165,25 +282,20 @@ struct AddNewCardScreen: View {
     // MARK: - Logic
     
     private func setupGroups() {
-        // Фильтруем все группы, исключая "All Cards"
         let allNonSystemGroups = cardsManager.groups.filter { $0.name != "All Cards" }
         
-        // Выбранные группы: текущая группа (если она не "All Cards")
         var selected: [CardsGroup] = []
         if group.name != "All Cards" {
             selected.append(group)
         }
         
         selectedGroups = selected
-        
-        // Доступные группы: все несистемные, кроме уже выбранных
         unselectedGroups = allNonSystemGroups.filter { nonSystemGroup in
             !selectedGroups.contains(where: { $0.id == nonSystemGroup.id })
         }
     }
 
     private func saveCard() {
-        // Проверяем, существует ли уже такая карточка
         let allCardsGroup = cardsManager.getGroup(by: "All Cards")
         let cardExists = allCardsGroup?.cardsArr.contains { existingCard in
             existingCard.originWord.lowercased() == originWord.lowercased() &&
@@ -197,10 +309,8 @@ struct AddNewCardScreen: View {
         
         let card = Card(origin: originWord, translate: translatedWord)
         
-        // Всегда добавляем в "All Cards"
         cardsManager.addCardToGroup(card: card, groupName: "All Cards")
         
-        // Добавляем в выбранные пользователем группы
         for grp in selectedGroups {
             cardsManager.addCardToGroup(card: card, groupName: grp.name)
         }
@@ -209,7 +319,48 @@ struct AddNewCardScreen: View {
     }
 }
 
-// MARK: - GroupChip (ОБНОВЛЁННЫЙ)
+// MARK: - ExistingCardRow
+struct ExistingCardRow: View {
+    let card: Card
+    let isSelected: Bool
+    let onSelect: () -> Void
+    
+    var body: some View {
+        Button(action: onSelect) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(card.originWord)
+                        .font(.bodyCustom)
+                        .foregroundColor(.textPrimary)
+                    Text(card.translatedWord)
+                        .font(.captionCustom)
+                        .foregroundColor(.textSecondary)
+                }
+                
+                Spacer()
+                
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.accent)
+                } else {
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.accent)
+                }
+            }
+            .padding()
+            .background(isSelected ? Color.accent.opacity(0.15) : Color.cardBackground)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? Color.accent : Color.stroke, lineWidth: 1)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .disabled(isSelected)
+    }
+}
+
+// MARK: - GroupChip
 struct GroupChip: View {
     let group: CardsGroup
     let isSelected: Bool

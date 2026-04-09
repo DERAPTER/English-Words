@@ -35,7 +35,7 @@ struct ReleaseNotesSheet: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность выбирать группы на экране редактирования карточки")
-                            ReleaseNoteItem(icon: "plus.circle", text: "")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность при добавлении новой карточки выбрать уже существующую")
                             
                         }
                     }

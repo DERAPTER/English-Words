@@ -210,7 +210,7 @@
 "release_notes_1_0_6_2" = "Added localization of the list of changes";
 "release_notes_1_0_6_3" = "Added localization of color theme names";
 "release_notes_1_0_6_4" = "System group names are now translated when you change the language";
-"release_notes_1_0_6_4" = "Added app icon";
+"release_notes_1_0_6_5" = "Added app icon";
 
 // Release Notes v1.0.5
 "release_notes_1_0_5_1" = "System group no longer appears when creating a new card";
@@ -265,3 +265,11 @@
 "groups_management" = "Groups Management";
 "selected_groups" = "Selected groups";
 "available_groups" = "Available groups";
+
+// Add Card Screen - Existing Cards
+"add_card_mode" = "Add Card Mode";
+"create_new" = "Create New";
+"choose_existing" = "Choose Existing";
+"choose_card" = "Choose Card";
+"search_card" = "Search card...";
+"no_cards_found" = "No cards found";
