@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - CardsGroup
 struct CardsGroup: Identifiable, Hashable, Codable {
     let id = UUID()
     var name: String
@@ -52,8 +53,20 @@ struct CardsGroup: Identifiable, Hashable, Codable {
     }
 }
 
+// MARK: - CardsManager
 class CardsManager: ObservableObject {
     @Published var groups: [CardsGroup] = []
+    
+    // MARK: - For Testing
+    private var testCurrentDate: Date? = nil
+    
+    func setTestCurrentDate(_ date: Date) {
+        testCurrentDate = date
+    }
+    
+    func getCurrentDate() -> Date {
+        return testCurrentDate ?? Date()
+    }
     
     // MARK: - Daily Goal & Statistics
     @AppStorage("dailyGoal") var dailyGoal: Int = 20
@@ -100,23 +113,12 @@ class CardsManager: ObservableObject {
     private func checkAndResetDaily() {
         let lastDate = Date(timeIntervalSince1970: lastActiveDate)
         let calendar = Calendar.current
+        let today = getCurrentDate()
         
-        if !calendar.isDateInToday(lastDate) {
-            // Проверяем, была ли достигнута цель вчера
-            let yesterday = calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date()
-            let yesterdayString = formatDate(yesterday)
-            
-            // Если вчера цель НЕ была достигнута, убеждаемся, что день не отмечен как активный
-            if activityHistory[yesterdayString] != true {
-                var history = activityHistory
-                history[yesterdayString] = false
-                activityHistory = history
-            }
-            
-            // Сбрасываем счётчик и флаг награды
+        if !calendar.isDate(lastDate, inSameDayAs: today) {
             todaySolvedRaw = 0
             dailyGoalRewarded = false
-            lastActiveDate = Date().timeIntervalSince1970
+            lastActiveDate = today.timeIntervalSince1970
             saveToFile()
         }
     }
@@ -126,49 +128,61 @@ class CardsManager: ObservableObject {
         todaySolvedRaw += 1
         totalSolved += 1
         
-        let today = Date()
-        let dateString = formatDate(today)
+        let today = getCurrentDate()
+        let todayString = formatDate(today)
         var history = activityHistory
         
-        // День считается активным ТОЛЬКО при достижении цели
-        if todaySolvedRaw >= dailyGoal {
-            history[dateString] = true
+        let goalJustCompleted = todaySolvedRaw >= dailyGoal && history[todayString] != true
+        
+        if goalJustCompleted {
+            history[todayString] = true
+            activityHistory = history
+            updateStreak()
             
             if !dailyGoalRewarded {
-                updateStreakOnGoalCompleted()
                 dailyGoalRewarded = true
             }
         } else {
-            // Если цель не достигнута, день НЕ отмечаем как активный
-            if history[dateString] != true {
-                history[dateString] = false
+            if history[todayString] != true {
+                history[todayString] = false
+                activityHistory = history
             }
         }
         
-        activityHistory = history
         saveToFile()
     }
     
-    private func updateStreakOnGoalCompleted() {
-        let lastDate = Date(timeIntervalSince1970: lastActiveDate)
+    private func updateStreak() {
         let calendar = Calendar.current
-        let today = Date()
+        let today = getCurrentDate()
+        let todayString = formatDate(today)
         
-        // Получаем дату вчерашнего дня
-        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return }
+        let activeDays = activityHistory
+            .filter { $0.value == true }
+            .keys
+            .sorted()
         
-        if calendar.isDate(lastDate, inSameDayAs: yesterday) {
-            // Последняя активность была вчера, увеличиваем серию
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today) ?? today
+        let yesterdayString = formatDate(yesterday)
+        
+        let previousActiveDays = activeDays.filter { $0 != todayString }
+        
+        if activeDays.contains(yesterdayString) {
+            // Вчера был активен → увеличиваем серию
             streak += 1
-        } else if !calendar.isDate(lastDate, inSameDayAs: today) {
-            // Не было активности сегодня и не было вчера, начинаем новую серию
+        } else if previousActiveDays.isEmpty {
+            // Первый активный день
             streak = 1
-        } else if streak == 0 {
-            // Если серии не было, начинаем новую
+        } else {
+            // Был перерыв → новая серия
             streak = 1
         }
-        
-        print("🎉 Дневная цель выполнена! Серия: \(streak) дней")
+    }
+    
+    private func dateFromString(_ dateString: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: dateString) ?? Date()
     }
     
     func updateDailyGoal(_ newGoal: Int) {
@@ -181,7 +195,7 @@ class CardsManager: ObservableObject {
         return activityHistory[dateString] == true
     }
     
-    private func formatDate(_ date: Date) -> String {
+    func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
@@ -275,13 +289,11 @@ class CardsManager: ObservableObject {
     func addCardToGroup(card: Card, groupName: String) {
         guard let index = groups.firstIndex(where: { $0.name == groupName }) else { return }
         
-        // Проверяем, существует ли уже такая карточка в группе
         let cardExists = groups[index].cards.cardsArr.contains { existingCard in
             existingCard.originWord.lowercased() == card.originWord.lowercased() &&
             existingCard.translatedWord.lowercased() == card.translatedWord.lowercased()
         }
         
-        // Если карточка уже существует, не добавляем её
         if cardExists {
             print("⚠️ Карточка '\(card.originWord)' уже существует в группе '\(groupName)'")
             return
@@ -336,7 +348,6 @@ class CardsManager: ObservableObject {
         let trimmedName = newName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else { return }
         
-        // Проверка на дубликат имени
         if groups.contains(where: { $0.name == trimmedName && $0.id != group.id }) {
             return
         }
@@ -345,7 +356,6 @@ class CardsManager: ObservableObject {
             let oldName = groups[index].name
             groups[index].name = trimmedName
             
-            // Обновляем название группы у всех карточек
             for card in groups[index].cards.cardsArr {
                 if let groupIndex = card.groups.firstIndex(of: oldName) {
                     card.groups[groupIndex] = trimmedName
@@ -359,5 +369,8 @@ class CardsManager: ObservableObject {
     // MARK: - Init
     init() {
         loadFromFile()
+        #if !DEBUG
+        testCurrentDate = nil
+        #endif
     }
 }
