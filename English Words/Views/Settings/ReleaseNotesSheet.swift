@@ -16,17 +16,42 @@ struct ReleaseNotesSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     
-                    // v1.0.6 - Current
+                    // v1.0.7 - Current
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Image(systemName: "crown.fill")
                                 .foregroundColor(.accent)
-                            Text("version_1_0_6".localized())
+                            Text("version_1_0_7".localized())
                                 .font(.titleCustom)
                                 .foregroundColor(themeManager.colors.textPrimary)
                         }
                         
                         Text("current_version".localized())
+                            .font(.captionCustom)
+                            .foregroundColor(themeManager.colors.textSecondary)
+                        
+                        Divider()
+                            .background(themeManager.colors.stroke)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность выбирать группы на экране редактирования карточки")
+                            ReleaseNoteItem(icon: "plus.circle", text: "")
+                            
+                        }
+                    }
+
+                    
+                    // v1.0.6
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(themeManager.colors.textSecondary)
+                            Text("version_1_0_6".localized())
+                                .font(.title3)
+                                .foregroundColor(themeManager.colors.textPrimary)
+                        }
+                        
+                        Text("previous_version".localized())
                             .font(.captionCustom)
                             .foregroundColor(themeManager.colors.textSecondary)
                         

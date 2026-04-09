@@ -139,7 +139,7 @@ struct SettingsScreen: View {
                     SettingsInfoRow(
                         icon: "info.circle",
                         title: "version".localized(),
-                        value: "1.0.6"
+                        value: "1.0.7"
                     )
                     
                     SettingsInfoRow(

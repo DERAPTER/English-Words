@@ -22,84 +22,12 @@ struct AddNewCardScreen: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Поле оригинал
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("original_word".localized())
-                            .font(.bodyCustom)
-                            .foregroundColor(.textPrimary)
-                        TextField("enter_word".localized(), text: $originWord)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .padding()
-                            .background(Color.cardBackground)
-                            .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.stroke, lineWidth: 1)
-                            )
-                    }
-
-                    // Поле перевод
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("translation".localized())
-                            .font(.bodyCustom)
-                            .foregroundColor(.textPrimary)
-                        TextField("enter_translation".localized(), text: $translatedWord)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .padding()
-                            .background(Color.cardBackground)
-                            .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.stroke, lineWidth: 1)
-                            )
-                    }
-
-                    // Группы: выбранные
-                    if !selectedGroups.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("selected_groups".localized())
-                                .font(.captionCustom)
-                                .foregroundColor(.textSecondary)
-                            FlowLayout(spacing: 8) {
-                                ForEach(selectedGroups) { grp in
-                                    GroupChip(name: grp.name, isSelected: true) {
-                                        selectedGroups.removeAll { $0.id == grp.id }
-                                        unselectedGroups.append(grp)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Доступные группы
-                    if !unselectedGroups.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("available_groups".localized())
-                                .font(.captionCustom)
-                                .foregroundColor(.textSecondary)
-                            FlowLayout(spacing: 8) {
-                                ForEach(unselectedGroups) { grp in
-                                    GroupChip(name: grp.name, isSelected: false) {
-                                        unselectedGroups.removeAll { $0.id == grp.id }
-                                        selectedGroups.append(grp)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Кнопка сохранения
-                    Button(action: saveCard) {
-                        Text("save_card".localized())
-                            .font(.bodyCustom.weight(.semibold))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(originWord.isEmpty || translatedWord.isEmpty ? Color.gray : Color.accent)
-                            .cornerRadius(16)
-                    }
-                    .disabled(originWord.isEmpty || translatedWord.isEmpty)
-                    .opacity(originWord.isEmpty || translatedWord.isEmpty ? 0.6 : 1)
+                    originWordField
+                    translatedWordField
+                    //infoMessage
+                    selectedGroupsSection
+                    availableGroupsSection
+                    saveButton
                 }
                 .padding()
             }
@@ -122,9 +50,125 @@ struct AddNewCardScreen: View {
         }
     }
     
+    // MARK: - UI Components
+    
+    private var originWordField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("original_word".localized())
+                .font(.bodyCustom)
+                .foregroundColor(.textPrimary)
+            TextField("enter_word".localized(), text: $originWord)
+                .textFieldStyle(PlainTextFieldStyle())
+                .padding()
+                .background(Color.cardBackground)
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.stroke, lineWidth: 1)
+                )
+        }
+    }
+    
+    private var translatedWordField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("translation".localized())
+                .font(.bodyCustom)
+                .foregroundColor(.textPrimary)
+            TextField("enter_translation".localized(), text: $translatedWord)
+                .textFieldStyle(PlainTextFieldStyle())
+                .padding()
+                .background(Color.cardBackground)
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.stroke, lineWidth: 1)
+                )
+        }
+    }
+    
+    /*
+    private var infoMessage: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "info.circle.fill")
+                    .font(.caption)
+                    .foregroundColor(.textSecondary)
+                Text("card_will_be_added_to_all_cards".localized())
+                    .font(.captionCustom)
+                    .foregroundColor(.textSecondary)
+            }
+            .padding(.horizontal, 4)
+        }
+    }
+     */
+    
+    @ViewBuilder
+    private var selectedGroupsSection: some View {
+        if !selectedGroups.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("selected_groups".localized())
+                    .font(.captionCustom)
+                    .foregroundColor(.textSecondary)
+                FlowLayout(spacing: 8) {
+                    ForEach(selectedGroups) { grp in
+                        GroupChip(group: grp, isSelected: true) {
+                            withAnimation {
+                                selectedGroups.removeAll { $0.id == grp.id }
+                                unselectedGroups.append(grp)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var availableGroupsSection: some View {
+        if !unselectedGroups.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("available_groups".localized())
+                    .font(.captionCustom)
+                    .foregroundColor(.textSecondary)
+                FlowLayout(spacing: 8) {
+                    ForEach(unselectedGroups) { grp in
+                        GroupChip(group: grp, isSelected: false) {
+                            withAnimation {
+                                unselectedGroups.removeAll { $0.id == grp.id }
+                                selectedGroups.append(grp)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private var saveButton: some View {
+        Button(action: saveCard) {
+            Text("save_card".localized())
+                .font(.bodyCustom.weight(.semibold))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(canSave ? Color.accent : Color.gray)
+                .cornerRadius(16)
+        }
+        .disabled(!canSave)
+        .opacity(canSave ? 1 : 0.6)
+    }
+    
+    private var canSave: Bool {
+        !originWord.isEmpty && !translatedWord.isEmpty
+    }
+
+    // MARK: - Logic
+    
     private func setupGroups() {
-        let allNonSystemGroups = cardsManager.groups.filter {$0.name != "All Cards"}
+        // Фильтруем все группы, исключая "All Cards"
+        let allNonSystemGroups = cardsManager.groups.filter { $0.name != "All Cards" }
         
+        // Выбранные группы: текущая группа (если она не "All Cards")
         var selected: [CardsGroup] = []
         if group.name != "All Cards" {
             selected.append(group)
@@ -132,10 +176,10 @@ struct AddNewCardScreen: View {
         
         selectedGroups = selected
         
+        // Доступные группы: все несистемные, кроме уже выбранных
         unselectedGroups = allNonSystemGroups.filter { nonSystemGroup in
-            !selectedGroups.contains(where: {$0.id == nonSystemGroup.id})
+            !selectedGroups.contains(where: { $0.id == nonSystemGroup.id })
         }
-        
     }
 
     private func saveCard() {
@@ -153,33 +197,27 @@ struct AddNewCardScreen: View {
         
         let card = Card(origin: originWord, translate: translatedWord)
         
+        // Всегда добавляем в "All Cards"
         cardsManager.addCardToGroup(card: card, groupName: "All Cards")
         
+        // Добавляем в выбранные пользователем группы
         for grp in selectedGroups {
             cardsManager.addCardToGroup(card: card, groupName: grp.name)
         }
+        
         showSheet = false
     }
 }
 
-// MARK: - GroupChip
+// MARK: - GroupChip (ОБНОВЛЁННЫЙ)
 struct GroupChip: View {
-    let name: String
+    let group: CardsGroup
     let isSelected: Bool
     let action: () -> Void
     
-    private var displayName: String {
-        if name == "All Cards" {
-            return "all_cards".localized()
-        } else if name == "Favourites" {
-            return "favourites".localized()
-        }
-        return name
-    }
-
     var body: some View {
         Button(action: action) {
-            Text(displayName)
+            Text(group.displayName)
                 .font(.captionCustom)
                 .foregroundColor(isSelected ? .white : .textPrimary)
                 .padding(.horizontal, 16)

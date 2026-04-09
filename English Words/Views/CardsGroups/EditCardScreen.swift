@@ -14,7 +14,10 @@ struct EditCardScreen: View {
     
     @State private var editedOrigin: String
     @State private var editedTranslation: String
+    @State private var selectedGroups: [CardsGroup] = []
+    @State private var unselectedGroups: [CardsGroup] = []
     @State private var showDeleteConfirmation = false
+    @State private var showDuplicateAlert = false
     
     init(cardsManager: CardsManager, card: Card) {
         self.cardsManager = cardsManager
@@ -67,6 +70,65 @@ struct EditCardScreen: View {
                     }
                 }
                 .padding(.horizontal)
+                
+                // MARK: - Управление группами (НОВОЕ)
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("groups_management".localized())
+                        .font(.titleCustom)
+                        .foregroundColor(.textPrimary)
+                        .padding(.horizontal)
+                    
+                    // Выбранные группы
+                    if !selectedGroups.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("selected_groups".localized())
+                                .font(.captionCustom)
+                                .foregroundColor(.textSecondary)
+                                .padding(.horizontal)
+                            
+                            FlowLayout(spacing: 8) {
+                                ForEach(selectedGroups) { group in
+                                    GroupChip(
+                                        group: group,
+                                        isSelected: true
+                                    ) {
+                                        withAnimation {
+                                            moveGroup(group, from: &selectedGroups, to: &unselectedGroups)
+                                            removeCardFromGroup(group)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    
+                    // Доступные группы (исключая All Cards и уже выбранные)
+                    let availableGroups = getAvailableGroups()
+                    if !availableGroups.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("available_groups".localized())
+                                .font(.captionCustom)
+                                .foregroundColor(.textSecondary)
+                                .padding(.horizontal)
+                            
+                            FlowLayout(spacing: 8) {
+                                ForEach(availableGroups) { group in
+                                    GroupChip(
+                                        group: group,
+                                        isSelected: false
+                                    ) {
+                                        withAnimation {
+                                            moveGroup(group, from: &unselectedGroups, to: &selectedGroups)
+                                            addCardToGroup(group)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                }
                 
                 // Информация о карточке
                 VStack(alignment: .leading, spacing: 16) {
@@ -139,6 +201,9 @@ struct EditCardScreen: View {
         .languageAware()
         .background(Color.appBackground.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            loadCardGroups()
+        }
         .alert("delete_card_confirmation".localized(), isPresented: $showDeleteConfirmation) {
             Button("cancel".localized(), role: .cancel) { }
             Button("delete".localized(), role: .destructive) {
@@ -147,9 +212,66 @@ struct EditCardScreen: View {
         } message: {
             Text("delete_card_message".localized())
         }
+        .alert("duplicate_card_title".localized(), isPresented: $showDuplicateAlert) {
+            Button("ok".localized(), role: .cancel) { }
+        } message: {
+            Text("duplicate_card_message".localized())
+        }
     }
     
+    // MARK: - Group Management
+    
+    private func loadCardGroups() {
+        // Получаем все группы, исключая "All Cards"
+        let allGroups = cardsManager.groups.filter { $0.name != "All Cards" }
+        
+        // Группы, в которых есть карточка
+        selectedGroups = allGroups.filter { group in
+            card.groups.contains(group.name)
+        }
+        
+        // Группы, в которых нет карточки
+        unselectedGroups = allGroups.filter { group in
+            !card.groups.contains(group.name)
+        }
+    }
+    
+    private func getAvailableGroups() -> [CardsGroup] {
+        // Возвращаем невыбранные группы (кроме All Cards)
+        return unselectedGroups
+    }
+    
+    private func moveGroup(_ group: CardsGroup, from: inout [CardsGroup], to: inout [CardsGroup]) {
+        from.removeAll { $0.id == group.id }
+        to.append(group)
+    }
+    
+    private func addCardToGroup(_ group: CardsGroup) {
+        cardsManager.addCardToGroup(card: card, groupName: group.name)
+    }
+    
+    private func removeCardFromGroup(_ group: CardsGroup) {
+        cardsManager.removeCardFromGroup(card: card, groupName: group.name)
+    }
+    
+    // MARK: - Actions
+    
     private func saveChanges() {
+        // Проверка на дубликат (если изменились слова)
+        if editedOrigin != card.originWord || editedTranslation != card.translatedWord {
+            let allCardsGroup = cardsManager.getGroup(by: "All Cards")
+            let cardExists = allCardsGroup?.cardsArr.contains { existingCard in
+                existingCard.id != card.id &&
+                existingCard.originWord.lowercased() == editedOrigin.lowercased() &&
+                existingCard.translatedWord.lowercased() == editedTranslation.lowercased()
+            } ?? false
+            
+            if cardExists {
+                showDuplicateAlert = true
+                return
+            }
+        }
+        
         card.originWord = editedOrigin
         card.translatedWord = editedTranslation
         dismiss()

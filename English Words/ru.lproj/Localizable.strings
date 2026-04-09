@@ -259,3 +259,8 @@
 // System Groups
 "all_cards" = "Все карточки";
 "favourites" = "Избранное";
+
+// Edit Card Screen - Groups Management
+"groups_management" = "Управление группами";
+"selected_groups" = "Выбранные группы";
+"available_groups" = "Доступные группы";

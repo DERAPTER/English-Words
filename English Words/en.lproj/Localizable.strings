@@ -261,3 +261,7 @@
 // System Groups
 "all_cards" = "All Cards";
 "favourites" = "Favourites";
+
+"groups_management" = "Groups Management";
+"selected_groups" = "Selected groups";
+"available_groups" = "Available groups";
