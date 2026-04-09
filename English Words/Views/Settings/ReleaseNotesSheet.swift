@@ -36,6 +36,7 @@ struct ReleaseNotesSheet: View {
                         VStack(alignment: .leading, spacing: 8) {
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность выбирать группы на экране редактирования карточки")
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность при добавлении новой карточки выбрать уже существующую")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Теперь активным днем в календаре считается день, когда достигнута ежедневная активность")
                             
                         }
                     }

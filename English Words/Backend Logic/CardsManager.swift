@@ -102,7 +102,18 @@ class CardsManager: ObservableObject {
         let calendar = Calendar.current
         
         if !calendar.isDateInToday(lastDate) {
-            // Сбрасываем счётчик и флаг награды при переходе на новый день
+            // Проверяем, была ли достигнута цель вчера
+            let yesterday = calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+            let yesterdayString = formatDate(yesterday)
+            
+            // Если вчера цель НЕ была достигнута, убеждаемся, что день не отмечен как активный
+            if activityHistory[yesterdayString] != true {
+                var history = activityHistory
+                history[yesterdayString] = false
+                activityHistory = history
+            }
+            
+            // Сбрасываем счётчик и флаг награды
             todaySolvedRaw = 0
             dailyGoalRewarded = false
             lastActiveDate = Date().timeIntervalSince1970
@@ -115,15 +126,25 @@ class CardsManager: ObservableObject {
         todaySolvedRaw += 1
         totalSolved += 1
         
-        if todaySolvedRaw >= dailyGoal && !dailyGoalRewarded {
-            updateStreakOnGoalCompleted()
-            dailyGoalRewarded = true
-        }
-        
         let today = Date()
         let dateString = formatDate(today)
         var history = activityHistory
-        history[dateString] = true
+        
+        // День считается активным ТОЛЬКО при достижении цели
+        if todaySolvedRaw >= dailyGoal {
+            history[dateString] = true
+            
+            if !dailyGoalRewarded {
+                updateStreakOnGoalCompleted()
+                dailyGoalRewarded = true
+            }
+        } else {
+            // Если цель не достигнута, день НЕ отмечаем как активный
+            if history[dateString] != true {
+                history[dateString] = false
+            }
+        }
+        
         activityHistory = history
         saveToFile()
     }
@@ -179,7 +200,6 @@ class CardsManager: ObservableObject {
     private func saveToFile() {
         DataManager.shared.saveData(groups: groups)
         
-        // Сохраняем статистику отдельно
         DataManager.shared.saveStatistics(
             dailyGoal: dailyGoal,
             streak: streak,
@@ -195,7 +215,6 @@ class CardsManager: ObservableObject {
             createDefaultData()
         }
         
-        // Загружаем статистику
         let stats = DataManager.shared.loadStatistics()
         if stats.dailyGoal != 20 || stats.streak != 0 || stats.totalSolved != 0 {
             self.dailyGoal = stats.dailyGoal
@@ -243,7 +262,7 @@ class CardsManager: ObservableObject {
         card6.addNewGroup(groupName: "Animals")
     }
     
-    // MARK: - Existing Methods
+    // MARK: - Group Management
     func addNewGroup(name: String) {
         groups.append(CardsGroup(name: name, cards: Cards(cards: [])))
         saveToFile()
