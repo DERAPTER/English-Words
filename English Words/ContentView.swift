@@ -11,6 +11,7 @@ struct ContentView: View {
     @StateObject private var cardsManager = CardsManager()
     @StateObject private var themeManager = ThemeManager.shared
     @StateObject private var languageManager = LanguageManager.shared
+    @StateObject private var achievementsManager = AchievementsManager.shared
     @State private var selectedTab: TabItem = AppScreen.solveCards.tabItem
     @State private var refreshTrigger = false
     private var tabs: [TabItem] { AppScreen.allTabItems }
@@ -54,6 +55,13 @@ struct ContentView: View {
             themeManager.applyNavigationBarAppearance()
         }
         .tint(themeManager.colors.accent)
+        .overlay(alignment: .top) {
+            if let achievement = achievementsManager.recentlyUnlocked {
+                AchievementNotificationView(achievement: achievement)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .zIndex(100)
+            }
+        }
     }
 }
 

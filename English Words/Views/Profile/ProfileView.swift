@@ -9,11 +9,13 @@ import SwiftUI
 
 struct ProfileScreen: View {
     @ObservedObject var cardsManager: CardsManager
+    @StateObject private var achievementsManager = AchievementsManager.shared
     @State private var showingGoalEditor = false
     @State private var tempGoal: Int = 20
     @State private var isStatisticsExpanded = false
     @State private var isCalendarExpanded = false
     @State private var isAchievementsExpanded = false
+    @State private var showAllAchievements = false
     
     var body: some View {
         NavigationStack {
@@ -191,6 +193,7 @@ struct ProfileScreen: View {
                                 StatCard(title: "groups_count".localized(), value: "\(cardsManager.groups.count)")
                                 StatCard(title: "favorites".localized(), value: "\(cardsManager.favouritesCount)")
                                 StatCard(title: "total_solved".localized(), value: "\(cardsManager.totalSolved)")
+                                StatCard(title: "achievements_unlocked".localized(), value: "\(achievementsManager.achievements.filter { $0.isUnlocked }.count)/\(achievementsManager.achievements.count)")
                             }
                             .padding(.horizontal)
                             .transition(.opacity.combined(with: .scale(scale: 0.95)))
@@ -225,18 +228,40 @@ struct ProfileScreen: View {
                         .buttonStyle(PlainButtonStyle())
                         
                         if isAchievementsExpanded {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    AchievementBadge(icon: "star.fill", title: "beginner".localized(), unlocked: cardsManager.totalSolved >= 10)
-                                    AchievementBadge(icon: "flame.fill", title: "days_7".localized(), unlocked: cardsManager.streak >= 7)
-                                    AchievementBadge(icon: "flame.fill", title: "days_30".localized(), unlocked: cardsManager.streak >= 30)
-                                    AchievementBadge(icon: "target", title: "goal_reached".localized(), unlocked: cardsManager.todaySolved >= cardsManager.dailyGoal)
-                                    AchievementBadge(icon: "crown.fill", title: "cards_100".localized(), unlocked: cardsManager.totalSolved >= 100)
+                            // Последние 5 полученных достижений
+                            let unlockedAchievements = achievementsManager.achievements.filter { $0.isUnlocked }
+                            
+                            if !unlockedAchievements.isEmpty {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 12) {
+                                        ForEach(unlockedAchievements.prefix(10)) { achievement in
+                                            AchievementBadge(
+                                                icon: achievement.icon,
+                                                title: achievement.title,
+                                                unlocked: true
+                                            )
+                                        }
+                                    }
+                                    .padding(.horizontal, 4)
                                 }
-                                .padding(.horizontal, 4)
+                                .padding(.horizontal)
+                            } else {
+                                Text("no_achievements_yet".localized())
+                                    .font(.bodyCustom)
+                                    .foregroundColor(.textSecondary)
+                                    .padding(.horizontal)
+                            }
+                            
+                            // Кнопка "Все достижения"
+                            Button(action: {
+                                showAllAchievements = true
+                            }) {
+                                Text("view_all_achievements".localized())
+                                    .font(.captionCustom)
+                                    .foregroundColor(.accent)
+                                    .padding(.top, 8)
                             }
                             .padding(.horizontal)
-                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
                         }
                     }
                     .padding(.bottom, 20)
@@ -263,12 +288,90 @@ struct ProfileScreen: View {
                     }
                 )
             }
+            .sheet(isPresented: $showAllAchievements) {
+                AllAchievementsSheet(achievementsManager: achievementsManager)
+            }
         }
         .languageAware()
+        .onReceive(NotificationCenter.default.publisher(for: .achievementUnlocked)) { _ in
+            // Обновляем UI при получении нового достижения
+            withAnimation {
+                isAchievementsExpanded = true
+            }
+        }
     }
 }
 
-// MARK: - Enhanced Streak View
+// MARK: - All Achievements Sheet
+struct AllAchievementsSheet: View {
+    @ObservedObject var achievementsManager: AchievementsManager
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject private var themeManager = ThemeManager.shared
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                    ForEach(achievementsManager.achievements) { achievement in
+                        AchievementCard(achievement: achievement)
+                    }
+                }
+                .padding()
+            }
+            .background(themeManager.colors.background.ignoresSafeArea())
+            .navigationTitle("all_achievements".localized())
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("close".localized()) {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Achievement Card
+struct AchievementCard: View {
+    let achievement: Achievement
+    @ObservedObject private var themeManager = ThemeManager.shared
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: achievement.icon)
+                .font(.system(size: 40))
+                .foregroundColor(achievement.isUnlocked ? .yellow : .gray.opacity(0.3))
+            
+            Text(achievement.title)
+                .font(.bodyCustom.weight(.semibold))
+                .foregroundColor(achievement.isUnlocked ? .textPrimary : .textSecondary)
+                .multilineTextAlignment(.center)
+            
+            Text(achievement.description)
+                .font(.caption2)
+                .foregroundColor(.textSecondary)
+                .multilineTextAlignment(.center)
+            
+            if achievement.isUnlocked, let date = achievement.unlockedDate {
+                Text(date.formatted(date: .abbreviated, time: .omitted))
+                    .font(.caption2)
+                    .foregroundColor(.accent)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(themeManager.colors.cardBackground)
+        .cornerRadius(16)
+        .opacity(achievement.isUnlocked ? 1 : 0.6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(achievement.isUnlocked ? Color.yellow : themeManager.colors.stroke, lineWidth: achievement.isUnlocked ? 2 : 1)
+        )
+    }
+}
+
+// MARK: - Enhanced Streak View (без изменений)
 struct EnhancedStreakView: View {
     let streak: Int
     
@@ -298,7 +401,7 @@ struct EnhancedStreakView: View {
     }
 }
 
-// MARK: - Enhanced Daily Goal View
+// MARK: - Enhanced Daily Goal View (без изменений)
 struct EnhancedDailyGoalView: View {
     let goal: Int
     let solved: Int
@@ -336,7 +439,7 @@ struct EnhancedDailyGoalView: View {
     }
 }
 
-// MARK: - Stat Card
+// MARK: - Stat Card (без изменений)
 struct StatCard: View {
     let title: String
     let value: String
@@ -357,7 +460,7 @@ struct StatCard: View {
     }
 }
 
-// MARK: - Achievement Badge
+// MARK: - Achievement Badge (обновлённый)
 struct AchievementBadge: View {
     let icon: String
     let title: String
@@ -367,23 +470,24 @@ struct AchievementBadge: View {
         VStack {
             Image(systemName: icon)
                 .font(.title)
-                .foregroundColor(unlocked ? .accent : .gray.opacity(0.3))
+                .foregroundColor(unlocked ? .yellow : .gray.opacity(0.3))
             Text(title)
                 .font(.captionCustom)
                 .foregroundColor(unlocked ? .textPrimary : .textSecondary)
+                .multilineTextAlignment(.center)
         }
         .frame(width: 80, height: 80)
         .background(Color.cardBackground.opacity(unlocked ? 1 : 0.5))
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(unlocked ? Color.accent : Color.clear, lineWidth: 1)
+                .stroke(unlocked ? Color.yellow : Color.clear, lineWidth: 1)
         )
         .shadow(color: .shadowColor, radius: 3, x: 0, y: 1)
     }
 }
 
-// MARK: - Goal Editor Sheet
+// MARK: - Goal Editor Sheet (без изменений)
 struct GoalEditorSheet: View {
     let currentGoal: Int
     let onSave: (Int) -> Void

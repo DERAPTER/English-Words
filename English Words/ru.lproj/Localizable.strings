@@ -196,6 +196,7 @@
 "initial_release" = "Первый релиз";
 
 // Versions
+"version_1_0_7" = "Версия 1.0.7";
 "version_1_0_6" = "Версия 1.0.6";
 "version_1_0_5" = "Версия 1.0.5";
 "version_1_0_4" = "Версия 1.0.4";
@@ -272,3 +273,87 @@
 "choose_card" = "Выбор карточки";
 "search_card" = "Поиск карточки...";
 "no_cards_found" = "Карточки не найдены";
+
+// Achievements
+"achievement_unlocked" = "Достижение получено! 🎉";
+"view_all_achievements" = "Все достижения";
+
+// Cards Created
+"achievement_cards_10" = "Новичок";
+"achievement_cards_10_desc" = "Создано 10 карточек";
+"achievement_cards_50" = "Любознательный";
+"achievement_cards_50_desc" = "Создано 50 карточек";
+"achievement_cards_100" = "Эрудит";
+"achievement_cards_100_desc" = "Создано 100 карточек";
+"achievement_cards_250" = "Полиглот";
+"achievement_cards_250_desc" = "Создано 250 карточек";
+"achievement_cards_500" = "Энциклопедия";
+"achievement_cards_500_desc" = "Создано 500 карточек";
+"achievement_cards_1000" = "Живой словарь";
+"achievement_cards_1000_desc" = "Создано 1000 карточек";
+
+// Cards Solved
+"achievement_solved_10" = "Первый шаг";
+"achievement_solved_10_desc" = "Решено 10 карточек";
+"achievement_solved_50" = "Ученик";
+"achievement_solved_50_desc" = "Решено 50 карточек";
+"achievement_solved_100" = "Знаток";
+"achievement_solved_100_desc" = "Решено 100 карточек";
+"achievement_solved_250" = "Мастер";
+"achievement_solved_250_desc" = "Решено 250 карточек";
+"achievement_solved_500" = "Гуру";
+"achievement_solved_500_desc" = "Решено 500 карточек";
+"achievement_solved_1000" = "Легенда";
+"achievement_solved_1000_desc" = "Решено 1000 карточек";
+
+// Streak
+"achievement_streak_3" = "Разминка";
+"achievement_streak_3_desc" = "Серия 3 дня";
+"achievement_streak_7" = "В ритме";
+"achievement_streak_7_desc" = "Серия 7 дней";
+"achievement_streak_14" = "Дисциплина";
+"achievement_streak_14_desc" = "Серия 14 дней";
+"achievement_streak_21" = "Мастер режима";
+"achievement_streak_21_desc" = "Серия 21 день";
+"achievement_streak_30" = "Железная воля";
+"achievement_streak_30_desc" = "Серия 30 дней";
+"achievement_streak_50" = "Неудержимый";
+"achievement_streak_50_desc" = "Серия 50 дней";
+"achievement_streak_100" = "Абсолют";
+"achievement_streak_100_desc" = "Серия 100 дней";
+
+// Daily Goal
+"achievement_goal_1" = "Цель дня";
+"achievement_goal_1_desc" = "Цель выполнена 1 раз";
+"achievement_goal_5" = "Пятидневка";
+"achievement_goal_5_desc" = "Цель выполнена 5 раз";
+"achievement_goal_10" = "Десятка";
+"achievement_goal_10_desc" = "Цель выполнена 10 раз";
+"achievement_goal_25" = "Месяц успеха";
+"achievement_goal_25_desc" = "Цель выполнена 25 раз";
+"achievement_goal_50" = "Марафонец";
+"achievement_goal_50_desc" = "Цель выполнена 50 раз";
+"achievement_goal_100" = "Олимпиец";
+"achievement_goal_100_desc" = "Цель выполнена 100 раз";
+
+// Favourites
+"achievement_fav_1" = "Первая любовь";
+"achievement_fav_1_desc" = "Добавлена первая карточка в избранное";
+"achievement_fav_5" = "Симпатия";
+"achievement_fav_5_desc" = "5 карточек в избранном";
+"achievement_fav_10" = "Обожание";
+"achievement_fav_10_desc" = "10 карточек в избранном";
+"achievement_fav_25" = "Коллекционер";
+"achievement_fav_25_desc" = "25 карточек в избранном";
+
+// Groups
+"achievement_group_1" = "Организатор";
+"achievement_group_1_desc" = "Создана первая группа";
+"achievement_group_5" = "Коллекционер групп";
+"achievement_group_5_desc" = "Создано 5 групп";
+"achievement_group_10" = "Архитектор";
+"achievement_group_10_desc" = "Создано 10 групп";
+
+"achievements_unlocked" = "Достижений";
+"all_achievements" = "Все достижения";
+"no_achievements_yet" = "Пока нет достижений. Продолжай учиться!";

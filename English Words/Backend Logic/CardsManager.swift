@@ -57,6 +57,8 @@ struct CardsGroup: Identifiable, Hashable, Codable {
 class CardsManager: ObservableObject {
     @Published var groups: [CardsGroup] = []
     
+    @Published var achievementsManager = AchievementsManager.shared
+    
     // MARK: - For Testing
     private var testCurrentDate: Date? = nil
     
@@ -150,6 +152,7 @@ class CardsManager: ObservableObject {
         }
         
         saveToFile()
+        achievementsManager.checkAchievements(cardsManager: self)
     }
     
     private func updateStreak() {
@@ -280,6 +283,7 @@ class CardsManager: ObservableObject {
     func addNewGroup(name: String) {
         groups.append(CardsGroup(name: name, cards: Cards(cards: [])))
         saveToFile()
+        achievementsManager.checkAchievements(cardsManager: self)
     }
     
     func getGroup(by name: String) -> Cards? {
@@ -302,6 +306,7 @@ class CardsManager: ObservableObject {
         groups[index].cards.addCard(card: card)
         card.addNewGroup(groupName: groupName)
         saveToFile()
+        achievementsManager.checkAchievements(cardsManager: self)
     }
     
     func removeCardFromGroup(card: Card, groupName: String) {
@@ -319,6 +324,7 @@ class CardsManager: ObservableObject {
         } else {
             addCardToGroup(card: card, groupName: "Favourites")
         }
+        achievementsManager.checkAchievements(cardsManager: self)
     }
     
     func isSystemGroup(_ group: CardsGroup) -> Bool {

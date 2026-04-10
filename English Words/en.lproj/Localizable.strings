@@ -197,6 +197,7 @@
 "initial_release" = "Initial release";
 
 // Versions
+"version_1_0_7" = "Version 1.0.7";
 "version_1_0_6" = "Version 1.0.6";
 "version_1_0_5" = "Version 1.0.5";
 "version_1_0_4" = "Version 1.0.4";
@@ -273,3 +274,87 @@
 "choose_card" = "Choose Card";
 "search_card" = "Search card...";
 "no_cards_found" = "No cards found";
+
+// Achievements
+"achievement_unlocked" = "Achievement Unlocked! 🎉";
+"view_all_achievements" = "View All Achievements";
+
+// Cards Created
+"achievement_cards_10" = "Beginner";
+"achievement_cards_10_desc" = "Created 10 cards";
+"achievement_cards_50" = "Curious";
+"achievement_cards_50_desc" = "Created 50 cards";
+"achievement_cards_100" = "Erudite";
+"achievement_cards_100_desc" = "Created 100 cards";
+"achievement_cards_250" = "Polyglot";
+"achievement_cards_250_desc" = "Created 250 cards";
+"achievement_cards_500" = "Encyclopedia";
+"achievement_cards_500_desc" = "Created 500 cards";
+"achievement_cards_1000" = "Living Dictionary";
+"achievement_cards_1000_desc" = "Created 1000 cards";
+
+// Cards Solved
+"achievement_solved_10" = "First Step";
+"achievement_solved_10_desc" = "Solved 10 cards";
+"achievement_solved_50" = "Student";
+"achievement_solved_50_desc" = "Solved 50 cards";
+"achievement_solved_100" = "Expert";
+"achievement_solved_100_desc" = "Solved 100 cards";
+"achievement_solved_250" = "Master";
+"achievement_solved_250_desc" = "Solved 250 cards";
+"achievement_solved_500" = "Guru";
+"achievement_solved_500_desc" = "Solved 500 cards";
+"achievement_solved_1000" = "Legend";
+"achievement_solved_1000_desc" = "Solved 1000 cards";
+
+// Streak
+"achievement_streak_3" = "Warm-up";
+"achievement_streak_3_desc" = "3 day streak";
+"achievement_streak_7" = "In Rhythm";
+"achievement_streak_7_desc" = "7 day streak";
+"achievement_streak_14" = "Discipline";
+"achievement_streak_14_desc" = "14 day streak";
+"achievement_streak_21" = "Master of Mode";
+"achievement_streak_21_desc" = "21 day streak";
+"achievement_streak_30" = "Iron Will";
+"achievement_streak_30_desc" = "30 day streak";
+"achievement_streak_50" = "Unstoppable";
+"achievement_streak_50_desc" = "50 day streak";
+"achievement_streak_100" = "Absolute";
+"achievement_streak_100_desc" = "100 day streak";
+
+// Daily Goal
+"achievement_goal_1" = "Goal of the Day";
+"achievement_goal_1_desc" = "Completed daily goal once";
+"achievement_goal_5" = "Five Days";
+"achievement_goal_5_desc" = "Completed daily goal 5 times";
+"achievement_goal_10" = "Ten Days";
+"achievement_goal_10_desc" = "Completed daily goal 10 times";
+"achievement_goal_25" = "Month of Success";
+"achievement_goal_25_desc" = "Completed daily goal 25 times";
+"achievement_goal_50" = "Marathoner";
+"achievement_goal_50_desc" = "Completed daily goal 50 times";
+"achievement_goal_100" = "Olympian";
+"achievement_goal_100_desc" = "Completed daily goal 100 times";
+
+// Favourites
+"achievement_fav_1" = "First Love";
+"achievement_fav_1_desc" = "Added first card to favorites";
+"achievement_fav_5" = "Sympathy";
+"achievement_fav_5_desc" = "5 cards in favorites";
+"achievement_fav_10" = "Adoration";
+"achievement_fav_10_desc" = "10 cards in favorites";
+"achievement_fav_25" = "Collector";
+"achievement_fav_25_desc" = "25 cards in favorites";
+
+// Groups
+"achievement_group_1" = "Organizer";
+"achievement_group_1_desc" = "Created first group";
+"achievement_group_5" = "Group Collector";
+"achievement_group_5_desc" = "Created 5 groups";
+"achievement_group_10" = "Architect";
+"achievement_group_10_desc" = "Created 10 groups";
+
+"achievements_unlocked" = "Achievements";
+"all_achievements" = "All Achievements";
+"no_achievements_yet" = "No achievements yet. Keep learning!";

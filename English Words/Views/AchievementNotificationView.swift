@@ -1,0 +1,58 @@
+//
+//  AchievementNotificationView.swift
+//  English Words
+//
+
+import SwiftUI
+
+struct AchievementNotificationView: View {
+    let achievement: Achievement
+    @ObservedObject private var themeManager = ThemeManager.shared
+    @State private var isAnimating = false
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: achievement.icon)
+                .font(.system(size: 40))
+                .foregroundColor(.yellow)
+                .background(
+                    Circle()
+                        .fill(Color.yellow.opacity(0.2))
+                        .frame(width: 60, height: 60)
+                )
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("achievement_unlocked".localized())
+                    .font(.captionCustom)
+                    .foregroundColor(.yellow)
+                
+                Text(achievement.title)
+                    .font(.bodyCustom.weight(.semibold))
+                    .foregroundColor(.textPrimary)
+                
+                Text(achievement.description)
+                    .font(.caption2)
+                    .foregroundColor(.textSecondary)
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(themeManager.colors.cardBackground)
+        .cornerRadius(16)
+        .shadow(color: .shadowColor, radius: 8, x: 0, y: 4)
+        .padding(.horizontal)
+        .offset(y: isAnimating ? 0 : -200)
+        .opacity(isAnimating ? 1 : 0)
+        .onAppear {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                isAnimating = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation(.easeOut) {
+                    isAnimating = false
+                }
+            }
+        }
+    }
+}
