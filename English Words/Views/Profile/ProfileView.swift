@@ -240,6 +240,7 @@ struct ProfileScreen: View {
                                                 title: achievement.title,
                                                 unlocked: true
                                             )
+                                            .padding(4)
                                         }
                                     }
                                     .padding(.horizontal, 4)

@@ -357,3 +357,13 @@
 "achievements_unlocked" = "Достижений";
 "all_achievements" = "Все достижения";
 "no_achievements_yet" = "Пока нет достижений. Продолжай учиться!";
+
+// Add Card Screen - Multiple Selection
+"choose_cards" = "Выбор карточек";
+"add_selected" = "Добавить выбранные";
+"selected_cards_count" = "Выбрано %d карточек";
+"clear_all" = "Очистить всё";
+"cards_added" = "Карточки добавлены";
+"cards_added_message" = "%d карточек добавлено в группу \"%@\"";
+"already_in_group" = "Уже в группе";
+"select_cards_hint" = "Выберите карточки для добавления в группу";

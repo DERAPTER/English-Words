@@ -358,3 +358,13 @@
 "achievements_unlocked" = "Achievements";
 "all_achievements" = "All Achievements";
 "no_achievements_yet" = "No achievements yet. Keep learning!";
+
+// Add Card Screen - Multiple Selection
+"choose_cards" = "Choose Cards";
+"add_selected" = "Add Selected";
+"selected_cards_count" = "%d cards selected";
+"clear_all" = "Clear all";
+"cards_added" = "Cards Added";
+"cards_added_message" = "%d cards have been added to \"%@\"";
+"already_in_group" = "Already in group";
+"select_cards_hint" = "Select cards to add to the group";
