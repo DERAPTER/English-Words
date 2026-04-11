@@ -26,7 +26,7 @@ struct ProfileScreen: View {
                         Image(systemName: "person.circle.fill")
                             .font(.system(size: 80))
                             .foregroundColor(.accent)
-                        Text("Learner")
+                        Text("learner".localized())
                             .font(.titleCustom)
                             .foregroundColor(.textPrimary)
                     }

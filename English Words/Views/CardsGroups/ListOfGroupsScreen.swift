@@ -65,6 +65,8 @@ struct ListOfGroupsScreenView: View {
                         }
                     )
                 }
+                .scrollDismissesKeyboard(.immediately)
+                .scrollIndicators(.hidden)
             }
             .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("groups_title".localized())

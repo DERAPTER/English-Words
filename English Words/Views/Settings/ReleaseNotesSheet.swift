@@ -34,11 +34,12 @@ struct ReleaseNotesSheet: View {
                             .background(themeManager.colors.stroke)
                         
                         VStack(alignment: .leading, spacing: 8) {
-                            ReleaseNoteItem(icon: "plus.circle", text: "Полностью переработана система достижений")
-                            ReleaseNoteItem(icon: "plus.circle", text: "Количество и разнообразие достижений значительно увеличено")
-                            ReleaseNoteItem(icon: "plus.circle", text: "При получении достижения всплывает уведомление")
-                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлен поиск карточек в меню добавления в группу")
-                            ReleaseNoteItem(icon: "plus.circle", text: "Теперь в группу можно добавить несколько существующих карточек за раз")
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_0_1".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_0_2".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_0_3".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_0_4".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_0_5".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_0_6".localized())
                         }
                     }
                     

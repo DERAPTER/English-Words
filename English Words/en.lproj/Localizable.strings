@@ -81,6 +81,7 @@
 
 // Profile Screen
 "profile_title" = "Profile";
+"learner" = "Learner";
 "your_progress_today" = "Your progress today";
 "daily_goal" = "daily goal";
 "streak" = "Streak";
@@ -212,8 +213,8 @@
 "release_notes_1_1_0_2" = "Number and variety of achievements significantly increased";
 "release_notes_1_1_0_3" = "Notification pops up when achieving an achievement";
 "release_notes_1_1_0_4" = "Added card search in group add menu";
-"release_notes_1_1_0_5" = "Added card search in group add menu";
-"release_notes_1_1_0_6" = "Now you can add multiple existing cards to a group at once";
+"release_notes_1_1_0_5" = "Now you can add multiple existing cards to a group at once";
+"release_notes_1_1_0_6" = "Fixed scroll on the screen with all cards";
 
 // Release Notes v1.0.7
 "version_1_0_7" = "Version 1.0.7";

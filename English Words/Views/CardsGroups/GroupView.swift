@@ -14,7 +14,7 @@ enum SwipedItem: Equatable {
     case card(id: UUID)
 }
 
-// MARK: - Delete Type Enum (НОВЫЙ - добавляем сюда)
+// MARK: - Delete Type Enum
 enum DeleteType {
     case fromGroup
     case completely
@@ -29,7 +29,6 @@ struct SwipeableGroupHeader: View {
     var onEdit: () -> Void
     var onDelete: () -> Void
     
-    // НОВОЕ: алерт для системной группы
     @State private var showSystemGroupAlert = false
     @State private var systemAlertMessage = ""
 
@@ -48,10 +47,10 @@ struct SwipeableGroupHeader: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: swipedItem == .group(id: group.id))
         }
         .contentShape(Rectangle())
-        .gesture(swipeGesture)
-        .onTapGesture {
+        .highPriorityGesture(swipeGesture)
+        .simultaneousGesture(TapGesture().onEnded {
             handleTap()
-        }
+        })
         .alert("system_group".localized(), isPresented: $showSystemGroupAlert) {
             Button("ok".localized(), role: .cancel) { }
         } message: {
@@ -100,7 +99,6 @@ struct SwipeableGroupHeader: View {
         Button(action: {
             withAnimation {
                 swipedItem = .none
-                // НОВОЕ: проверка на системную группу
                 if cardsManager.isSystemGroup(group) {
                     systemAlertMessage = "system_group_cannot_delete".localized()
                     showSystemGroupAlert = true
@@ -120,57 +118,44 @@ struct SwipeableGroupHeader: View {
     }
 
     private var swipeGesture: some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 20, coordinateSpace: .local)
             .onChanged { value in
-                handleSwipe(value: value)
+                let translation = value.translation.width
+                if translation < -20 {
+                    if swipedItem != .group(id: group.id) && swipedItem != .none {
+                        swipedItem = .none
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                swipedItem = .group(id: group.id)
+                            }
+                        }
+                    } else if translation < -20 {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            swipedItem = .group(id: group.id)
+                        }
+                    }
+                }
             }
             .onEnded { value in
-                handleSwipeEnd(value: value)
-            }
-    }
-
-    private func handleSwipe(value: DragGesture.Value) {
-        let translation = value.translation.width
-        
-        if translation < -20 {
-            if swipedItem != .group(id: group.id) && swipedItem != .none {
-                swipedItem = .none
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let translation = value.translation.width
+                let predictedEnd = value.predictedEndTranslation.width
+                
+                if translation < -60 || predictedEnd < -100 {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         swipedItem = .group(id: group.id)
                     }
-                }
-            } else {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    swipedItem = .group(id: group.id)
-                }
-            }
-        } else if translation > 20 {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                swipedItem = .none
-            }
-        }
-    }
-
-    private func handleSwipeEnd(value: DragGesture.Value) {
-        let translation = value.translation.width
-        let predictedEnd = value.predictedEndTranslation.width
-        
-        if translation < -60 || predictedEnd < -100 {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                swipedItem = .group(id: group.id)
-            }
-        } else if translation > 60 || predictedEnd > 100 {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                swipedItem = .none
-            }
-        } else {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                if swipedItem == .group(id: group.id) && translation > -30 {
-                    swipedItem = .none
+                } else if translation > 60 || predictedEnd > 100 {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        swipedItem = .none
+                    }
+                } else {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        if swipedItem == .group(id: group.id) && translation > -30 {
+                            swipedItem = .none
+                        }
+                    }
                 }
             }
-        }
     }
 
     private func handleTap() {
@@ -213,10 +198,10 @@ struct SwipeableCardRow: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: swipedItem == .card(id: card.id))
         }
         .contentShape(Rectangle())
-        .gesture(swipeGesture)
-        .onTapGesture {
+        .highPriorityGesture(swipeGesture)
+        .simultaneousGesture(TapGesture().onEnded {
             handleTap()
-        }
+        })
         .confirmationDialog("delete_card".localized(), isPresented: $showDeleteOptions, titleVisibility: .visible) {
             Button(String(format: "delete_from_group".localized(), group.name), role: .destructive) {
                 onDeleteFromGroup()
@@ -265,57 +250,44 @@ struct SwipeableCardRow: View {
     }
 
     private var swipeGesture: some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 20, coordinateSpace: .local)
             .onChanged { value in
-                handleSwipe(value: value)
+                let translation = value.translation.width
+                if translation < -20 {
+                    if swipedItem != .card(id: card.id) && swipedItem != .none {
+                        swipedItem = .none
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                swipedItem = .card(id: card.id)
+                            }
+                        }
+                    } else if translation < -20 {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            swipedItem = .card(id: card.id)
+                        }
+                    }
+                }
             }
             .onEnded { value in
-                handleSwipeEnd(value: value)
-            }
-    }
-
-    private func handleSwipe(value: DragGesture.Value) {
-        let translation = value.translation.width
-        
-        if translation < -20 {
-            if swipedItem != .card(id: card.id) && swipedItem != .none {
-                swipedItem = .none
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let translation = value.translation.width
+                let predictedEnd = value.predictedEndTranslation.width
+                
+                if translation < -60 || predictedEnd < -100 {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         swipedItem = .card(id: card.id)
                     }
-                }
-            } else {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    swipedItem = .card(id: card.id)
-                }
-            }
-        } else if translation > 20 {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                swipedItem = .none
-            }
-        }
-    }
-
-    private func handleSwipeEnd(value: DragGesture.Value) {
-        let translation = value.translation.width
-        let predictedEnd = value.predictedEndTranslation.width
-        
-        if translation < -60 || predictedEnd < -100 {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                swipedItem = .card(id: card.id)
-            }
-        } else if translation > 60 || predictedEnd > 100 {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                swipedItem = .none
-            }
-        } else {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                if swipedItem == .card(id: card.id) && translation > -30 {
-                    swipedItem = .none
+                } else if translation > 60 || predictedEnd > 100 {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        swipedItem = .none
+                    }
+                } else {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        if swipedItem == .card(id: card.id) && translation > -30 {
+                            swipedItem = .none
+                        }
+                    }
                 }
             }
-        }
     }
 
     private func handleTap() {
@@ -327,15 +299,13 @@ struct SwipeableCardRow: View {
     }
 }
 
-// MARK: - Main GroupView
+// MARK: - Main GroupView (без изменений, но добавь .scrollDisabled для карточек)
 struct GroupView: View {
     @ObservedObject var cardsManager: CardsManager
     let group: CardsGroup
     @ObservedObject var cards: Cards
     
-    // НОВОЕ: для отслеживания обновлений
     @State private var refreshTrigger = false
-
     @State private var isExpanded = false
     @State private var swipedItem: SwipedItem = .none
     
@@ -401,7 +371,7 @@ struct GroupView: View {
                 .padding(.leading, 16)
             }
         }
-        .id(refreshTrigger) // НОВОЕ: принудительное обновление при изменении
+        .id(refreshTrigger)
         .sheet(isPresented: $showSheet) {
             AddNewCardScreen(group: group, cardsManager: cardsManager, showSheet: $showSheet)
         }
@@ -428,7 +398,6 @@ struct GroupView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("GroupNameChanged"))) { _ in
-            // НОВОЕ: обновляем UI при получении уведомления
             refreshTrigger.toggle()
         }
     }
