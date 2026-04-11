@@ -197,6 +197,7 @@
 "initial_release" = "Initial release";
 
 // Versions
+"version_1_1_0" = "Version 1.1.0";
 "version_1_0_7" = "Version 1.0.7";
 "version_1_0_6" = "Version 1.0.6";
 "version_1_0_5" = "Version 1.0.5";
@@ -205,6 +206,21 @@
 "version_1_0_2" = "Version 1.0.2";
 "version_1_0_1" = "Version 1.0.1";
 "version_1_0_0" = "Version 1.0.0";
+
+// Release Notes v1.1.0
+"release_notes_1_1_0_1" = "Completely redesigned achievements system";
+"release_notes_1_1_0_2" = "Number and variety of achievements significantly increased";
+"release_notes_1_1_0_3" = "Notification pops up when achieving an achievement";
+"release_notes_1_1_0_4" = "Added card search in group add menu";
+"release_notes_1_1_0_5" = "Added card search in group add menu";
+"release_notes_1_1_0_6" = "Now you can add multiple existing cards to a group at once";
+
+// Release Notes v1.0.7
+"version_1_0_7" = "Version 1.0.7";
+"release_notes_1_0_7_1" = "Added ability to select groups on card editing screen";
+"release_notes_1_0_7_2" = "Ability to select an existing card when adding a new one";
+"release_notes_1_0_7_3" = "Now an active day in the calendar is considered a day when the daily goal is achieved";
+"release_notes_1_0_7_4" = "Fixed consecutive active days counter";
 
 // Release Notes v1.0.6
 "release_notes_1_0_6_1" = "Fixed theme switching, now applies instantly to all elements";

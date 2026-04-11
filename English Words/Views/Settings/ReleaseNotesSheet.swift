@@ -37,6 +37,9 @@ struct ReleaseNotesSheet: View {
                             ReleaseNoteItem(icon: "plus.circle", text: "Полностью переработана система достижений")
                             ReleaseNoteItem(icon: "plus.circle", text: "Количество и разнообразие достижений значительно увеличено")
                             ReleaseNoteItem(icon: "plus.circle", text: "При получении достижения всплывает уведомление")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлен поиск карточек в меню добавления в группу")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлен поиск карточек в меню добавления в группу")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Теперь в группу можно добавить несколько существующих карточек за раз")
                         }
                     }
                     
@@ -59,7 +62,7 @@ struct ReleaseNotesSheet: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность выбирать группы на экране редактирования карточки")
-                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлена возможность при добавлении новой карточки выбрать уже существующую")
+                            ReleaseNoteItem(icon: "plus.circle", text: "Возможность при добавлении новой карточки выбрать уже существующую")
                             ReleaseNoteItem(icon: "plus.circle", text: "Теперь активным днем в календаре считается день, когда достигнута ежедневная активность")
                             ReleaseNoteItem(icon: "plus.circle", text: "Исправлен счетчик серии активных дней подряд")
                         }
