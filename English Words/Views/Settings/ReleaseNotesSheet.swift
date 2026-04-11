@@ -38,7 +38,6 @@ struct ReleaseNotesSheet: View {
                             ReleaseNoteItem(icon: "plus.circle", text: "Количество и разнообразие достижений значительно увеличено")
                             ReleaseNoteItem(icon: "plus.circle", text: "При получении достижения всплывает уведомление")
                             ReleaseNoteItem(icon: "plus.circle", text: "Добавлен поиск карточек в меню добавления в группу")
-                            ReleaseNoteItem(icon: "plus.circle", text: "Добавлен поиск карточек в меню добавления в группу")
                             ReleaseNoteItem(icon: "plus.circle", text: "Теперь в группу можно добавить несколько существующих карточек за раз")
                         }
                     }
