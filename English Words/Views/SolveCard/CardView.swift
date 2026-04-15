@@ -20,7 +20,7 @@ struct CardView: View {
                 .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
         }
         .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
-        .frame(width: 300, height: 450)
+        .frame(width: 320, height: 480)
         .overlay(
             ZStack {
                 // Зелёная обводка (правильно)
@@ -48,7 +48,7 @@ struct CardView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color.cardBackground)
-                .frame(width: 300, height: 450)
+                .frame(width: 320, height: 480)
                 .shadow(color: .shadowColor, radius: 12, x: 0, y: 4)
                 .overlay(
                     RoundedRectangle(cornerRadius: 30)
@@ -88,7 +88,7 @@ struct CardView: View {
                     .lineLimit(3)
                     .minimumScaleFactor(0.7)
                     .padding(.horizontal, 20)
-                    .frame(maxWidth: 260) // Ограничиваем ширину
+                    .frame(maxWidth: 280) // Ограничиваем ширину
                     .opacity(min(1 - findWrongOpacity(percentage: percentageOfMove), 1 - findCorrectOpacity(percentage: percentageOfMove)))
             }
         }
@@ -107,7 +107,7 @@ struct CardView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color.cardBackground)
-                .frame(width: 300, height: 450)
+                .frame(width: 320, height: 480)
                 .shadow(color: .shadowColor, radius: 12, x: 0, y: 4)
                 .overlay(
                     RoundedRectangle(cornerRadius: 30)
@@ -147,7 +147,7 @@ struct CardView: View {
                     .lineLimit(3)
                     .minimumScaleFactor(0.7)
                     .padding(.horizontal, 20)
-                    .frame(maxWidth: 260) // Ограничиваем ширину
+                    .frame(maxWidth: 280) // Ограничиваем ширину
                     .opacity(min(1 - findWrongOpacity(percentage: percentageOfMove), 1 - findCorrectOpacity(percentage: percentageOfMove)))
             }
         }
