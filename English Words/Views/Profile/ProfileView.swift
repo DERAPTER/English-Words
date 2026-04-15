@@ -44,7 +44,7 @@ struct ProfileScreen: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             HStack(alignment: .center, spacing: 20) {
-                                EnhancedStreakView(streak: cardsManager.streak)
+                                EnhancedStreakView(streak: cardsManager.streak, todayGoalCompleted: cardsManager.todaySolved >= cardsManager.dailyGoal)
                                 
                                 Spacer()
                                 
@@ -372,26 +372,28 @@ struct AchievementCard: View {
     }
 }
 
-// MARK: - Enhanced Streak View (без изменений)
+// MARK: - Enhanced Streak View (обновлённая)
 struct EnhancedStreakView: View {
     let streak: Int
+    let todayGoalCompleted: Bool  // Добавляем параметр
+    //@ObservedObject private var cardsManager = CardsManager.shared
     
     var body: some View {
         VStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill(Color.orange.opacity(0.1))
+                    .fill(flameColor.opacity(0.1))
                     .frame(width: 70, height: 70)
                 
                 Image(systemName: "flame.fill")
                     .font(.system(size: 35))
-                    .foregroundColor(streak > 0 ? .orange : .gray)
+                    .foregroundColor(flameColor)
             }
             
             VStack(spacing: 4) {
                 Text("\(streak)")
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(streak > 0 ? .orange : .textSecondary)
+                    .foregroundColor(flameColor)
                 
                 Text("days_in_row".localized())
                     .font(.captionCustom)
@@ -399,6 +401,16 @@ struct EnhancedStreakView: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+    
+    private var flameColor: Color {
+        if streak == 0 {
+            return .gray
+        } else if todayGoalCompleted {
+            return .orange  // Серия активна сегодня
+        } else {
+            return .gray.opacity(0.5)  // Серия есть, но сегодня ещё не активна
+        }
     }
 }
 
