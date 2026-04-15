@@ -16,17 +16,42 @@ struct ReleaseNotesSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     
-                    // v1.1.0 - Current
+                    // v1.1.1 - Current
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Image(systemName: "crown.fill")
                                 .foregroundColor(.accent)
-                            Text("version_1_1_0".localized())
+                            Text("version_1_1_1".localized())
                                 .font(.titleCustom)
                                 .foregroundColor(themeManager.colors.textPrimary)
                         }
                         
                         Text("current_version".localized())
+                            .font(.captionCustom)
+                            .foregroundColor(themeManager.colors.textSecondary)
+                        
+                        Divider()
+                            .background(themeManager.colors.stroke)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_1_1".localized())
+                            ReleaseNoteItem(icon: "plus.circle", text: "release_notes_1_1_1_2".localized())
+                            
+                        }
+                    }
+                    
+                    // v1.1.0
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundColor(themeManager.colors.textSecondary)
+                            Text("version_1_1_0".localized())
+                                .font(.title3)
+                                .foregroundColor(themeManager.colors.textPrimary)
+
+                        }
+                        
+                        Text("previous_version".localized())
                             .font(.captionCustom)
                             .foregroundColor(themeManager.colors.textSecondary)
                         

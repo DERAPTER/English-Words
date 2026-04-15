@@ -198,6 +198,7 @@
 "initial_release" = "Initial release";
 
 // Versions
+"version_1_1_1" = "Version 1.1.1";
 "version_1_1_0" = "Version 1.1.0";
 "version_1_0_7" = "Version 1.0.7";
 "version_1_0_6" = "Version 1.0.6";
@@ -207,6 +208,10 @@
 "version_1_0_2" = "Version 1.0.2";
 "version_1_0_1" = "Version 1.0.1";
 "version_1_0_0" = "Version 1.0.0";
+
+// Release Notes v1.1.0
+"release_notes_1_1_1_1" = "Fixed the behavior of long text on the card";
+"release_notes_1_1_1_2" = "Fixed the appearance of the activity series counter";
 
 // Release Notes v1.1.0
 "release_notes_1_1_0_1" = "Completely redesigned achievements system";

@@ -20,6 +20,7 @@ struct CardView: View {
                 .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
         }
         .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+        .frame(width: 300, height: 450)
         .overlay(
             ZStack {
                 // Зелёная обводка (правильно)
@@ -31,8 +32,6 @@ struct CardView: View {
                 RoundedRectangle(cornerRadius: 30)
                     .stroke(Color.wrong, lineWidth: 4)
                     .opacity(percentageOfMove < 0 ? -percentageOfMove : 0)
-                
-                
             }
         )
         .onTapGesture {
@@ -55,9 +54,10 @@ struct CardView: View {
                     RoundedRectangle(cornerRadius: 30)
                         .stroke(Color.stroke, lineWidth: 1)
                 )
-            VStack {
+            
+            VStack(spacing: 16) {
+                // Текст подсказки при свайпе
                 ZStack {
-                    // Текст "Уже знаю"
                     if percentageOfMove > 0 {
                         Text("already_know".localized())
                             .font(.title2.bold())
@@ -65,11 +65,9 @@ struct CardView: View {
                             .padding(8)
                             .background(Color.cardBackground.opacity(0.9))
                             .cornerRadius(12)
-                        //.position(x: 220, y: 120)
                             .opacity(percentageOfMove)
                     }
                     
-                    // Текст "Ещё изучаю"
                     if percentageOfMove < 0 {
                         Text("still_learning".localized())
                             .font(.title2.bold())
@@ -77,19 +75,21 @@ struct CardView: View {
                             .padding(8)
                             .background(Color.cardBackground.opacity(0.9))
                             .cornerRadius(12)
-                        //.position(x: 80, y: 120)
                             .opacity(-percentageOfMove)
                     }
                 }
-                .frame(height: 30)
-                .padding(.top, -30)
+                .frame(height: 50)
                 
+                // Оригинальное слово с переносом и ограничением ширины
                 Text(card.originWord)
                     .font(.largeTitleCustom)
                     .foregroundColor(.textPrimary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                    .opacity(min(1-findWrongOpacity(percentage: percentageOfMove), 1-findCorrectOpacity(percentage: percentageOfMove)))
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.7)
+                    .padding(.horizontal, 20)
+                    .frame(maxWidth: 260) // Ограничиваем ширину
+                    .opacity(min(1 - findWrongOpacity(percentage: percentageOfMove), 1 - findCorrectOpacity(percentage: percentageOfMove)))
             }
         }
         .overlay(
@@ -113,9 +113,10 @@ struct CardView: View {
                     RoundedRectangle(cornerRadius: 30)
                         .stroke(Color.stroke, lineWidth: 1)
                 )
-            VStack {
+            
+            VStack(spacing: 16) {
+                // Текст подсказки при свайпе
                 ZStack {
-                    // Текст "Уже знаю"
                     if percentageOfMove > 0 {
                         Text("already_know".localized())
                             .font(.title2.bold())
@@ -123,11 +124,9 @@ struct CardView: View {
                             .padding(8)
                             .background(Color.cardBackground.opacity(0.9))
                             .cornerRadius(12)
-                        //.position(x: 220, y: 120)
                             .opacity(percentageOfMove)
                     }
                     
-                    // Текст "Ещё изучаю"
                     if percentageOfMove < 0 {
                         Text("still_learning".localized())
                             .font(.title2.bold())
@@ -135,19 +134,21 @@ struct CardView: View {
                             .padding(8)
                             .background(Color.cardBackground.opacity(0.9))
                             .cornerRadius(12)
-                        //.position(x: 80, y: 120)
                             .opacity(-percentageOfMove)
                     }
                 }
-                .frame(height: 30)
-                .padding(.top, -30)
+                .frame(height: 50)
                 
+                // Перевод с переносом и ограничением ширины
                 Text(card.translatedWord)
                     .font(.largeTitleCustom)
                     .foregroundColor(.textPrimary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                    .opacity(min(1-findWrongOpacity(percentage: percentageOfMove), 1-findCorrectOpacity(percentage: percentageOfMove)))
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.7)
+                    .padding(.horizontal, 20)
+                    .frame(maxWidth: 260) // Ограничиваем ширину
+                    .opacity(min(1 - findWrongOpacity(percentage: percentageOfMove), 1 - findCorrectOpacity(percentage: percentageOfMove)))
             }
         }
         .overlay(
@@ -174,5 +175,4 @@ struct CardView: View {
         }
         return 0
     }
-    
 }
