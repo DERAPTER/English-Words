@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 protocol GroupRepository {
     // Fetch
     func fetchUserGroups() throws -> [CardGroup]

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 final class SwiftDataGroupRepository: GroupRepository {
     private let context: ModelContext
     
@@ -124,7 +125,7 @@ final class SwiftDataGroupRepository: GroupRepository {
     // MARK: - Private
     
     private func nextOrderIndex() throws -> Int {
-        let descriptor = FetchDescriptor<CardGroup>(
+        var descriptor = FetchDescriptor<CardGroup>(
             sortBy: [SortDescriptor(\.orderIndex, order: .reverse)]
         )
         descriptor.fetchLimit = 1

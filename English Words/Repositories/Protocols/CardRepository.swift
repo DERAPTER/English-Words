@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 protocol CardRepository {
     // Fetch
     func fetchAll() throws -> [Card]

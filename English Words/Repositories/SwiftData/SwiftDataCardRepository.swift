@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 final class SwiftDataCardRepository: CardRepository {
     private let context: ModelContext
     

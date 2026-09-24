@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 final class SwiftDataStatsRepository: StatsRepository {
     private let context: ModelContext
     

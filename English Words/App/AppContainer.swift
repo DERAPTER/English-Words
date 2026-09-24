@@ -13,6 +13,7 @@ import SwiftData
 ///
 /// Здесь собираются все репозитории и сервисы. ViewModel'и получают их через `init`.
 
+@MainActor
 @Observable
 final class AppContainer {
     
