@@ -11,8 +11,8 @@ import SwiftUI
 /// Здесь же будут глобальные оверлеи (уведомления о достижениях).
 struct RootView: View {
     @Environment(AppContainer.self) private var container
-    @StateObject private var themeManager = ThemeManager.shared
-    @StateObject private var languageManager = LanguageManager.shared
+    private let themeManager = ThemeManager.shared
+    private let languageManager = LanguageManager.shared
     
     @State private var selectedTab: TabItem = TabItem(screen: .cardsGroups)
     @State private var refreshTrigger = false
