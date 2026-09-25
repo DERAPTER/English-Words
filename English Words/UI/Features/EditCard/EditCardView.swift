@@ -8,26 +8,195 @@
 import SwiftUI
 
 struct EditCardView: View {
-    let card: Card
     @Environment(\.dismiss) private var dismiss
     
+    @State private var viewModel: EditCardViewModel
+    private let onComplete: () -> Void
+    
+    init(
+        card: Card,
+        cardRepository: CardRepository,
+        groupRepository: GroupRepository,
+        onComplete: @escaping () -> Void
+    ) {
+        self.onComplete = onComplete
+        _viewModel = State(initialValue: EditCardViewModel(
+            card: card,
+            cardRepository: cardRepository,
+            groupRepository: groupRepository
+        ))
+    }
+    
     var body: some View {
-        NavigationStack {
-            VStack {
-                Text(card.originWord)
-                    .font(.titleCustom)
-                    .foregroundColor(.textPrimary)
-                Text("В разработке")
-                    .font(.bodyCustom)
-                    .foregroundColor(.textSecondary)
+        ScrollView {
+            VStack(spacing: 24) {
+                header
+                
+                wordFields
+                
+                groupsSection
+                
+                CardStatsSection(card: viewModel.card)
+                
+                saveButton
+                
+                deleteButton
+                
+                Spacer(minLength: 40)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.appBackground.ignoresSafeArea())
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("close".localized()) { dismiss() }
+        }
+        .background(Color.appBackground.ignoresSafeArea())
+        .navigationTitle("edit_card".localized())
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("cancel".localized()) {
+                    dismiss()
                 }
             }
         }
+        .onAppear { viewModel.onAppear() }
+        .alert("delete_card_confirmation".localized(), isPresented: $viewModel.showDeleteConfirmation) {
+            Button("cancel".localized(), role: .cancel) { }
+            Button("delete".localized(), role: .destructive) {
+                if viewModel.delete() {
+                    onComplete()
+                    dismiss()
+                }
+            }
+        } message: {
+            Text("delete_card_message".localized())
+        }
+        .alert("duplicate_card_title".localized(), isPresented: $viewModel.showDuplicateAlert) {
+            Button("ok".localized(), role: .cancel) { }
+        } message: {
+            Text("duplicate_card_message".localized())
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    private var header: some View {
+        Text("edit_card".localized())
+            .font(.largeTitleCustom)
+            .foregroundColor(.textPrimary)
+            .padding(.top, 20)
+    }
+    
+    private var wordFields: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            WordInputField(
+                title: "original_word".localized(),
+                placeholder: "enter_word".localized(),
+                text: $viewModel.editedOrigin
+            )
+            
+            WordInputField(
+                title: "translation".localized(),
+                placeholder: "enter_translation".localized(),
+                text: $viewModel.editedTranslated
+            )
+        }
+        .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    private var groupsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("groups_management".localized())
+                .font(.titleCustom)
+                .foregroundColor(.textPrimary)
+                .padding(.horizontal)
+            
+            if !viewModel.selectedGroups.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("selected_groups".localized())
+                        .font(.captionCustom)
+                        .foregroundColor(.textSecondary)
+                        .padding(.horizontal)
+                    
+                    FlowLayout(spacing: 8) {
+                        ForEach(viewModel.selectedGroups) { group in
+                            GroupChip(group: group, isSelected: true) {
+                                withAnimation {
+                                    viewModel.toggleGroup(group)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            
+            if !viewModel.availableGroups.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("available_groups".localized())
+                        .font(.captionCustom)
+                        .foregroundColor(.textSecondary)
+                        .padding(.horizontal)
+                    
+                    FlowLayout(spacing: 8) {
+                        ForEach(viewModel.availableGroups) { group in
+                            GroupChip(group: group, isSelected: false) {
+                                withAnimation {
+                                    viewModel.toggleGroup(group)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            
+            if viewModel.selectedGroups.isEmpty && viewModel.availableGroups.isEmpty {
+                Text("no_groups_available".localized())
+                    .font(.captionCustom)
+                    .foregroundColor(.textSecondary)
+                    .padding(.horizontal)
+            }
+        }
+    }
+    
+    private var saveButton: some View {
+        Button {
+            if viewModel.save() {
+                onComplete()
+                dismiss()
+            }
+        } label: {
+            Text("save_changes".localized())
+                .font(.bodyCustom.weight(.semibold))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(viewModel.canSave ? Color.accent : Color.gray)
+                .cornerRadius(16)
+        }
+        .disabled(!viewModel.canSave)
+        .padding(.horizontal)
+    }
+    
+    private var deleteButton: some View {
+        Button(role: .destructive) {
+            viewModel.showDeleteConfirmation = true
+        } label: {
+            HStack {
+                Image(systemName: "trash.fill")
+                    .font(.title2)
+                Text("delete_card".localized())
+                    .font(.bodyCustom)
+            }
+            .foregroundColor(.red)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color.cardBackground)
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.stroke, lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal)
     }
 }

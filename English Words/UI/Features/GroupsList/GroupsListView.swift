@@ -61,8 +61,12 @@ struct GroupsListView: View {
                     .environment(container)
             }
             .sheet(item: $cardToEdit) { card in
-                EditCardView(card: card)
-                    .environment(container)
+                EditCardView(
+                    card: card,
+                    cardRepository: container.cardRepository,
+                    groupRepository: container.groupRepository,
+                    onComplete: { viewModel.handleCardAdded() }
+                )
             }
             .sheet(item: $addCardToGroup) { group in
                 AddCardSheet(
