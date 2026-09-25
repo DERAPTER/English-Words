@@ -57,15 +57,18 @@ struct GroupsListView: View {
                 AddGroupSheet(viewModel: viewModel, isPresented: $showAddGroupSheet)
             }
             .sheet(item: $groupToEdit) { group in
-                EditGroupView(group: group)
-                    .environment(container)
+                EditGroupView(
+                    group: group,
+                    groupRepository: container.groupRepository,
+                    onComplete: { viewModel.load() }
+                )
             }
             .sheet(item: $cardToEdit) { card in
                 EditCardView(
                     card: card,
                     cardRepository: container.cardRepository,
                     groupRepository: container.groupRepository,
-                    onComplete: { viewModel.handleCardAdded() }
+                    onComplete: { viewModel.load() }
                 )
             }
             .sheet(item: $addCardToGroup) { group in
@@ -73,7 +76,7 @@ struct GroupsListView: View {
                     group: group,
                     cardRepository: container.cardRepository,
                     groupRepository: container.groupRepository,
-                    onComplete: { viewModel.handleCardAdded() }
+                    onComplete: { viewModel.load() }
                 )
             }
             .alert("delete_group_confirmation".localized(), isPresented: $showDeleteGroupAlert) {
