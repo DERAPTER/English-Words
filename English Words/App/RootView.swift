@@ -31,7 +31,7 @@ struct RootView: View {
             Group {
                 switch selectedTab.screen {
                 case .cardsGroups:
-                    placeholder(for: .cardsGroups)
+                    GroupsListView(container: container)
                 case .solveCards:
                     placeholder(for: .solveCards)
                 case .profile:
