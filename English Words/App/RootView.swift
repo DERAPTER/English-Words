@@ -33,7 +33,7 @@ struct RootView: View {
                 case .cardsGroups:
                     GroupsListView(container: container)
                 case .solveCards:
-                    placeholder(for: .solveCards)
+                    SolveListView(container: container)
                 case .profile:
                     placeholder(for: .profile)
                 }

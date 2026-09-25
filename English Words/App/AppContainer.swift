@@ -25,18 +25,23 @@ final class AppContainer {
     
     // MARK: - Services
     
-    // (Появятся в следующих слоях: AchievementsService, SolveSessionStore)
+    let solveSessionStore: SolveSessionStore
+    let solveSessionCoordinator: SolveSessionCoordinator
     
     // MARK: - Init
     
     init(
         cardRepository: CardRepository,
         groupRepository: GroupRepository,
-        statsRepository: StatsRepository
+        statsRepository: StatsRepository,
+        solveSessionStore: SolveSessionStore,
+        solveSessionCoordinator: SolveSessionCoordinator
     ) {
         self.cardRepository = cardRepository
         self.groupRepository = groupRepository
         self.statsRepository = statsRepository
+        self.solveSessionStore = solveSessionStore
+        self.solveSessionCoordinator = solveSessionCoordinator
     }
     
     // MARK: - Factory
@@ -44,10 +49,22 @@ final class AppContainer {
     static func live(container: ModelContainer) -> AppContainer {
         let context = container.mainContext
         
+        let cardRepo = SwiftDataCardRepository(context: context)
+        let groupRepo = SwiftDataGroupRepository(context: context)
+        let statsRepo = SwiftDataStatsRepository(context: context)
+        
+        let sessionStore = SolveSessionStore()
+        let sessionCoordinator = SolveSessionCoordinator(
+            store: sessionStore,
+            cardRepository: cardRepo
+        )
+        
         return AppContainer(
-            cardRepository: SwiftDataCardRepository(context: context),
-            groupRepository: SwiftDataGroupRepository(context: context),
-            statsRepository: SwiftDataStatsRepository(context: context)
+            cardRepository: cardRepo,
+            groupRepository: groupRepo,
+            statsRepository: statsRepo,
+            solveSessionStore: sessionStore,
+            solveSessionCoordinator: sessionCoordinator
         )
     }
 }
