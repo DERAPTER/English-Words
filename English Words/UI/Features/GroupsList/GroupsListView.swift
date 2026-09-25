@@ -65,10 +65,12 @@ struct GroupsListView: View {
                     .environment(container)
             }
             .sheet(item: $addCardToGroup) { group in
-                AddCardSheet(group: group, onComplete: {
-                    viewModel.handleCardAdded()
-                })
-                .environment(container)
+                AddCardSheet(
+                    group: group,
+                    cardRepository: container.cardRepository,
+                    groupRepository: container.groupRepository,
+                    onComplete: { viewModel.handleCardAdded() }
+                )
             }
             .alert("delete_group_confirmation".localized(), isPresented: $showDeleteGroupAlert) {
                 Button("cancel".localized(), role: .cancel) { groupToDelete = nil }
