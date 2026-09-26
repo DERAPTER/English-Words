@@ -49,6 +49,7 @@ final class SolveViewModel {
     private let cardRepository: CardRepository
     private let statsRepository: StatsRepository
     private let sessionCoordinator: SolveSessionCoordinator
+    private let achievementsService: AchievementsService
     
     // MARK: - Constants
     
@@ -63,13 +64,15 @@ final class SolveViewModel {
         title: String,
         cardRepository: CardRepository,
         statsRepository: StatsRepository,
-        sessionCoordinator: SolveSessionCoordinator
+        sessionCoordinator: SolveSessionCoordinator,
+        achievementsService: AchievementsService
     ) {
         self.key = key
         self.title = title
         self.cardRepository = cardRepository
         self.statsRepository = statsRepository
         self.sessionCoordinator = sessionCoordinator
+        self.achievementsService = achievementsService
         
         // Временная пустая сессия до onAppear
         self.session = SolveSession(groupKey: key, cardIDs: [])
@@ -226,6 +229,7 @@ final class SolveViewModel {
         do {
             try cardRepository.recordAnswer(card, correct: true)
             _ = try statsRepository.recordSolved(on: .now)
+            _ = achievementsService.evaluate()
         } catch {
             errorMessage = error.localizedDescription
         }

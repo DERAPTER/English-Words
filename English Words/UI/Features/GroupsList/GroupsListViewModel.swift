@@ -30,10 +30,16 @@ final class GroupsListViewModel {
     
     private let cardRepository: CardRepository
     private let groupRepository: GroupRepository
+    private let achievementsService: AchievementsService
     
-    init(cardRepository: CardRepository, groupRepository: GroupRepository) {
+    init(
+        cardRepository: CardRepository,
+        groupRepository: GroupRepository,
+        achievementsService: AchievementsService
+    ) {
         self.cardRepository = cardRepository
         self.groupRepository = groupRepository
+        self.achievementsService = achievementsService
     }
     
     // MARK: - Derived
@@ -127,6 +133,7 @@ final class GroupsListViewModel {
     
     func createGroup(name: String) throws {
         _ = try groupRepository.create(name: name)
+        _ = achievementsService.evaluate()
         load()
     }
     
@@ -139,6 +146,7 @@ final class GroupsListViewModel {
     
     func toggleFavourite(_ card: Card) throws {
         try cardRepository.toggleFavourite(card)
+        _ = achievementsService.evaluate()
         refreshAfterCardMutation()
     }
     

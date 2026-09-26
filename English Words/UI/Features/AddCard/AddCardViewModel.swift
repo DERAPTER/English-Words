@@ -53,15 +53,18 @@ final class AddCardViewModel {
     private let targetGroup: CardGroup
     private let cardRepository: CardRepository
     private let groupRepository: GroupRepository
+    private let achievementsService: AchievementsService
     
     init(
         targetGroup: CardGroup,
         cardRepository: CardRepository,
-        groupRepository: GroupRepository
+        groupRepository: GroupRepository,
+        achievementsService: AchievementsService
     ) {
         self.targetGroup = targetGroup
         self.cardRepository = cardRepository
         self.groupRepository = groupRepository
+        self.achievementsService = achievementsService
     }
     
     // MARK: - Derived
@@ -181,6 +184,8 @@ final class AddCardViewModel {
                 translated: trimmedTranslated,
                 groups: selectedGroups
             )
+            
+            _ = achievementsService.evaluate()
             
             return true
         } catch {

@@ -22,13 +22,15 @@ struct AddCardSheet: View {
         group: CardGroup,
         cardRepository: CardRepository,
         groupRepository: GroupRepository,
+        achievementsService: AchievementsService,
         onComplete: @escaping () -> Void
     ) {
         self.onComplete = onComplete
         _viewModel = State(initialValue: AddCardViewModel(
             targetGroup: group,
             cardRepository: cardRepository,
-            groupRepository: groupRepository
+            groupRepository: groupRepository,
+            achievementsService: achievementsService
         ))
     }
     

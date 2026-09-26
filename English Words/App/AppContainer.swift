@@ -5,13 +5,13 @@
 //  Created by Егор Халиков on 23.09.2026.
 //
 
+//
+//  AppContainer.swift
+//  English Words
+//
+
 import Foundation
 import SwiftData
-
-/// DI-контейнер приложения.
-/// Создаётся один раз в `English_WordsApp` и живёт через `Environment` до конца сессии.
-///
-/// Здесь собираются все репозитории и сервисы. ViewModel'и получают их через `init`.
 
 @MainActor
 @Observable
@@ -27,6 +27,7 @@ final class AppContainer {
     
     let solveSessionStore: SolveSessionStore
     let solveSessionCoordinator: SolveSessionCoordinator
+    let achievementsService: AchievementsService
     
     // MARK: - Init
     
@@ -35,13 +36,15 @@ final class AppContainer {
         groupRepository: GroupRepository,
         statsRepository: StatsRepository,
         solveSessionStore: SolveSessionStore,
-        solveSessionCoordinator: SolveSessionCoordinator
+        solveSessionCoordinator: SolveSessionCoordinator,
+        achievementsService: AchievementsService
     ) {
         self.cardRepository = cardRepository
         self.groupRepository = groupRepository
         self.statsRepository = statsRepository
         self.solveSessionStore = solveSessionStore
         self.solveSessionCoordinator = solveSessionCoordinator
+        self.achievementsService = achievementsService
     }
     
     // MARK: - Factory
@@ -59,12 +62,19 @@ final class AppContainer {
             cardRepository: cardRepo
         )
         
+        let achievementsService = AchievementsService(
+            statsRepository: statsRepo,
+            cardRepository: cardRepo,
+            groupRepository: groupRepo
+        )
+        
         return AppContainer(
             cardRepository: cardRepo,
             groupRepository: groupRepo,
             statsRepository: statsRepo,
             solveSessionStore: sessionStore,
-            solveSessionCoordinator: sessionCoordinator
+            solveSessionCoordinator: sessionCoordinator,
+            achievementsService: achievementsService
         )
     }
 }

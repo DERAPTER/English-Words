@@ -21,7 +21,8 @@ struct GroupsListView: View {
     init(container: AppContainer) {
         _viewModel = State(initialValue: GroupsListViewModel(
             cardRepository: container.cardRepository,
-            groupRepository: container.groupRepository
+            groupRepository: container.groupRepository,
+            achievementsService: container.achievementsService
         ))
     }
     
@@ -76,6 +77,7 @@ struct GroupsListView: View {
                     group: group,
                     cardRepository: container.cardRepository,
                     groupRepository: container.groupRepository,
+                    achievementsService: container.achievementsService,
                     onComplete: { viewModel.load() }
                 )
             }

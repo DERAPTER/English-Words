@@ -22,7 +22,8 @@ struct SolveView: View {
             title: title,
             cardRepository: container.cardRepository,
             statsRepository: container.statsRepository,
-            sessionCoordinator: container.solveSessionCoordinator
+            sessionCoordinator: container.solveSessionCoordinator,
+            achievementsService: container.achievementsService
         ))
     }
     

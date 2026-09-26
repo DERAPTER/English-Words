@@ -5,10 +5,13 @@
 //  Created by Егор Халиков on 23.09.2026.
 //
 
+//
+//  RootView.swift
+//  English Words
+//
+
 import SwiftUI
 
-/// Корневой экран приложения. Содержит таббар и переключает вкладки.
-/// Здесь же будут глобальные оверлеи (уведомления о достижениях).
 struct RootView: View {
     @Environment(AppContainer.self) private var container
     private let themeManager = ThemeManager.shared
@@ -21,13 +24,10 @@ struct RootView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Фон под всей областью приложения
             themeManager.colors.background
                 .ignoresSafeArea()
-            //TODO: REMOVE BackgroundLines
                 .overlay(BackgroundLines())
             
-            // Активный экран
             Group {
                 switch selectedTab.screen {
                 case .cardsGroups:
@@ -35,13 +35,12 @@ struct RootView: View {
                 case .solveCards:
                     SolveListView(container: container)
                 case .profile:
-                    placeholder(for: .profile)
+                    ProfileView(container: container)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .id(refreshTrigger)
             
-            // Таббар
             CustomTabBar(tabs: tabs, selectedTab: $selectedTab)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
@@ -55,21 +54,23 @@ struct RootView: View {
         .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
             refreshTrigger.toggle()
         }
+        .overlay(alignment: .top) {
+            achievementBanner
+        }
     }
     
-    // Заглушки для экранов — заменятся по мере переноса фич
     @ViewBuilder
-    private func placeholder(for screen: AppScreen) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: screen.iconName)
-                .font(.system(size: 60))
-                .foregroundColor(.accent)
-            Text(screen.title)
-                .font(.largeTitleCustom)
-                .foregroundColor(.textPrimary)
-            Text("В разработке")
-                .font(.bodyCustom)
-                .foregroundColor(.textSecondary)
+    private var achievementBanner: some View {
+        if let achievement = container.achievementsService.recentlyUnlocked {
+            AchievementNotificationView(achievement: achievement)
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .task(id: achievement.id) {
+                    try? await Task.sleep(for: .seconds(3))
+                    withAnimation {
+                        container.achievementsService.consumeRecentlyUnlocked()
+                    }
+                }
+                .zIndex(100)
         }
     }
 }
