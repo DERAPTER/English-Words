@@ -20,10 +20,29 @@ final class Card {
     var correctCount: Int
     var wrongCount: Int
     
-    /// Связь many-to-many с группами.
-    /// inverse задаётся на стороне CardGroup.
+    // MARK: - SRS (SM-2)
+    
+    /// Коэффициент лёгкости. По умолчанию 2.5, минимум 1.3.
+    var easeFactor: Double = 2.5
+    
+    /// Текущий интервал в днях. 0 у новых карточек.
+    var intervalDays: Int = 0
+    
+    /// Количество подряд правильных ответов (оценка ≥ 3).
+    var repetitions: Int = 0
+    
+    /// Когда карточку нужно показать снова. nil = новая, ещё не оценивалась.
+    var nextReviewDate: Date? = nil
+    
+    /// Дата последнего ответа в SRS-режиме.
+    var lastReviewDate: Date? = nil
+    
+    // MARK: - Relationships
+    
     @Relationship(inverse: \CardGroup.cards)
     var groups: [CardGroup] = []
+    
+    // MARK: - Init
     
     init(
         origin: String,
@@ -37,6 +56,12 @@ final class Card {
         self.dateAdded = dateAdded
         self.correctCount = 0
         self.wrongCount = 0
+        
+        self.easeFactor = SRSAlgorithm.defaultEaseFactor
+        self.intervalDays = 0
+        self.repetitions = 0
+        self.nextReviewDate = nil
+        self.lastReviewDate = nil
     }
     
     // MARK: - Computed
@@ -48,5 +73,21 @@ final class Card {
     var successRate: Double {
         guard totalAttempts > 0 else { return 0 }
         return Double(correctCount) / Double(totalAttempts)
+    }
+    
+    // MARK: - SRS helpers
+    
+    /// Карточка ещё ни разу не оценивалась в SRS-режиме.
+    var isNewInSRS: Bool {
+        lastReviewDate == nil
+    }
+    
+    /// Пора повторять сегодня (или карточка новая).
+    var isDueToday: Bool {
+        guard let next = nextReviewDate else { return true }
+        let endOfToday = Calendar.current
+            .startOfDay(for: .now)
+            .addingTimeInterval(86400)
+        return next < endOfToday
     }
 }

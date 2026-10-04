@@ -174,9 +174,8 @@ final class SwiftDataCardRepository: CardRepository {
         let lowerOrigin = origin.lowercased()
         let lowerTranslated = translated.lowercased()
         
-        let descriptor = FetchDescriptor<Card>()
         do {
-            let all = try context.fetch(descriptor)
+            let all = try context.fetch(FetchDescriptor<Card>())
             return all.contains { card in
                 if let excludeID = cardID, card.id == excludeID { return false }
                 return card.originWord.lowercased() == lowerOrigin &&
@@ -185,6 +184,62 @@ final class SwiftDataCardRepository: CardRepository {
         } catch {
             throw RepositoryError.fetchFailed(underlying: error)
         }
+    }
+    
+    // MARK: - SRS (SM-2)
+    
+    func fetchDueToday(on date: Date, newCardsLimit: Int) throws -> [Card] {
+        let calendar = Calendar.current
+        let endOfDay = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: date)
+        ) ?? date
+        
+        let all = try fetchAll()
+        
+        var due: [Card] = []
+        var newOnes: [Card] = []
+        
+        for card in all {
+            if card.isNewInSRS {
+                newOnes.append(card)
+            } else if let next = card.nextReviewDate, next < endOfDay {
+                due.append(card)
+            }
+        }
+        
+        // Сначала просроченные, потом новые — но не больше лимита
+        let limitedNew = Array(newOnes.prefix(newCardsLimit))
+        return due + limitedNew
+    }
+    
+    func dueTodayCount(on date: Date, newCardsLimit: Int) throws -> Int {
+        try fetchDueToday(on: date, newCardsLimit: newCardsLimit).count
+    }
+    
+    func recordSRSReview(_ card: Card, quality: Int, on date: Date) throws {
+        let prediction = SRSAlgorithm.predict(
+            quality: quality,
+            currentEaseFactor: card.easeFactor,
+            currentIntervalDays: card.intervalDays,
+            currentRepetitions: card.repetitions,
+            from: date
+        )
+        
+        card.intervalDays = prediction.intervalDays
+        card.repetitions = prediction.repetitions
+        card.easeFactor = prediction.easeFactor
+        card.nextReviewDate = prediction.nextReviewDate
+        card.lastReviewDate = date
+        
+        if quality >= 3 {
+            card.correctCount += 1
+        } else {
+            card.wrongCount += 1
+        }
+        
+        try save()
     }
     
     // MARK: - Private

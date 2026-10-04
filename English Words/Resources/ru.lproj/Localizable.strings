@@ -122,6 +122,25 @@
 "repeat_mistakes" = "Повторить ошибки";
 "start_over_button" = "Начать сначала";
 
+/* ============ SRS (Spaced Repetition) ============ */
+"srs_review_title" = "Review";
+"srs_due_count" = "%d cards due";
+"srs_tap_to_reveal" = "Tap to reveal";
+"srs_how_well" = "How well did you remember?";
+"srs_q0" = "Blackout";
+"srs_q1" = "Forgot";
+"srs_q2" = "Almost";
+"srs_q3" = "Hard";
+"srs_q4" = "Good";
+"srs_q5" = "Easy";
+"srs_interval_1d" = "+1d";
+"srs_interval_nd" = "+%dd";
+"srs_result_title" = "Great job!";
+"srs_result_message" = "Reviewed %d cards. Come back tomorrow!";
+"srs_section_title" = "Spaced Repetition";
+"srs_new_cards_limit" = "New cards per day";
+"srs_new_cards_limit_hint" = "How many new cards to introduce daily";
+
 /* ============ EMPTY GROUP ============ */
 "empty_group_title" = "Пустая группа";
 "empty_group_message" = "В группе \"%@\" пока нет карточек. Добавьте первую карточку, чтобы начать изучение!";
@@ -289,6 +308,7 @@
 "current_version" = "Текущая версия";
 "previous_version" = "Предыдущая версия";
 "initial_release" = "Первый релиз";
+"version_2_0_0" = "Версия 2.0.0";
 "version_1_1_1" = "Версия 1.1.1";
 "version_1_1_0" = "Версия 1.1.0";
 "version_1_0_7" = "Версия 1.0.7";
@@ -301,6 +321,9 @@
 "version_1_0_0" = "Версия 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_0_0_1" = "Добавлено интервальное повторение (SM-2) для эффективного запоминания";
+"release_notes_2_0_0_2" = "Полностью переписана архитектура приложения";
+
 "release_notes_1_1_1_1" = "Исправлено поведение длинного текста на карточке";
 "release_notes_1_1_1_2" = "Исправлен внешний вид счётчика серии активности";
 
@@ -360,3 +383,4 @@
 "release_notes_1_0_0_14" = "Возможность выбрать один из языков: Русский/Английский";
 "release_notes_1_0_0_15" = "Возможность обнулить всю статистику";
 "release_notes_1_0_0_16" = "Возможность удалить все данные";
+

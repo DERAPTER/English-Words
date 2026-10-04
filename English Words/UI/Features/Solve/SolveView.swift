@@ -10,10 +10,10 @@ import SwiftUI
 struct SolveView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @State private var showAddFirstCardSheet = false
-    
     @State private var viewModel: SolveViewModel
     private let container: AppContainer
+    
+    @State private var showAddFirstCardSheet = false
     
     init(key: SolveGroupKey, title: String, container: AppContainer) {
         self.container = container
@@ -30,22 +30,11 @@ struct SolveView: View {
     var body: some View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
-            
             content
         }
+        .navigationTitle(viewModel.groupTitle)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { viewModel.onAppear() }
-        .sheet(isPresented: $showAddFirstCardSheet) {
-            AddFirstCardSheet(
-                group: userGroupForCurrentKey,
-                systemType: systemTypeForCurrentKey,
-                cardRepository: container.cardRepository,
-                groupRepository: container.groupRepository,
-                onComplete: {
-                    viewModel.onAppear()
-                }
-            )
-        }
         .alert(
             "continue_session_question".localized(),
             isPresented: $viewModel.showUnfinishedSessionAlert
@@ -59,6 +48,15 @@ struct SolveView: View {
                 viewModel.totalProgress
             ))
         }
+        .sheet(isPresented: $showAddFirstCardSheet) {
+            AddFirstCardSheet(
+                group: userGroupForCurrentKey,
+                systemType: systemTypeForCurrentKey,
+                cardRepository: container.cardRepository,
+                groupRepository: container.groupRepository,
+                onComplete: { viewModel.onAppear() }
+            )
+        }
     }
     
     // MARK: - Content
@@ -69,35 +67,41 @@ struct SolveView: View {
         case .empty:
             EmptyGroupView(
                 groupTitle: viewModel.groupTitle,
-                onAddFirstCard: handleAddFirstCard,
+                onAddFirstCard: { showAddFirstCardSheet = true },
                 onDismiss: { dismiss() }
             )
-        case .completedWithoutMistakes:
-            ResultView(
-                successCount: viewModel.successCount,
-                failCount: viewModel.failCount,
-                progressFraction: viewModel.progressFraction,
-                hasMistakes: false,
-                onRestart: { viewModel.restartFromResult() },
-                onRestartMistakes: nil
-            )
-        case .completedWithMistakes:
-            ResultView(
-                successCount: viewModel.successCount,
-                failCount: viewModel.failCount,
-                progressFraction: viewModel.progressFraction,
-                hasMistakes: true,
-                onRestart: { viewModel.restartFromResult() },
-                onRestartMistakes: { viewModel.restartMistakesFromResult() }
-            )
+            
+        case .completedWithoutMistakes, .completedWithMistakes:
+            if viewModel.isSRSMode {
+                SRSResultView(
+                    reviewedCount: viewModel.totalProgress,
+                    onFinish: { dismiss() }
+                )
+            } else {
+                ResultView(
+                    successCount: viewModel.successCount,
+                    failCount: viewModel.failCount,
+                    progressFraction: viewModel.progressFraction,
+                    hasMistakes: viewModel.state == .completedWithMistakes,
+                    onRestart: { viewModel.restartFromResult() },
+                    onRestartMistakes: viewModel.state == .completedWithMistakes
+                        ? { viewModel.restartMistakesFromResult() }
+                        : nil
+                )
+            }
+            
         case .solving:
-            solvingScreen
+            if viewModel.isSRSMode {
+                srsSolvingScreen
+            } else {
+                swipeSolvingScreen
+            }
         }
     }
     
-    // MARK: - Solving screen
+    // MARK: - Swipe mode
     
-    private var solvingScreen: some View {
+    private var swipeSolvingScreen: some View {
         VStack {
             Text("\(viewModel.currentProgress)/\(viewModel.totalProgress)")
                 .font(.titleCustom)
@@ -111,7 +115,7 @@ struct SolveView: View {
             
             Spacer()
             
-            cardArea
+            swipeCardArea
             
             Spacer()
             Spacer()
@@ -122,7 +126,7 @@ struct SolveView: View {
     }
     
     @ViewBuilder
-    private var cardArea: some View {
+    private var swipeCardArea: some View {
         if let card = viewModel.currentCard {
             SwipeableCardView(
                 card: card,
@@ -132,27 +136,22 @@ struct SolveView: View {
             .offset(x: viewModel.offsetOfCardX, y: viewModel.offsetOfCardY)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.offsetOfCardX)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.offsetOfCardY)
-            .gesture(dragGesture)
+            .gesture(swipeGesture)
         } else {
-            Color.clear
-                .frame(width: 320, height: 480)
+            Color.clear.frame(width: 320, height: 480)
         }
     }
     
-    // MARK: - Gesture
-    
-    private var dragGesture: some Gesture {
+    private var swipeGesture: some Gesture {
         DragGesture()
-            .onChanged { value in
-                viewModel.onDragChanged(value)
-            }
+            .onChanged { viewModel.onDragChanged($0) }
             .onEnded { value in
                 let decision = viewModel.onDragEnded(value)
-                handleDecision(decision)
+                handleSwipeDecision(decision)
             }
     }
     
-    private func handleDecision(_ decision: SolveViewModel.SwipeDecision) {
+    private func handleSwipeDecision(_ decision: SolveViewModel.SwipeDecision) {
         switch decision {
         case .flyLeft:
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -173,12 +172,53 @@ struct SolveView: View {
         }
     }
     
-    // MARK: - Handlers
+    // MARK: - SRS mode
     
-    private func handleAddFirstCard() {
-        showAddFirstCardSheet = true
+    private var srsSolvingScreen: some View {
+        VStack {
+            Text("\(viewModel.currentProgress)/\(viewModel.totalProgress)")
+                .font(.titleCustom)
+                .foregroundColor(.textSecondary)
+                .padding(.top, 20)
+            
+            Spacer()
+            
+            srsCardArea
+            
+            Spacer()
+            
+            srsButtonsArea
+        }
     }
-
+    
+    @ViewBuilder
+    private var srsCardArea: some View {
+        if let card = viewModel.currentCard {
+            SRSCardView(
+                card: card,
+                isFlipped: $viewModel.isCardFlipped,
+                onToggleFavourite: { viewModel.toggleFavouriteCurrentCard() }
+            )
+        } else {
+            Color.clear.frame(width: 320, height: 480)
+        }
+    }
+    
+    @ViewBuilder
+    private var srsButtonsArea: some View {
+        if viewModel.isCardFlipped {
+            SRSQualityButtonsView(
+                intervalPreviews: viewModel.intervalPreviews(),
+                onRate: { quality in
+                    Task { await viewModel.rateCurrentCard(quality) }
+                }
+            )
+            .transition(.move(edge: .bottom).combined(with: .opacity))
+        } else {
+            Color.clear.frame(height: 110)
+        }
+    }
+    
     // MARK: - Helpers
     
     private var userGroupForCurrentKey: CardGroup? {
@@ -187,7 +227,7 @@ struct SolveView: View {
         }
         return nil
     }
-
+    
     private var systemTypeForCurrentKey: SystemGroupType? {
         if case .system(let type) = viewModel.key {
             return type

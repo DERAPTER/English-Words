@@ -9,25 +9,37 @@ import Foundation
 
 @MainActor
 protocol CardRepository {
-    // Fetch
+    // MARK: - Fetch
     func fetchAll() throws -> [Card]
     func fetch(id: UUID) throws -> Card?
     func fetch(inGroup groupID: UUID) throws -> [Card]
     func fetchFavourites() throws -> [Card]
     func search(_ query: String) throws -> [Card]
     
-    // Counts
+    // MARK: - Counts
     func totalCount() throws -> Int
     func favouritesCount() throws -> Int
     func count(inGroup groupID: UUID) throws -> Int
     
-    // Mutations
+    // MARK: - Mutations
     func create(origin: String, translated: String, groups: [CardGroup]) throws -> Card
     func update(_ card: Card, origin: String, translated: String, groups: [CardGroup]) throws
     func toggleFavourite(_ card: Card) throws
     func delete(_ card: Card) throws
     func recordAnswer(_ card: Card, correct: Bool) throws
     
-    // Validation
+    // MARK: - Validation
     func exists(origin: String, translated: String, excluding cardID: UUID?) throws -> Bool
+    
+    // MARK: - SRS (SM-2)
+    /// Карточки к повторению на указанную дату:
+    /// просроченные + не более `newCardsLimit` новых.
+    func fetchDueToday(on date: Date, newCardsLimit: Int) throws -> [Card]
+    
+    /// Количество карточек к повторению на дату.
+    func dueTodayCount(on date: Date, newCardsLimit: Int) throws -> Int
+    
+    /// Обновляет SRS-состояние карточки по оценке (0...5).
+    /// Также инкрементирует correctCount (q ≥ 3) или wrongCount (q < 3).
+    func recordSRSReview(_ card: Card, quality: Int, on date: Date) throws
 }

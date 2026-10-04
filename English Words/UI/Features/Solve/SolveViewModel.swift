@@ -31,11 +31,15 @@ final class SolveViewModel {
     private(set) var currentCard: Card?
     private var cardsByID: [UUID: Card] = [:]
     
-    // MARK: - UI state
+    // MARK: - UI state (свайп-режим)
     
     var offsetOfCardX: CGFloat = 0
     var offsetOfCardY: CGFloat = 0
     private(set) var percentageOfMove: Double = 0
+    
+    // MARK: - UI state (SRS-режим)
+    
+    var isCardFlipped: Bool = false
     
     // MARK: - Alerts
     
@@ -44,7 +48,7 @@ final class SolveViewModel {
     
     // MARK: - Dependencies
     
-    private(set) var key: SolveGroupKey
+    let key: SolveGroupKey
     private let title: String
     private let cardRepository: CardRepository
     private let statsRepository: StatsRepository
@@ -55,7 +59,6 @@ final class SolveViewModel {
     
     private let swipeThreshold: CGFloat = 60
     private let colorThreshold: CGFloat = 30
-    private let flyOutDistance: CGFloat = 1000
     
     // MARK: - Init
     
@@ -74,13 +77,22 @@ final class SolveViewModel {
         self.sessionCoordinator = sessionCoordinator
         self.achievementsService = achievementsService
         
-        // Временная пустая сессия до onAppear
         self.session = SolveSession(groupKey: key, cardIDs: [])
     }
     
     // MARK: - Derived
     
-    var groupTitle: String { title }
+    var isSRSMode: Bool {
+        if case .srs = key { return true }
+        return false
+    }
+    
+    var groupTitle: String {
+        if isSRSMode {
+            return "srs_review_title".localized()
+        }
+        return title
+    }
     
     var state: SolveState {
         if session.totalCount == 0 { return .empty }
@@ -89,14 +101,8 @@ final class SolveViewModel {
         return .solving
     }
     
-    var currentProgress: Int {
-        session.solvedCount + 1
-    }
-    
-    var totalProgress: Int {
-        session.totalCount
-    }
-    
+    var currentProgress: Int { session.solvedCount + 1 }
+    var totalProgress: Int { session.totalCount }
     var successCount: Int { session.successIDs.count }
     var failCount: Int { session.failIDs.count }
     
@@ -110,20 +116,13 @@ final class SolveViewModel {
     
     func onAppear() {
         do {
-            let loadedSession = try sessionCoordinator.currentSession(for: key)
-            
-            // Если группа пуста — сессия не нужна
-            if loadedSession.totalCount == 0 {
-                session = loadedSession
-                return
-            }
-            
-            session = loadedSession
+            let loaded = try sessionCoordinator.currentSession(for: key)
+            session = loaded
             try reloadCards()
             updateCurrentCard()
             
-            // Предложить продолжить только если есть незавершённая сессия
-            if session.isUnfinished {
+            // Alert про продолжение — только для не-SRS режимов
+            if !isSRSMode && session.isUnfinished {
                 showUnfinishedSessionAlert = true
             }
         } catch {
@@ -131,7 +130,7 @@ final class SolveViewModel {
         }
     }
     
-    // MARK: - Session control
+    // MARK: - Session control (свайп-режим)
     
     func continueSession() {
         showUnfinishedSessionAlert = false
@@ -166,7 +165,7 @@ final class SolveViewModel {
         resetOffsets()
     }
     
-    // MARK: - Swipe handling
+    // MARK: - Swipe handling (не-SRS режим)
     
     func onDragChanged(_ value: DragGesture.Value) {
         offsetOfCardX = value.translation.width
@@ -195,16 +194,53 @@ final class SolveViewModel {
         }
     }
     
-    /// Вызывается View после анимации отлёта карточки.
     func commitSwipe(_ decision: SwipeDecision) async {
         switch decision {
-        case .flyLeft:
-            await commitWrong()
-        case .flyRight:
-            await commitCorrect()
-        case .reset:
-            resetOffsets()
+        case .flyLeft:  await commitWrong()
+        case .flyRight: await commitCorrect()
+        case .reset:    resetOffsets()
         }
+    }
+    
+    // MARK: - SRS handling
+    
+    /// Предсказания интервалов для кнопок 0–5.
+    func intervalPreviews() -> [SRSQuality: Int] {
+        guard let card = currentCard else { return [:] }
+        var result: [SRSQuality: Int] = [:]
+        for q in SRSQuality.allCases {
+            result[q] = SRSAlgorithm.previewIntervalDays(
+                quality: q.rawValue,
+                currentEaseFactor: card.easeFactor,
+                currentIntervalDays: card.intervalDays,
+                currentRepetitions: card.repetitions
+            )
+        }
+        return result
+    }
+    
+    /// Оценка карточки в SRS-режиме.
+    func rateCurrentCard(_ quality: SRSQuality) async {
+        guard let card = currentCard else { return }
+        
+        do {
+            try cardRepository.recordSRSReview(card, quality: quality.rawValue, on: .now)
+            
+            // В dailyGoal идёт только «зачётный» ответ (q ≥ 3)
+            if quality.isCorrect {
+                _ = try statsRepository.recordSolved(on: .now)
+                _ = achievementsService.evaluate()
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        // В SRS-режиме разницы success/fail нет — карточка просто уходит из очереди
+        session = sessionCoordinator.markCorrect(session)
+        
+        try? await Task.sleep(for: .milliseconds(150))
+        isCardFlipped = false
+        updateCurrentCard()
     }
     
     // MARK: - Card favourite
@@ -235,8 +271,6 @@ final class SolveViewModel {
         }
         
         session = sessionCoordinator.markCorrect(session)
-        
-        // Ждём, пока карточка "улетит", потом сбрасываем
         try? await Task.sleep(for: .milliseconds(200))
         resetOffsets()
         updateCurrentCard()
@@ -255,7 +289,6 @@ final class SolveViewModel {
         }
         
         session = sessionCoordinator.markWrong(session)
-        
         try? await Task.sleep(for: .milliseconds(200))
         resetOffsets()
         updateCurrentCard()
@@ -276,6 +309,9 @@ final class SolveViewModel {
             allCards = try cardRepository.fetchFavourites()
         case .user(let id):
             allCards = try cardRepository.fetch(inGroup: id)
+        case .srs:
+            // Для SRS грузим все карточки — среди них те, что в сессии
+            allCards = try cardRepository.fetchAll()
         }
         cardsByID = Dictionary(uniqueKeysWithValues: allCards.map { ($0.id, $0) })
     }

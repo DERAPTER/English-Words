@@ -2,13 +2,20 @@
 //  SolveSessionCoordinator.swift
 //  English Words
 //
-//  Created by Егор Халиков on 25.09.2026.
+//  Created by Егор Халиков on 23.09.2026.
 //
 
 import Foundation
 
 /// Сервис для работы с сессией нарешивания.
 /// Отвечает за подготовку сессии к актуальному состоянию карточек группы.
+///
+/// **SRS-режим — особый случай:**
+/// - Сессия одноразовая: собирается из карточек, due на момент открытия.
+/// - Не проходит через reconcile: новые карточки, появившиеся во время
+///   сессии, не подтягиваются. Просроченные — тоже.
+/// - После завершения сессии очищается, потому что все карточки
+///   получили новое расписание.
 @MainActor
 final class SolveSessionCoordinator {
     private let store: SolveSessionStore
@@ -20,10 +27,19 @@ final class SolveSessionCoordinator {
     }
     
     /// Возвращает актуальную сессию для группы.
-    /// Если сохранённой сессии нет или она неактуальна — создаёт новую.
-    /// Новые карточки (добавленные после старта сессии) добавляются в очередь.
-    /// Удалённые карточки выбрасываются из сессии.
     func currentSession(for key: SolveGroupKey) throws -> SolveSession {
+        // SRS — без reconcile
+        if case .srs = key {
+            if let existing = store.load(for: key) {
+                return existing
+            }
+            let ids = try fetchCardIDs(for: key)
+            let fresh = SolveSession(groupKey: key, cardIDs: ids)
+            store.save(fresh, for: key)
+            return fresh
+        }
+        
+        // Остальные режимы — как раньше
         let currentCardIDs = try fetchCardIDs(for: key)
         
         guard var session = store.load(for: key) else {
@@ -50,7 +66,9 @@ final class SolveSessionCoordinator {
     func restartMistakes(_ session: SolveSession) -> SolveSession {
         var updated = session
         updated.restartMistakes()
-        store.save(updated, for: session.groupKey ?? .system(.allCards))
+        if let key = session.groupKey {
+            store.save(updated, for: key)
+        }
         return updated
     }
     
@@ -74,8 +92,6 @@ final class SolveSessionCoordinator {
     
     // MARK: - Private
     
-    /// Оставляем только те ID, которые ещё есть в группе,
-    /// и добавляем новые карточки в очередь unsolved.
     private func reconcile(session: SolveSession, with currentIDs: [UUID]) -> SolveSession {
         let currentSet = Set(currentIDs)
         var updated = session
@@ -93,7 +109,9 @@ final class SolveSessionCoordinator {
     
     private func persistIfNeeded(_ session: SolveSession) {
         guard let key = session.groupKey else { return }
-        // Если сессия завершена — не храним её, кроме случая с ошибками.
+        
+        // Для SRS-сессии: как только все карточки отвечены — чистим.
+        // Для остальных: чистим, когда всё правильно, без ошибок.
         if session.isCompletedWithoutMistakes {
             store.clear(for: key)
         } else {
@@ -109,6 +127,12 @@ final class SolveSessionCoordinator {
             return try cardRepository.fetchFavourites().map(\.id)
         case .user(let id):
             return try cardRepository.fetch(inGroup: id).map(\.id)
+        case .srs:
+            let limit = UserDefaults.standard.integer(forKey: "srsNewCardsPerDay")
+            let effectiveLimit = limit > 0 ? limit : 20
+            return try cardRepository
+                .fetchDueToday(on: .now, newCardsLimit: effectiveLimit)
+                .map(\.id)
         }
     }
 }

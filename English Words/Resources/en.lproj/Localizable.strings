@@ -122,6 +122,26 @@
 "repeat_mistakes" = "Repeat mistakes";
 "start_over_button" = "Start over";
 
+/* ============ SRS (Spaced Repetition) ============ */
+"srs_review_title" = "Review";
+"srs_due_count" = "%d cards due";
+"srs_tap_to_reveal" = "Tap to reveal";
+"srs_how_well" = "How well did you remember?";
+"srs_q0" = "Blackout";
+"srs_q1" = "Forgot";
+"srs_q2" = "Almost";
+"srs_q3" = "Hard";
+"srs_q4" = "Good";
+"srs_q5" = "Easy";
+"srs_interval_1d" = "+1d";
+"srs_interval_nd" = "+%dd";
+"srs_result_title" = "Great job!";
+"srs_result_message" = "Reviewed %d cards. Come back tomorrow!";
+"srs_section_title" = "Spaced Repetition";
+"srs_new_cards_limit" = "New cards per day";
+"srs_new_cards_limit_hint" = "How many new cards to introduce daily";
+
+
 /* ============ EMPTY GROUP ============ */
 "empty_group_title" = "Empty Group";
 "empty_group_message" = "The group \"%@\" has no cards yet. Add your first card to start learning!";
@@ -289,6 +309,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_0_0" = "Version 2.0.0";
 "version_1_1_1" = "Version 1.1.1";
 "version_1_1_0" = "Version 1.1.0";
 "version_1_0_7" = "Version 1.0.7";
@@ -301,6 +322,9 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_0_0_1" = "Added spaced repetition (SM-2) for effective learning";
+"release_notes_2_0_0_2" = "Completely rewritten architecture";
+
 "release_notes_1_1_1_1" = "Fixed the behavior of long text on the card";
 "release_notes_1_1_1_2" = "Fixed the appearance of the activity series counter";
 

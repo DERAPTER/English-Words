@@ -25,6 +25,7 @@ final class SolveListViewModel {
     }
     
     private(set) var items: [GroupItem] = []
+    private(set) var srsDueCount: Int = 0
     private(set) var errorMessage: String?
     
     private let cardRepository: CardRepository
@@ -66,6 +67,15 @@ final class SolveListViewModel {
             }
             
             items = result
+            
+            // SRS: считаем карточки к повторению
+            let limit = UserDefaults.standard.integer(forKey: "srsNewCardsPerDay")
+            let effectiveLimit = limit > 0 ? limit : 20
+            srsDueCount = (try? cardRepository.dueTodayCount(
+                on: .now,
+                newCardsLimit: effectiveLimit
+            )) ?? 0
+            
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -79,13 +89,13 @@ final class SolveListViewModel {
     ) throws -> GroupItem {
         let total = cards.count
         
-        // Проверяем актуальность сохранённой сессии
         var solvedInSession = 0
         var hasUnfinished = false
         
         if let session = sessionStore.load(for: key) {
             let currentIDs = Set(cards.map(\.id))
-            let validSolved = (session.successIDs + session.failIDs).filter { currentIDs.contains($0) }
+            let validSolved = (session.successIDs + session.failIDs)
+                .filter { currentIDs.contains($0) }
             
             solvedInSession = validSolved.count
             hasUnfinished = !session.unsolvedIDs.isEmpty && solvedInSession > 0

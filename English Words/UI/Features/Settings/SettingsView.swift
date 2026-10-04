@@ -15,6 +15,8 @@ struct SettingsView: View {
     
     @State private var viewModel: SettingsViewModel
     
+    @AppStorage("srsNewCardsPerDay") private var srsNewCardsLimit: Int = 20
+    
     init(container: AppContainer) {
         _viewModel = State(initialValue: SettingsViewModel(
             cardRepository: container.cardRepository,
@@ -30,6 +32,10 @@ struct SettingsView: View {
                 header
                 
                 appearanceSection
+                
+                divider
+                
+                srsSection
                 
                 divider
                 
@@ -125,6 +131,41 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 16) {
             sectionTitle("appearance".localized())
             ThemePickerGridView()
+        }
+    }
+    
+    private var srsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            sectionTitle("srs_section_title".localized())
+            
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("srs_new_cards_limit".localized())
+                        .font(.bodyCustom)
+                        .foregroundColor(.textPrimary)
+                    Spacer()
+                    Text("\(srsNewCardsLimit)")
+                        .font(.bodyCustom.weight(.semibold))
+                        .foregroundColor(.accent)
+                }
+                Slider(
+                    value: Binding(
+                        get: { Double(srsNewCardsLimit) },
+                        set: { srsNewCardsLimit = Int($0) }
+                    ),
+                    in: 5...100,
+                    step: 5
+                )
+                .tint(.accent)
+                
+                Text("srs_new_cards_limit_hint".localized())
+                    .font(.captionCustom)
+                    .foregroundColor(.textSecondary)
+            }
+            .padding()
+            .background(Color.cardBackground)
+            .cornerRadius(12)
+            .padding(.horizontal)
         }
     }
     
