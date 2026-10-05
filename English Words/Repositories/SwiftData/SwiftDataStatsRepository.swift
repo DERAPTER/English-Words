@@ -94,9 +94,11 @@ final class SwiftDataStatsRepository: StatsRepository {
     
     func activityHistory(monthsBack: Int) throws -> [DailyStat] {
         let calendar = Calendar.current
-        guard let from = calendar.date(byAdding: .month, value: -monthsBack, to: .now) else {
+        guard let rawFrom = calendar.date(byAdding: .month, value: -monthsBack, to: .now) else {
             return []
         }
+        let from = calendar.startOfDay(for: rawFrom)
+        
         let predicate = #Predicate<DailyStat> { $0.date >= from }
         let descriptor = FetchDescriptor<DailyStat>(
             predicate: predicate,
