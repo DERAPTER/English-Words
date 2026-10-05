@@ -5,11 +5,6 @@
 //  Created by Егор Халиков on 23.09.2026.
 //
 
-//
-//  EditGroupView.swift
-//  English Words
-//
-
 import SwiftUI
 
 struct EditGroupView: View {

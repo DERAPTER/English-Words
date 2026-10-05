@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		19DEC46A3073ED0A00D1BFD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1996A7D12F7E56E800413906 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1996A7D82F7E56E800413906;
+			remoteInfo = "English Words";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1996A7D92F7E56E800413906 /* English Words.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "English Words.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		19DEC4663073ED0A00D1BFD5 /* English Words Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "English Words Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = "English Words";
 			sourceTree = "<group>";
 		};
+		19DEC4673073ED0A00D1BFD5 /* English Words Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "English Words Tests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1996A7D62F7E56E800413906 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19DEC4633073ED0A00D1BFD5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				1996A7DB2F7E56E800413906 /* English Words */,
+				19DEC4673073ED0A00D1BFD5 /* English Words Tests */,
 				1996A7DA2F7E56E800413906 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				1996A7D92F7E56E800413906 /* English Words.app */,
+				19DEC4663073ED0A00D1BFD5 /* English Words Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = 1996A7D92F7E56E800413906 /* English Words.app */;
 			productType = "com.apple.product-type.application";
 		};
+		19DEC4653073ED0A00D1BFD5 /* English Words Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19DEC46C3073ED0A00D1BFD5 /* Build configuration list for PBXNativeTarget "English Words Tests" */;
+			buildPhases = (
+				19DEC4623073ED0A00D1BFD5 /* Sources */,
+				19DEC4633073ED0A00D1BFD5 /* Frameworks */,
+				19DEC4643073ED0A00D1BFD5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19DEC46B3073ED0A00D1BFD5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				19DEC4673073ED0A00D1BFD5 /* English Words Tests */,
+			);
+			name = "English Words Tests";
+			packageProductDependencies = (
+			);
+			productName = "English Words Tests";
+			productReference = 19DEC4663073ED0A00D1BFD5 /* English Words Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -83,6 +131,10 @@
 					1996A7D82F7E56E800413906 = {
 						CreatedOnToolsVersion = 16.4;
 						LastSwiftMigration = 2640;
+					};
+					19DEC4653073ED0A00D1BFD5 = {
+						CreatedOnToolsVersion = 26.4;
+						TestTargetID = 1996A7D82F7E56E800413906;
 					};
 				};
 			};
@@ -102,12 +154,20 @@
 			projectRoot = "";
 			targets = (
 				1996A7D82F7E56E800413906 /* English Words */,
+				19DEC4653073ED0A00D1BFD5 /* English Words Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1996A7D72F7E56E800413906 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19DEC4643073ED0A00D1BFD5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -124,7 +184,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		19DEC4623073ED0A00D1BFD5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		19DEC46B3073ED0A00D1BFD5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1996A7D82F7E56E800413906 /* English Words */;
+			targetProxy = 19DEC46A3073ED0A00D1BFD5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1996A7F82F7E56EA00413906 /* Debug */ = {
@@ -307,6 +382,48 @@
 			};
 			name = Release;
 		};
+		19DEC46D3073ED0A00D1BFD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "DERAPTER.English-Words-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/English Words.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/English Words";
+			};
+			name = Debug;
+		};
+		19DEC46E3073ED0A00D1BFD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "DERAPTER.English-Words-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/English Words.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/English Words";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -324,6 +441,15 @@
 			buildConfigurations = (
 				1996A7FB2F7E56EA00413906 /* Debug */,
 				1996A7FC2F7E56EA00413906 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19DEC46C3073ED0A00D1BFD5 /* Build configuration list for PBXNativeTarget "English Words Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19DEC46D3073ED0A00D1BFD5 /* Debug */,
+				19DEC46E3073ED0A00D1BFD5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
