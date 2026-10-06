@@ -309,6 +309,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_0_1" = "Version 2.0.1";
 "version_2_0_0" = "Version 2.0.0";
 "version_1_1_1" = "Version 1.1.1";
 "version_1_1_0" = "Version 1.1.0";
@@ -322,6 +323,9 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_0_1_1" = "Pull-to-refresh now works on all main screens";
+"release_notes_2_0_1_2" = "Fixed tab bar layout in Russian";
+
 "release_notes_2_0_0_1" = "Added spaced repetition (SM-2) for effective learning";
 "release_notes_2_0_0_2" = "Completely rewritten architecture";
 

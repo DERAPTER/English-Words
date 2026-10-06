@@ -61,6 +61,7 @@ struct ProfileView: View {
                     }
                 }
             }
+            .refreshable { viewModel.load() }
             .task { viewModel.load() }
             .onAppear { viewModel.load() }
             .sheet(isPresented: $viewModel.showingGoalEditor) {

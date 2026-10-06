@@ -56,6 +56,9 @@ struct SettingsView: View {
         .background(themeManager.colors.background.ignoresSafeArea())
         .navigationTitle("settings_title".localized())
         .navigationBarTitleDisplayMode(.inline)
+        .refreshable {
+            viewModel.updateStorageSize()
+        }
         .onAppear {
             viewModel.updateStorageSize()
         }

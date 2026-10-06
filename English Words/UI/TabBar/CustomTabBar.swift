@@ -43,12 +43,14 @@ struct CustomTabBar: View {
                 
                 if selectedTab == tab {
                     Text(tab.title)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                         .transition(.opacity.combined(with: .scale))
                 }
             }
             .foregroundColor(selectedTab == tab ? .white : Color.textSecondary)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 10)
             .padding(.vertical, 10)
             .frame(maxWidth: .infinity)
             .background(
