@@ -45,7 +45,11 @@ final class SettingsViewModel {
     // MARK: - Storage size
     
     func updateStorageSize() {
-        storageSize = StorageSizeCalculator.calculate()
+        storageSize = StorageSizeCalculator.calculate(
+            cardRepository: cardRepository,
+            groupRepository: groupRepository,
+            statsRepository: statsRepository
+        )
     }
     
     // MARK: - Reset stats

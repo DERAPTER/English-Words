@@ -49,13 +49,13 @@ struct AddFirstCardSheet: View {
                         text: $translatedWord
                     )
                     
-                    WordInputField(
+                    MultilineInputField(
                         title: "original_description".localized(),
                         placeholder: "enter_original_description".localized(),
                         text: $originDescription
                     )
-                        
-                    WordInputField(
+                    
+                    MultilineInputField(
                         title: "translated_description".localized(),
                         placeholder: "enter_translated_description".localized(),
                         text: $translatedDescription

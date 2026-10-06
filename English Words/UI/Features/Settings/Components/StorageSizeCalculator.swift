@@ -7,45 +7,66 @@
 
 import Foundation
 
-/// Считает примерный размер данных приложения.
+/// Считает примерный логический размер данных приложения.
+///
+/// **Почему не физический размер файлов:**
+/// SQLite-хранилище SwiftData (`.store`) не сжимается после `DELETE` —
+/// удалённые строки превращаются в свободные страницы внутри файла, но
+/// сам файл не уменьшается без `VACUUM` (недоступен через SwiftData).
+/// Плюс при больших транзакциях (например, сброс статистики) SQLite
+/// может выделить новые страницы для служебных структур, и физический
+/// размер `.store` на короткое время подрастает.
+///
+/// Поэтому показываем пользователю **логический** объём: считаем количество
+/// записей в репозиториях и умножаем на оценочный размер строки. Цифра
+/// стабильна и отражает реальный объём данных, а не внутреннее состояние БД.
+@MainActor
 enum StorageSizeCalculator {
     
-    static func calculate() -> String {
-        let fileManager = FileManager.default
-        var total: Int64 = 0
+    // MARK: - Оценочные размеры строк
+    
+    private enum RowSize {
+        static let card: Int64 = 400       // слово + перевод + 2 описания + SRS + метаданные
+        static let group: Int64 = 120      // имя + orderIndex + метаданные
+        static let dailyStat: Int64 = 80   // dateKey + date + счётчики + флаг
+        static let settings: Int64 = 2_000 // singleton с массивами достижений
+    }
+    
+    /// Фиксированный «пол» — размер самого SwiftData-хранилища «с нуля» (пустая БД).
+    /// Чтобы даже на пустой базе показывалось осмысленное число, а не «0 KB».
+    private static let baselineBytes: Int64 = 32_000
+    
+    // MARK: - Public
+    
+    static func calculate(
+        cardRepository: CardRepository,
+        groupRepository: GroupRepository,
+        statsRepository: StatsRepository
+    ) -> String {
+        var total: Int64 = baselineBytes
         
-        // 1. Размер SwiftData-хранилища
-        if let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
-            total += directorySize(at: appSupport, fileManager: fileManager)
+        // Карточки
+        if let count = try? cardRepository.totalCount() {
+            total += Int64(count) * RowSize.card
         }
         
-        // 2. Размер Documents (старый JSON — если есть)
-        if let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
-            total += directorySize(at: documents, fileManager: fileManager)
+        // Пользовательские группы
+        if let count = try? groupRepository.userGroupsCount() {
+            total += Int64(count) * RowSize.group
         }
+        
+        // Дни активности (DailyStat)
+        if let stats = try? statsRepository.activityHistory(monthsBack: 24) {
+            total += Int64(stats.count) * RowSize.dailyStat
+        }
+        
+        // UserSettings (singleton)
+        total += RowSize.settings
         
         return format(total)
     }
     
     // MARK: - Private
-    
-    private static func directorySize(at url: URL, fileManager: FileManager) -> Int64 {
-        guard let enumerator = fileManager.enumerator(
-            at: url,
-            includingPropertiesForKeys: [.fileSizeKey, .isRegularFileKey]
-        ) else { return 0 }
-        
-        var size: Int64 = 0
-        for case let fileURL as URL in enumerator {
-            guard
-                let values = try? fileURL.resourceValues(forKeys: [.fileSizeKey, .isRegularFileKey]),
-                values.isRegularFile == true,
-                let fileSize = values.fileSize
-            else { continue }
-            size += Int64(fileSize)
-        }
-        return size
-    }
     
     private static func format(_ bytes: Int64) -> String {
         let formatter = ByteCountFormatter()

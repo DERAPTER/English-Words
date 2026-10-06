@@ -105,13 +105,13 @@ struct EditCardView: View {
                 .font(.captionCustom)
                 .foregroundColor(.textSecondary)
             
-            WordInputField(
+            MultilineInputField(
                 title: "original_description".localized(),
                 placeholder: "enter_original_description".localized(),
                 text: $viewModel.editedOriginDescription
             )
             
-            WordInputField(
+            MultilineInputField(
                 title: "translated_description".localized(),
                 placeholder: "enter_translated_description".localized(),
                 text: $viewModel.editedTranslatedDescription
