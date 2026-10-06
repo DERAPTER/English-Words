@@ -9,6 +9,7 @@
 /* ============ TAB BAR ============ */
 "tab_cards" = "Карточки";
 "tab_solve" = "Изучение";
+"tab_srs" = "Повторение";
 "tab_profile" = "Профиль";
 
 /* ============ THEMES ============ */
@@ -146,6 +147,21 @@
 "srs_section_title" = "Spaced Repetition";
 "srs_new_cards_limit" = "New cards per day";
 "srs_new_cards_limit_hint" = "How many new cards to introduce daily";
+
+/* ============ SRS OVERVIEW ============ */
+"srs_overview_subtitle" = "Повторяйте слова через увеличивающиеся интервалы";
+"srs_overview_available_today" = "Доступно сегодня";
+"srs_overview_overdue_count" = "Просрочено: %d";
+"srs_overview_new_count" = "Новых: %d";
+"srs_overview_start" = "Начать повторение";
+"srs_overview_all_caught_up" = "Всё повторено!";
+"srs_overview_all_caught_up_desc" = "Возвращайтесь, когда появятся новые карточки для повторения";
+"srs_overview_next_review" = "Следующее повторение";
+"srs_overview_cards" = "Карточек";
+"srs_overview_how_it_works" = "Как это работает";
+"srs_overview_how_it_works_desc" = "Слова, которые вы оцениваете хорошо, возвращаются реже. Сложные слова — чаще. Так запоминание становится эффективнее.";
+"srs_overview_tomorrow" = "Завтра";
+"srs_overview_next_short" = "Следующее: %@";
 
 /* ============ EMPTY GROUP ============ */
 "empty_group_title" = "Пустая группа";
@@ -319,6 +335,7 @@
 "current_version" = "Текущая версия";
 "previous_version" = "Предыдущая версия";
 "initial_release" = "Первый релиз";
+"version_2_3_0" = "Версия 2.3.0";
 "version_2_2_0" = "Версия 2.2.0";
 "version_2_1_1" = "Версия 2.1.1";
 "version_2_1_0" = "Версия 2.1.0";
@@ -336,6 +353,10 @@
 "version_1_0_0" = "Версия 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_3_0_1" = "Интервальное повторение вынесено в отдельный таб с собственным экраном";
+"release_notes_2_3_0_2" = "На экране повторения видно, сколько карточек доступно сегодня и когда следующее повторение";
+"release_notes_2_3_0_3" = "Обновлён вид таб-бара";
+
 "release_notes_2_2_0_1" = "Добавлено произношение слов — нажмите на значок динамика на карточке, чтобы услышать";
 
 "release_notes_2_1_1_1" = "Изменён вид поля ввода описания — теперь многострочное с прокруткой";

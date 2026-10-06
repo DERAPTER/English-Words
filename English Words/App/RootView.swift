@@ -34,6 +34,8 @@ struct RootView: View {
                     GroupsListView(container: container)
                 case .solveCards:
                     SolveListView(container: container)
+                case .srsReview:
+                    SRSOverviewView(container: container)
                 case .profile:
                     ProfileView(container: container)
                 }

@@ -265,6 +265,48 @@ final class SwiftDataCardRepository: CardRepository {
         try save()
     }
     
+    func srsOverview(on date: Date, newCardsLimit: Int) throws -> SRSOverview {
+        let calendar = Calendar.current
+        let endOfDay = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: date)
+        ) ?? date
+        
+        let all = try fetchAll()
+        
+        var overdueCount = 0
+        var newOnesCount = 0
+        var futureByDay: [Date: Int] = [:]
+        
+        for card in all {
+            if card.isNewInSRS {
+                newOnesCount += 1
+            } else if let next = card.nextReviewDate {
+                if next < endOfDay {
+                    overdueCount += 1
+                } else {
+                    let day = calendar.startOfDay(for: next)
+                    futureByDay[day, default: 0] += 1
+                }
+            }
+        }
+        
+        let newCardsAvailable = min(newOnesCount, newCardsLimit)
+        let dueToday = overdueCount + newCardsAvailable
+        
+        let nextDate = futureByDay.keys.min()
+        let nextCount = nextDate.flatMap { futureByDay[$0] } ?? 0
+        
+        return SRSOverview(
+            dueToday: dueToday,
+            overdueCount: overdueCount,
+            newCardsAvailable: newCardsAvailable,
+            nextReviewDate: nextDate,
+            nextReviewCount: nextCount
+        )
+    }
+    
     // MARK: - Private
     
     private func save() throws {

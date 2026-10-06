@@ -25,7 +25,6 @@ final class SolveListViewModel {
     }
     
     private(set) var items: [GroupItem] = []
-    private(set) var srsDueCount: Int = 0
     private(set) var errorMessage: String?
     
     private let cardRepository: CardRepository
@@ -67,15 +66,6 @@ final class SolveListViewModel {
             }
             
             items = result
-            
-            // SRS: считаем карточки к повторению
-            let limit = UserDefaults.standard.integer(forKey: "srsNewCardsPerDay")
-            let effectiveLimit = limit > 0 ? limit : 20
-            srsDueCount = (try? cardRepository.dueTodayCount(
-                on: .now,
-                newCardsLimit: effectiveLimit
-            )) ?? 0
-            
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription

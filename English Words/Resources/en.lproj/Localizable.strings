@@ -9,6 +9,7 @@
 /* ============ TAB BAR ============ */
 "tab_cards" = "Cards";
 "tab_solve" = "Solve";
+"tab_srs" = "Review";
 "tab_profile" = "Profile";
 
 /* ============ THEMES ============ */
@@ -146,6 +147,21 @@
 "srs_section_title" = "Spaced Repetition";
 "srs_new_cards_limit" = "New cards per day";
 "srs_new_cards_limit_hint" = "How many new cards to introduce daily";
+
+/* ============ SRS OVERVIEW ============ */
+"srs_overview_subtitle" = "Review words at increasing intervals";
+"srs_overview_available_today" = "Available today";
+"srs_overview_overdue_count" = "%d overdue";
+"srs_overview_new_count" = "%d new";
+"srs_overview_start" = "Start Review";
+"srs_overview_all_caught_up" = "All caught up!";
+"srs_overview_all_caught_up_desc" = "Come back when new cards are ready for review";
+"srs_overview_next_review" = "Next review";
+"srs_overview_cards" = "Cards";
+"srs_overview_how_it_works" = "How it works";
+"srs_overview_how_it_works_desc" = "Cards you rate well come back less often. Cards you struggle with come back sooner. This makes learning more effective.";
+"srs_overview_tomorrow" = "Tomorrow";
+"srs_overview_next_short" = "Next: %@";
 
 
 /* ============ EMPTY GROUP ============ */
@@ -320,6 +336,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_3_0" = "Version 2.3.0";
 "version_2_2_0" = "Version 2.2.0";
 "version_2_1_1" = "Version 2.1.1";
 "version_2_1_0" = "Version 2.1.0";
@@ -337,6 +354,10 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_3_0_1" = "Spaced repetition is now a separate tab with its own screen";
+"release_notes_2_3_0_2" = "Review screen shows how many cards are due today and when the next review is";
+"release_notes_2_3_0_3" = "Updated tab bar layout";
+
 "release_notes_2_2_0_1" = "Added word pronunciation — tap the speaker icon on the card to hear it";
 
 "release_notes_2_1_1_1" = "Improved card description input field — now multi-line with scrolling";

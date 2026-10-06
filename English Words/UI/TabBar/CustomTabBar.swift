@@ -32,30 +32,29 @@ struct CustomTabBar: View {
     }
     
     private func tabButton(_ tab: TabItem) -> some View {
-        Button {
+        let isSelected = selectedTab == tab
+        
+        return Button {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
                 selectedTab = tab
             }
         } label: {
-            HStack(spacing: 6) {
+            VStack(spacing: 3) {
                 Image(systemName: tab.iconName)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                 
-                if selectedTab == tab {
-                    Text(tab.title)
-                        .font(.system(size: 13, weight: .semibold))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                        .transition(.opacity.combined(with: .scale))
-                }
+                Text(tab.title)
+                    .font(.system(size: 10, weight: .semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
-            .foregroundColor(selectedTab == tab ? .white : Color.textSecondary)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 10)
+            .foregroundColor(isSelected ? .white : Color.textSecondary)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 8)
             .frame(maxWidth: .infinity)
             .background(
                 ZStack {
-                    if selectedTab == tab {
+                    if isSelected {
                         Capsule()
                             .fill(Color.accent)
                             .matchedGeometryEffect(id: "selection", in: selectionNamespace)
@@ -66,3 +65,4 @@ struct CustomTabBar: View {
         .buttonStyle(.plain)
     }
 }
+

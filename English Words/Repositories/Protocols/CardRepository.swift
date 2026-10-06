@@ -57,6 +57,10 @@ protocol CardRepository {
     /// Обновляет SRS-состояние карточки по оценке (0...5).
     /// Также инкрементирует correctCount (q ≥ 3) или wrongCount (q < 3).
     func recordSRSReview(_ card: Card, quality: Int, on date: Date) throws
+    
+    /// Снимок SRS-состояния для экрана обзора.
+    /// Показывает, что доступно сегодня, и когда будет следующее повторение.
+    func srsOverview(on date: Date, newCardsLimit: Int) throws -> SRSOverview
 }
 
 // MARK: - Convenience overloads (обратная совместимость)

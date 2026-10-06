@@ -27,38 +27,21 @@ struct SolveListView: View {
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 16) {
-                    // SRS-карточка сверху — если есть что повторять
-                    if viewModel.srsDueCount > 0 {
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(viewModel.items) { item in
                         NavigationLink {
                             SolveView(
-                                key: .srs,
-                                title: "srs_review_title".localized(),
+                                key: item.key,
+                                title: item.name,
                                 container: container
                             )
                         } label: {
-                            SRSDueCard(count: viewModel.srsDueCount)
+                            GroupSolveCardView(item: item)
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal)
                     }
-                    
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(viewModel.items) { item in
-                            NavigationLink {
-                                SolveView(
-                                    key: item.key,
-                                    title: item.name,
-                                    container: container
-                                )
-                            } label: {
-                                GroupSolveCardView(item: item)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.horizontal)
                 }
+                .padding(.horizontal)
                 .padding(.top, 8)
                 .padding(.bottom, 100)
             }
