@@ -42,9 +42,17 @@ struct SwipeableCardView: View {
     
     private var frontSide: some View {
         cardBase {
-            VStack(spacing: 16) {
+            VStack(spacing: 0) {
                 swipeHintView
-                cardWord(card.originWord)
+                
+                Spacer()
+                
+                VStack(spacing: 12) {
+                    cardWord(card.originWord)
+                    cardDescription(card.originDescription)
+                }
+                
+                Spacer()
             }
         }
     }
@@ -53,9 +61,17 @@ struct SwipeableCardView: View {
     
     private var backSide: some View {
         cardBase {
-            VStack(spacing: 16) {
+            VStack(spacing: 0) {
                 swipeHintView
-                cardWord(card.translatedWord)
+                
+                Spacer()
+                
+                VStack(spacing: 12) {
+                    cardWord(card.translatedWord)
+                    cardDescription(card.translatedDescription)
+                }
+                
+                Spacer()
             }
         }
     }
@@ -88,6 +104,21 @@ struct SwipeableCardView: View {
                 }
                 Spacer()
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func cardDescription(_ text: String) -> some View {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            Text(trimmed)
+                .font(.bodyCustom)
+                .foregroundColor(.textSecondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(4)
+                .minimumScaleFactor(0.85)
+                .padding(.horizontal, 24)
+                .opacity(cardTextOpacity * 0.9)
         }
     }
     

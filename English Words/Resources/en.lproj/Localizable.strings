@@ -66,6 +66,11 @@
 "cards_added" = "Cards Added";
 "cards_added_message" = "%d cards have been added to \"%@\"";
 "already_in_group" = "Already in group";
+"optional_description_section" = "Description (optional)";
+"original_description" = "Hint in English";
+"enter_original_description" = "Example or usage hint";
+"translated_description" = "Hint translation";
+"enter_translated_description" = "Translation of the example";
 
 /* ============ EDIT CARD ============ */
 "edit_card" = "Edit card";
@@ -309,6 +314,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_1_0" = "Version 2.1.0"
 "version_2_0_1" = "Version 2.0.1";
 "version_2_0_0" = "Version 2.0.0";
 "version_1_1_1" = "Version 1.1.1";
@@ -323,6 +329,9 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_1_0_1" = "Added card descriptions (examples or hints)";
+"release_notes_2_1_0_2" = "Description is shown on the card during practice";
+
 "release_notes_2_0_1_1" = "Pull-to-refresh now works on all main screens";
 "release_notes_2_0_1_2" = "Fixed tab bar layout in Russian";
 

@@ -22,8 +22,23 @@ protocol CardRepository {
     func count(inGroup groupID: UUID) throws -> Int
     
     // MARK: - Mutations
-    func create(origin: String, translated: String, groups: [CardGroup]) throws -> Card
-    func update(_ card: Card, origin: String, translated: String, groups: [CardGroup]) throws
+    func create(
+        origin: String,
+        translated: String,
+        originDescription: String,
+        translatedDescription: String,
+        groups: [CardGroup]
+    ) throws -> Card
+    
+    func update(
+        _ card: Card,
+        origin: String,
+        translated: String,
+        originDescription: String,
+        translatedDescription: String,
+        groups: [CardGroup]
+    ) throws
+    
     func toggleFavourite(_ card: Card) throws
     func delete(_ card: Card) throws
     func recordAnswer(_ card: Card, correct: Bool) throws
@@ -42,4 +57,42 @@ protocol CardRepository {
     /// Обновляет SRS-состояние карточки по оценке (0...5).
     /// Также инкрементирует correctCount (q ≥ 3) или wrongCount (q < 3).
     func recordSRSReview(_ card: Card, quality: Int, on date: Date) throws
+}
+
+// MARK: - Convenience overloads (обратная совместимость)
+
+extension CardRepository {
+    
+    /// Создать карточку без описаний.
+    @discardableResult
+    func create(
+        origin: String,
+        translated: String,
+        groups: [CardGroup]
+    ) throws -> Card {
+        try create(
+            origin: origin,
+            translated: translated,
+            originDescription: "",
+            translatedDescription: "",
+            groups: groups
+        )
+    }
+    
+    /// Обновить карточку без изменения описаний.
+    func update(
+        _ card: Card,
+        origin: String,
+        translated: String,
+        groups: [CardGroup]
+    ) throws {
+        try update(
+            card,
+            origin: origin,
+            translated: translated,
+            originDescription: card.originDescription,
+            translatedDescription: card.translatedDescription,
+            groups: groups
+        )
+    }
 }

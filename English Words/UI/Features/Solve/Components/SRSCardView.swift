@@ -45,47 +45,81 @@ struct SRSCardView: View {
     
     private var frontSide: some View {
         cardBase {
-            VStack(spacing: 12) {
+            VStack(spacing: 0) {
                 Text("srs_tap_to_reveal".localized())
                     .font(.captionCustom)
                     .foregroundColor(.textSecondary)
                     .padding(.vertical, 6)
                 
-                Text(card.originWord)
-                    .font(.largeTitleCustom)
-                    .foregroundColor(.textPrimary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.7)
-                    .padding(.horizontal, 20)
-                    .frame(maxWidth: 280)
+                Spacer()
+                
+                VStack(spacing: 12) {
+                    Text(card.originWord)
+                        .font(.largeTitleCustom)
+                        .foregroundColor(.textPrimary)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.7)
+                        .padding(.horizontal, 20)
+                        .frame(maxWidth: 280)
+                    
+                    if card.hasOriginDescription {
+                        Text(card.originDescription)
+                            .font(.bodyCustom)
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(4)
+                            .minimumScaleFactor(0.85)
+                            .padding(.horizontal, 24)
+                            .frame(maxWidth: 280)
+                    }
+                }
+                
+                Spacer()
             }
         }
     }
     
     private var backSide: some View {
         cardBase {
-            VStack(spacing: 12) {
-                Text(card.originWord)
-                    .font(.title2)
-                    .foregroundColor(.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.7)
-                    .padding(.horizontal, 20)
+            VStack(spacing: 0) {
+                Spacer()
                 
-                Divider()
-                    .background(Color.stroke)
-                    .padding(.horizontal, 40)
+                VStack(spacing: 12) {
+                    Text(card.originWord)
+                        .font(.title2)
+                        .foregroundColor(.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.7)
+                        .padding(.horizontal, 20)
+                    
+                    Divider()
+                        .background(Color.stroke)
+                        .padding(.horizontal, 40)
+                    
+                    Text(card.translatedWord)
+                        .font(.largeTitleCustom)
+                        .foregroundColor(.textPrimary)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.7)
+                        .padding(.horizontal, 20)
+                        .frame(maxWidth: 280)
+                    
+                    if card.hasTranslatedDescription {
+                        Text(card.translatedDescription)
+                            .font(.bodyCustom)
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(4)
+                            .minimumScaleFactor(0.85)
+                            .padding(.horizontal, 24)
+                            .frame(maxWidth: 280)
+                    }
+                }
                 
-                Text(card.translatedWord)
-                    .font(.largeTitleCustom)
-                    .foregroundColor(.textPrimary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.7)
-                    .padding(.horizontal, 20)
-                    .frame(maxWidth: 280)
+                Spacer()
             }
         }
     }

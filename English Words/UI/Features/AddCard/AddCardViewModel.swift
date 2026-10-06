@@ -32,6 +32,8 @@ final class AddCardViewModel {
     
     var originWord = ""
     var translatedWord = ""
+    var originDescription = ""
+    var translatedDescription = ""
     private(set) var selectedGroups: [CardGroup] = []
     private(set) var availableGroups: [CardGroup] = []
     
@@ -182,11 +184,12 @@ final class AddCardViewModel {
             _ = try cardRepository.create(
                 origin: trimmedOrigin,
                 translated: trimmedTranslated,
+                originDescription: originDescription,
+                translatedDescription: translatedDescription,
                 groups: selectedGroups
             )
             
             _ = achievementsService.evaluate()
-            
             return true
         } catch {
             errorMessage = error.localizedDescription

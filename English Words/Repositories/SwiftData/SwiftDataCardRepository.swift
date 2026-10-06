@@ -120,7 +120,13 @@ final class SwiftDataCardRepository: CardRepository {
     
     // MARK: - Mutations
     
-    func create(origin: String, translated: String, groups: [CardGroup]) throws -> Card {
+    func create(
+        origin: String,
+        translated: String,
+        originDescription: String,
+        translatedDescription: String,
+        groups: [CardGroup]
+    ) throws -> Card {
         let trimmedOrigin = origin.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedTranslated = translated.trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -128,14 +134,29 @@ final class SwiftDataCardRepository: CardRepository {
             throw RepositoryError.invalidInput(reason: "Слово и перевод не могут быть пустыми")
         }
         
-        let card = Card(origin: trimmedOrigin, translated: trimmedTranslated)
+        let trimmedOriginDesc = originDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedTranslatedDesc = translatedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        let card = Card(
+            origin: trimmedOrigin,
+            translated: trimmedTranslated,
+            originDescription: trimmedOriginDesc,
+            translatedDescription: trimmedTranslatedDesc
+        )
         card.groups = groups
         context.insert(card)
         try save()
         return card
     }
     
-    func update(_ card: Card, origin: String, translated: String, groups: [CardGroup]) throws {
+    func update(
+        _ card: Card,
+        origin: String,
+        translated: String,
+        originDescription: String,
+        translatedDescription: String,
+        groups: [CardGroup]
+    ) throws {
         let trimmedOrigin = origin.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedTranslated = translated.trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -145,6 +166,8 @@ final class SwiftDataCardRepository: CardRepository {
         
         card.originWord = trimmedOrigin
         card.translatedWord = trimmedTranslated
+        card.originDescription = originDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        card.translatedDescription = translatedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
         card.groups = groups
         try save()
     }

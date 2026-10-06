@@ -15,6 +15,8 @@ final class Card {
     @Attribute(.unique) var id: UUID
     var originWord: String
     var translatedWord: String
+    var originDescription: String = ""
+    var translatedDescription: String = ""
     var isFavourite: Bool
     var dateAdded: Date
     var correctCount: Int
@@ -47,11 +49,15 @@ final class Card {
     init(
         origin: String,
         translated: String,
+        originDescription: String = "",
+        translatedDescription: String = "",
         dateAdded: Date = .now
     ) {
         self.id = UUID()
         self.originWord = origin
         self.translatedWord = translated
+        self.originDescription = originDescription
+        self.translatedDescription = translatedDescription
         self.isFavourite = false
         self.dateAdded = dateAdded
         self.correctCount = 0
@@ -65,6 +71,14 @@ final class Card {
     }
     
     // MARK: - Computed
+    
+    var hasOriginDescription: Bool {
+        !originDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+        
+    var hasTranslatedDescription: Bool {
+        !translatedDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
     
     var totalAttempts: Int {
         correctCount + wrongCount

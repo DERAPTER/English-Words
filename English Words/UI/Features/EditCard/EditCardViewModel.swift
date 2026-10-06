@@ -19,12 +19,16 @@ final class EditCardViewModel {
     
     private let originalOrigin: String
     private let originalTranslated: String
+    private let originalOriginDescription: String
+    private let originalTranslatedDescription: String
     private let originalGroupIDs: Set<UUID>
     
     // MARK: - Editable state
     
     var editedOrigin: String
     var editedTranslated: String
+    var editedOriginDescription: String
+    var editedTranslatedDescription: String
     
     private(set) var selectedGroups: [CardGroup] = []
     private(set) var availableGroups: [CardGroup] = []
@@ -51,10 +55,14 @@ final class EditCardViewModel {
         
         self.originalOrigin = card.originWord
         self.originalTranslated = card.translatedWord
+        self.originalOriginDescription = card.originDescription
+        self.originalTranslatedDescription = card.translatedDescription
         self.originalGroupIDs = Set(card.groups.map(\.id))
         
         self.editedOrigin = card.originWord
         self.editedTranslated = card.translatedWord
+        self.editedOriginDescription = card.originDescription
+        self.editedTranslatedDescription = card.translatedDescription
     }
     
     // MARK: - Derived
@@ -67,10 +75,14 @@ final class EditCardViewModel {
     var hasChanges: Bool {
         let trimmedOrigin = editedOrigin.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedTranslated = editedTranslated.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedOriginDesc = editedOriginDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedTranslatedDesc = editedTranslatedDescription.trimmingCharacters(in: .whitespacesAndNewlines)
         let currentGroupIDs = Set(selectedGroups.map(\.id))
         
         return trimmedOrigin != originalOrigin ||
                trimmedTranslated != originalTranslated ||
+               trimmedOriginDesc != originalOriginDescription ||
+               trimmedTranslatedDesc != originalTranslatedDescription ||
                currentGroupIDs != originalGroupIDs
     }
     
@@ -131,6 +143,8 @@ final class EditCardViewModel {
                 card,
                 origin: trimmedOrigin,
                 translated: trimmedTranslated,
+                originDescription: editedOriginDescription,
+                translatedDescription: editedTranslatedDescription,
                 groups: selectedGroups
             )
             return true

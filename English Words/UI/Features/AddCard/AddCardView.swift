@@ -106,6 +106,8 @@ struct AddCardSheet: View {
             text: $viewModel.translatedWord
         )
         
+        optionalDescriptionsSection
+        
         if !viewModel.selectedGroups.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
                 Text("selected_groups".localized())
@@ -134,6 +136,27 @@ struct AddCardSheet: View {
                     }
                 }
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var optionalDescriptionsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("optional_description_section".localized())
+                .font(.captionCustom)
+                .foregroundColor(.textSecondary)
+            
+            WordInputField(
+                title: "original_description".localized(),
+                placeholder: "enter_original_description".localized(),
+                text: $viewModel.originDescription
+            )
+            
+            WordInputField(
+                title: "translated_description".localized(),
+                placeholder: "enter_translated_description".localized(),
+                text: $viewModel.translatedDescription
+            )
         }
     }
     

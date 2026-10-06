@@ -21,6 +21,8 @@ struct AddFirstCardSheet: View {
     
     @State private var originWord = ""
     @State private var translatedWord = ""
+    @State private var originDescription = ""
+    @State private var translatedDescription = ""
     @State private var errorMessage: String?
     @State private var isSaving = false
     
@@ -45,6 +47,18 @@ struct AddFirstCardSheet: View {
                         title: "translation".localized(),
                         placeholder: "enter_translation".localized(),
                         text: $translatedWord
+                    )
+                    
+                    WordInputField(
+                        title: "original_description".localized(),
+                        placeholder: "enter_original_description".localized(),
+                        text: $originDescription
+                    )
+                        
+                    WordInputField(
+                        title: "translated_description".localized(),
+                        placeholder: "enter_translated_description".localized(),
+                        text: $translatedDescription
                     )
                 }
                 .padding(.horizontal)
@@ -150,6 +164,8 @@ struct AddFirstCardSheet: View {
             let card = try cardRepository.create(
                 origin: trimmedOrigin,
                 translated: trimmedTranslated,
+                originDescription: originDescription,
+                translatedDescription: translatedDescription,
                 groups: targetGroups
             )
             
