@@ -211,6 +211,11 @@
 "release_notes" = "История изменений";
 "release_notes_description" = "Что нового в каждой версии";
 
+/* ============ FEEDBACK ============ */
+"feedback_section" = "Отклик";
+"haptics_enabled" = "Тактильный отклик";
+"haptics_enabled_description" = "Вибрация при свайпах карточек";
+
 /* ============ SETTINGS ALERTS ============ */
 "reset_statistics_alert_title" = "Сбросить статистику?";
 "reset_statistics_alert_message" = "Вся история прохождений и статистика будут удалены. Карточки и группы останутся нетронутыми.";

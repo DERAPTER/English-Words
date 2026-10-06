@@ -34,7 +34,10 @@ struct SolveView: View {
         }
         .navigationTitle(viewModel.groupTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { viewModel.onAppear() }
+        .onAppear {
+            HapticService.shared.prepare()
+            viewModel.onAppear()
+        }
         .alert(
             "continue_session_question".localized(),
             isPresented: $viewModel.showUnfinishedSessionAlert

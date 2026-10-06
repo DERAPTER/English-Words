@@ -212,6 +212,11 @@
 "release_notes" = "Release Notes";
 "release_notes_description" = "What's new in each version";
 
+/* ============ FEEDBACK ============ */
+"feedback_section" = "Feedback";
+"haptics_enabled" = "Haptic feedback";
+"haptics_enabled_description" = "Vibration when swiping cards";
+
 /* ============ SETTINGS ALERTS ============ */
 "reset_statistics_alert_title" = "Reset statistics?";
 "reset_statistics_alert_message" = "All progress history and statistics will be deleted. Cards and groups will remain untouched.";
@@ -314,7 +319,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
-"version_2_1_0" = "Version 2.1.0"
+"version_2_1_0" = "Version 2.1.0";
 "version_2_0_1" = "Version 2.0.1";
 "version_2_0_0" = "Version 2.0.0";
 "version_1_1_1" = "Version 1.1.1";

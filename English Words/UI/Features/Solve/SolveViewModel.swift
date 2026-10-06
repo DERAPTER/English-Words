@@ -37,6 +37,11 @@ final class SolveViewModel {
     var offsetOfCardY: CGFloat = 0
     private(set) var percentageOfMove: Double = 0
     
+    private enum SwipeSide {
+        case none, left, right
+    }
+    private var currentSwipeSide: SwipeSide = .none
+    
     // MARK: - UI state (SRS-режим)
     
     var isCardFlipped: Bool = false
@@ -121,7 +126,6 @@ final class SolveViewModel {
             try reloadCards()
             updateCurrentCard()
             
-            // Alert про продолжение — только для не-SRS режимов
             if !isSRSMode && session.isUnfinished {
                 showUnfinishedSessionAlert = true
             }
@@ -179,6 +183,25 @@ final class SolveViewModel {
         } else {
             percentageOfMove = 0
         }
+        
+        // Определяем текущую сторону
+        let newSide: SwipeSide
+        if t < -colorThreshold {
+            newSide = .left
+        } else if t > colorThreshold {
+            newSide = .right
+        } else {
+            newSide = .none
+        }
+        
+        // Вибро — при входе в зону или при перескоке через центр на другую сторону.
+        // Уход в .none (ободок гаснет) отклика не даёт.
+        if newSide != currentSwipeSide {
+            if newSide != .none {
+                HapticService.shared.lightImpact()
+            }
+            currentSwipeSide = newSide
+        }
     }
     
     func onDragEnded(_ value: DragGesture.Value) -> SwipeDecision {
@@ -204,7 +227,6 @@ final class SolveViewModel {
     
     // MARK: - SRS handling
     
-    /// Предсказания интервалов для кнопок 0–5.
     func intervalPreviews() -> [SRSQuality: Int] {
         guard let card = currentCard else { return [:] }
         var result: [SRSQuality: Int] = [:]
@@ -226,7 +248,6 @@ final class SolveViewModel {
         do {
             try cardRepository.recordSRSReview(card, quality: quality.rawValue, on: .now)
             
-            // В dailyGoal идёт только «зачётный» ответ (q ≥ 3)
             if quality.isCorrect {
                 _ = try statsRepository.recordSolved(on: .now)
                 _ = achievementsService.evaluate()
@@ -235,7 +256,13 @@ final class SolveViewModel {
             errorMessage = error.localizedDescription
         }
         
-        // В SRS-режиме разницы success/fail нет — карточка просто уходит из очереди
+        // Тактильный отклик: успех / ошибка
+        if quality.isCorrect {
+            HapticService.shared.success()
+        } else {
+            HapticService.shared.error()
+        }
+        
         session = sessionCoordinator.markCorrect(session)
         
         try? await Task.sleep(for: .milliseconds(150))
@@ -270,6 +297,8 @@ final class SolveViewModel {
             errorMessage = error.localizedDescription
         }
         
+        HapticService.shared.success()
+        
         session = sessionCoordinator.markCorrect(session)
         try? await Task.sleep(for: .milliseconds(200))
         resetOffsets()
@@ -288,6 +317,8 @@ final class SolveViewModel {
             errorMessage = error.localizedDescription
         }
         
+        HapticService.shared.error()
+        
         session = sessionCoordinator.markWrong(session)
         try? await Task.sleep(for: .milliseconds(200))
         resetOffsets()
@@ -298,6 +329,7 @@ final class SolveViewModel {
         offsetOfCardX = 0
         offsetOfCardY = 0
         percentageOfMove = 0
+        currentSwipeSide = .none
     }
     
     private func reloadCards() throws {
@@ -310,7 +342,6 @@ final class SolveViewModel {
         case .user(let id):
             allCards = try cardRepository.fetch(inGroup: id)
         case .srs:
-            // Для SRS грузим все карточки — среди них те, что в сессии
             allCards = try cardRepository.fetchAll()
         }
         cardsByID = Dictionary(uniqueKeysWithValues: allCards.map { ($0.id, $0) })

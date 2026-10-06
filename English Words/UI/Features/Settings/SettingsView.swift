@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State private var viewModel: SettingsViewModel
     
     @AppStorage("srsNewCardsPerDay") private var srsNewCardsLimit: Int = 20
+    @AppStorage("hapticsEnabled") private var hapticsEnabled: Bool = true
     
     init(container: AppContainer) {
         _viewModel = State(initialValue: SettingsViewModel(
@@ -36,6 +37,10 @@ struct SettingsView: View {
                 divider
                 
                 srsSection
+                
+                divider
+                
+                feedbackSection
                 
                 divider
                 
@@ -164,6 +169,45 @@ struct SettingsView: View {
                 Text("srs_new_cards_limit_hint".localized())
                     .font(.captionCustom)
                     .foregroundColor(.textSecondary)
+            }
+            .padding()
+            .background(Color.cardBackground)
+            .cornerRadius(12)
+            .padding(.horizontal)
+        }
+    }
+    
+    private var feedbackSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            sectionTitle("feedback_section".localized())
+            
+            HStack(spacing: 12) {
+                Image(systemName: "hand.tap.fill")
+                    .font(.title2)
+                    .foregroundColor(.accent)
+                    .frame(width: 32)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("haptics_enabled".localized())
+                        .font(.bodyCustom)
+                        .foregroundColor(.textPrimary)
+                    Text("haptics_enabled_description".localized())
+                        .font(.captionCustom)
+                        .foregroundColor(.textSecondary)
+                }
+                
+                Spacer()
+                
+                Toggle("", isOn: $hapticsEnabled)
+                    .labelsHidden()
+                    .tint(.accent)
+                    .onChange(of: hapticsEnabled) { _, isOn in
+                        // Дать пользователю почувствовать эффект при включении.
+                        // При выключении отклик уже отключён — тишина.
+                        if isOn {
+                            HapticService.shared.lightImpact()
+                        }
+                    }
             }
             .padding()
             .background(Color.cardBackground)

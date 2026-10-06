@@ -32,6 +32,7 @@ struct SRSCardView: View {
         .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
         .frame(width: cardWidth, height: cardHeight)
         .onTapGesture {
+            HapticService.shared.lightImpact()
             withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                 isFlipped.toggle()
             }
