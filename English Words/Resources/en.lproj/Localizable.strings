@@ -44,6 +44,7 @@
 "change" = "Change";
 "add_selected" = "Add Selected";
 "clear_all" = "Clear all";
+"speak" = "Speak";
 
 /* ============ ADD CARD ============ */
 "new_card" = "New card";
@@ -319,6 +320,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_2_0" = "Version 2.2.0";
 "version_2_1_1" = "Version 2.1.1";
 "version_2_1_0" = "Version 2.1.0";
 "version_2_0_1" = "Version 2.0.1";
@@ -335,6 +337,8 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_2_0_1" = "Added word pronunciation — tap the speaker icon on the card to hear it";
+
 "release_notes_2_1_1_1" = "Improved card description input field — now multi-line with scrolling";
 "release_notes_2_1_1_2" = "Fixed English title above description input";
 "release_notes_2_1_1_3" = "Fixed storage size calculation";

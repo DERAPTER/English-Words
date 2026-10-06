@@ -39,13 +39,20 @@ struct SRSCardView: View {
         }
         .onChange(of: card.id) { _, _ in
             isFlipped = false
+            PronunciationService.shared.stop()
+        }
+        .onDisappear {
+            PronunciationService.shared.stop()
         }
     }
     
     // MARK: - Sides
     
     private var frontSide: some View {
-        cardBase {
+        cardBase(
+            speechText: card.originWord,
+            speechLanguage: .english
+        ) {
             VStack(spacing: 0) {
                 Text("srs_tap_to_reveal".localized())
                     .font(.captionCustom)
@@ -82,7 +89,10 @@ struct SRSCardView: View {
     }
     
     private var backSide: some View {
-        cardBase {
+        cardBase(
+            speechText: card.translatedWord,
+            speechLanguage: .russian
+        ) {
             VStack(spacing: 0) {
                 Spacer()
                 
@@ -127,7 +137,11 @@ struct SRSCardView: View {
     
     // MARK: - Base
     
-    private func cardBase<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+    private func cardBase<Content: View>(
+        speechText: String,
+        speechLanguage: AppLanguage,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color.cardBackground)
@@ -141,17 +155,36 @@ struct SRSCardView: View {
             
             VStack {
                 HStack {
+                    speakButton(text: speechText, language: speechLanguage)
                     Spacer()
-                    Button(action: onToggleFavourite) {
-                        Image(systemName: card.isFavourite ? "star.fill" : "star")
-                            .font(.title2)
-                            .foregroundColor(card.isFavourite ? .accent : .textSecondary)
-                            .padding(16)
-                    }
-                    .buttonStyle(.plain)
+                    favouriteButton
                 }
                 Spacer()
             }
         }
+    }
+    
+    private func speakButton(text: String, language: AppLanguage) -> some View {
+        Button {
+            HapticService.shared.lightImpact()
+            PronunciationService.shared.speak(text, language: language)
+        } label: {
+            Image(systemName: "speaker.wave.2.fill")
+                .font(.title2)
+                .foregroundColor(.textSecondary)
+                .padding(16)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("speak".localized())
+    }
+    
+    private var favouriteButton: some View {
+        Button(action: onToggleFavourite) {
+            Image(systemName: card.isFavourite ? "star.fill" : "star")
+                .font(.title2)
+                .foregroundColor(card.isFavourite ? .accent : .textSecondary)
+                .padding(16)
+        }
+        .buttonStyle(.plain)
     }
 }

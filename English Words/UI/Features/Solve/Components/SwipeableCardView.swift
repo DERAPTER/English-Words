@@ -35,13 +35,20 @@ struct SwipeableCardView: View {
         }
         .onChange(of: card.id) { _, _ in
             isFlipped = false
+            PronunciationService.shared.stop()
+        }
+        .onDisappear {
+            PronunciationService.shared.stop()
         }
     }
     
     // MARK: - Front
     
     private var frontSide: some View {
-        cardBase {
+        cardBase(
+            speechText: card.originWord,
+            speechLanguage: .english
+        ) {
             VStack(spacing: 0) {
                 swipeHintView
                 
@@ -60,7 +67,10 @@ struct SwipeableCardView: View {
     // MARK: - Back
     
     private var backSide: some View {
-        cardBase {
+        cardBase(
+            speechText: card.translatedWord,
+            speechLanguage: .russian
+        ) {
             VStack(spacing: 0) {
                 swipeHintView
                 
@@ -78,7 +88,11 @@ struct SwipeableCardView: View {
     
     // MARK: - Building blocks
     
-    private func cardBase<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+    private func cardBase<Content: View>(
+        speechText: String,
+        speechLanguage: AppLanguage,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color.cardBackground)
@@ -90,36 +104,39 @@ struct SwipeableCardView: View {
             
             content()
             
-            // Кнопка избранного
             VStack {
                 HStack {
+                    speakButton(text: speechText, language: speechLanguage)
                     Spacer()
-                    Button(action: onToggleFavourite) {
-                        Image(systemName: card.isFavourite ? "star.fill" : "star")
-                            .font(.title2)
-                            .foregroundColor(card.isFavourite ? .accent : .textSecondary)
-                            .padding(16)
-                    }
-                    .buttonStyle(.plain)
+                    favouriteButton
                 }
                 Spacer()
             }
         }
     }
     
-    @ViewBuilder
-    private func cardDescription(_ text: String) -> some View {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmed.isEmpty {
-            Text(trimmed)
-                .font(.bodyCustom)
+    private func speakButton(text: String, language: AppLanguage) -> some View {
+        Button {
+            HapticService.shared.lightImpact()
+            PronunciationService.shared.speak(text, language: language)
+        } label: {
+            Image(systemName: "speaker.wave.2.fill")
+                .font(.title2)
                 .foregroundColor(.textSecondary)
-                .multilineTextAlignment(.center)
-                .lineLimit(4)
-                .minimumScaleFactor(0.85)
-                .padding(.horizontal, 24)
-                .opacity(cardTextOpacity * 0.9)
+                .padding(16)
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel("speak".localized())
+    }
+    
+    private var favouriteButton: some View {
+        Button(action: onToggleFavourite) {
+            Image(systemName: card.isFavourite ? "star.fill" : "star")
+                .font(.title2)
+                .foregroundColor(card.isFavourite ? .accent : .textSecondary)
+                .padding(16)
+        }
+        .buttonStyle(.plain)
     }
     
     private var swipeHintView: some View {
@@ -154,6 +171,21 @@ struct SwipeableCardView: View {
             .padding(.horizontal, 20)
             .frame(maxWidth: 280)
             .opacity(cardTextOpacity)
+    }
+    
+    @ViewBuilder
+    private func cardDescription(_ text: String) -> some View {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            Text(trimmed)
+                .font(.bodyCustom)
+                .foregroundColor(.textSecondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(4)
+                .minimumScaleFactor(0.85)
+                .padding(.horizontal, 24)
+                .opacity(cardTextOpacity * 0.9)
+        }
     }
     
     private var cardTextOpacity: Double {
