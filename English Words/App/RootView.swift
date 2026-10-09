@@ -5,11 +5,6 @@
 //  Created by Егор Халиков on 23.09.2026.
 //
 
-//
-//  RootView.swift
-//  English Words
-//
-
 import SwiftUI
 
 struct RootView: View {
@@ -17,8 +12,9 @@ struct RootView: View {
     private let themeManager = ThemeManager.shared
     private let languageManager = LanguageManager.shared
     
-    @State private var selectedTab: TabItem = TabItem(screen: .cardsGroups)
+    @State private var selectedTab: TabItem = TabItem(screen: .srsReview)
     @State private var refreshTrigger = false
+    @State private var tabBarVisibility = TabBarVisibility()
     
     private var tabs: [TabItem] { TabItem.all }
     
@@ -43,13 +39,18 @@ struct RootView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .id(refreshTrigger)
             
-            CustomTabBar(tabs: tabs, selectedTab: $selectedTab)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 10)
+            if tabBarVisibility.isVisible {
+                CustomTabBar(tabs: tabs, selectedTab: $selectedTab)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 10)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
         }
+        .environment(tabBarVisibility)
         .ignoresSafeArea(.container, edges: .bottom)
         .preferredColorScheme(themeManager.colorScheme)
         .tint(themeManager.colors.accent)
+        .animation(.easeInOut(duration: 0.25), value: tabBarVisibility.isVisible)
         .onAppear {
             themeManager.applyNavigationBarAppearance()
         }

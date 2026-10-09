@@ -13,7 +13,8 @@ struct SRSOverviewView: View {
     
     init(container: AppContainer) {
         _viewModel = State(initialValue: SRSOverviewViewModel(
-            cardRepository: container.cardRepository
+            cardRepository: container.cardRepository,
+            statsRepository: container.statsRepository
         ))
     }
     
@@ -21,6 +22,7 @@ struct SRSOverviewView: View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
+                    streakCard
                     statusCard
                     infoCard
                 }
@@ -38,6 +40,49 @@ struct SRSOverviewView: View {
         }
     }
     
+    // MARK: - Streak
+    
+    private var streakCard: some View {
+        HStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(streakColor.opacity(0.15))
+                    .frame(width: 56, height: 56)
+                Image(systemName: "flame.fill")
+                    .font(.title2)
+                    .foregroundColor(streakColor)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("srs_streak_label".localized())
+                    .font(.bodyCustom.weight(.semibold))
+                    .foregroundColor(.textPrimary)
+                Text(streakSubtitle)
+                    .font(.captionCustom)
+                    .foregroundColor(.textSecondary)
+            }
+            
+            Spacer()
+            
+            Text("\(viewModel.srsStreak)")
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(streakColor)
+        }
+        .padding()
+        .background(Color.cardBackground)
+        .cornerRadius(20)
+        .shadow(color: .shadowColor, radius: 8, x: 0, y: 2)
+    }
+    
+    private var streakColor: Color {
+        viewModel.srsStreak == 0 ? .gray : .orange
+    }
+    
+    private var streakSubtitle: String {
+        viewModel.srsStreak == 0
+            ? "srs_streak_empty".localized()
+            : "days_in_row".localized()
+    }
     
     // MARK: - Status
     
@@ -87,11 +132,7 @@ struct SRSOverviewView: View {
             }
             
             NavigationLink {
-                SolveView(
-                    key: .srs,
-                    title: "srs_review_title".localized(),
-                    container: container
-                )
+                SRSView(container: container)
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "play.fill")

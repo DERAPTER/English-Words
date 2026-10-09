@@ -23,6 +23,10 @@ final class UserSettings {
     var lastActiveDate: Date
     var dailyGoalRewarded: Bool
     
+    /// Серия дней подряд, в которые разгребены все SRS-карточки.
+    /// Обновляется отдельно от `streak` через `StatsRepository.markSRSCleared`.
+    var srsStreak: Int = 0
+    
     // Достижения
     var unlockedAchievementIDs: [String]
     var achievementUnlockDates: [String: Date]
@@ -34,6 +38,7 @@ final class UserSettings {
         self.totalSolved = 0
         self.lastActiveDate = .now
         self.dailyGoalRewarded = false
+        self.srsStreak = 0
         self.unlockedAchievementIDs = []
         self.achievementUnlockDates = [:]
     }

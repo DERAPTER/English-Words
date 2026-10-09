@@ -49,13 +49,11 @@ final class SwiftDataStatsRepository: StatsRepository {
         let s = try settings()
         let calendar = Calendar.current
         
-        // Проверяем смену дня
         if !calendar.isDate(s.lastActiveDate, inSameDayAs: date) {
             s.lastActiveDate = date
             s.dailyGoalRewarded = false
         }
         
-        // Обновляем/создаём запись за сегодня
         let todayStat = try statForDate(date) ?? {
             let created = DailyStat(date: date)
             context.insert(created)
@@ -65,14 +63,14 @@ final class SwiftDataStatsRepository: StatsRepository {
         todayStat.solvedCount += 1
         s.totalSolved += 1
         
-        // Проверяем достижение цели
         let goalJustCompleted = !todayStat.goalCompleted && todayStat.solvedCount >= s.dailyGoal
         if goalJustCompleted {
             todayStat.goalCompleted = true
             if !s.dailyGoalRewarded {
                 s.dailyGoalRewarded = true
             }
-            updateStreak(settings: s, date: date)
+            // Streak обновляется здесь — как было.
+            updateGoalStreak(settings: s, date: date)
         }
         
         try save()
@@ -84,6 +82,29 @@ final class SwiftDataStatsRepository: StatsRepository {
             newTodaySolved: todayStat.solvedCount,
             dailyGoal: s.dailyGoal
         )
+    }
+    
+    func markSRSCleared(on date: Date) throws {
+        let s = try settings()
+        let calendar = Calendar.current
+        
+        if !calendar.isDate(s.lastActiveDate, inSameDayAs: date) {
+            s.lastActiveDate = date
+            s.dailyGoalRewarded = false
+        }
+        
+        let todayStat = try statForDate(date) ?? {
+            let created = DailyStat(date: date)
+            context.insert(created)
+            return created
+        }()
+        
+        // Идемпотентность: не засчитываем один день дважды
+        guard !todayStat.srsCleared else { return }
+        
+        todayStat.srsCleared = true
+        updateSRSStreak(settings: s, date: date)
+        try save()
     }
     
     // MARK: - Activity
@@ -135,6 +156,7 @@ final class SwiftDataStatsRepository: StatsRepository {
             
             let s = try settings()
             s.streak = 0
+            s.srsStreak = 0
             s.totalSolved = 0
             s.lastActiveDate = .now
             s.dailyGoalRewarded = false
@@ -171,27 +193,37 @@ final class SwiftDataStatsRepository: StatsRepository {
         }
     }
     
-    /// Обновляет streak. Логика:
-    /// - если вчерашний день был активен — увеличиваем
-    /// - если активных дней нет — streak = 1
-    /// - если был перерыв — streak = 1
-    private func updateStreak(settings: UserSettings, date: Date) {
+    /// Streak по достижению dailyGoal — старая логика, без изменений.
+    private func updateGoalStreak(settings: UserSettings, date: Date) {
         let calendar = Calendar.current
         let yesterday = calendar.date(byAdding: .day, value: -1, to: date) ?? date
         let yesterdayKey = DailyStat.makeKey(for: yesterday)
         
         let predicate = #Predicate<DailyStat> { $0.dateKey == yesterdayKey && $0.goalCompleted == true }
         let descriptor = FetchDescriptor<DailyStat>(predicate: predicate)
-        let yesterdayWasActive = (try? context.fetchCount(descriptor)) ?? 0 > 0
+        let yesterdayWasActive = ((try? context.fetchCount(descriptor)) ?? 0) > 0
         
         if yesterdayWasActive {
             settings.streak += 1
         } else {
-            // Проверим, есть ли вообще активные дни до сегодня
-            let todayKey = DailyStat.makeKey(for: date)
-            let anyActivePredicate = #Predicate<DailyStat> { $0.goalCompleted == true && $0.dateKey != todayKey }
-            let anyActive = (try? context.fetchCount(FetchDescriptor<DailyStat>(predicate: anyActivePredicate))) ?? 0 > 0
-            settings.streak = anyActive ? 1 : 1
+            settings.streak = 1
+        }
+    }
+    
+    /// Streak по SRS-clear — новая логика, отдельный счётчик.
+    private func updateSRSStreak(settings: UserSettings, date: Date) {
+        let calendar = Calendar.current
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: date) ?? date
+        let yesterdayKey = DailyStat.makeKey(for: yesterday)
+        
+        let predicate = #Predicate<DailyStat> { $0.dateKey == yesterdayKey && $0.srsCleared == true }
+        let descriptor = FetchDescriptor<DailyStat>(predicate: predicate)
+        let yesterdayWasCleared = ((try? context.fetchCount(descriptor)) ?? 0) > 0
+        
+        if yesterdayWasCleared {
+            settings.srsStreak += 1
+        } else {
+            settings.srsStreak = 1
         }
     }
     

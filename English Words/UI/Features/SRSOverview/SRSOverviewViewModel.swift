@@ -12,12 +12,15 @@ import Foundation
 final class SRSOverviewViewModel {
     
     private(set) var overview: SRSOverview?
+    private(set) var srsStreak: Int = 0
     private(set) var errorMessage: String?
     
     private let cardRepository: CardRepository
+    private let statsRepository: StatsRepository
     
-    init(cardRepository: CardRepository) {
+    init(cardRepository: CardRepository, statsRepository: StatsRepository) {
         self.cardRepository = cardRepository
+        self.statsRepository = statsRepository
     }
     
     // MARK: - Loading
@@ -30,6 +33,7 @@ final class SRSOverviewViewModel {
                 on: .now,
                 newCardsLimit: effectiveLimit
             )
+            srsStreak = try statsRepository.settings().srsStreak
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -37,7 +41,6 @@ final class SRSOverviewViewModel {
     
     // MARK: - Date formatting
     
-    /// «Завтра», «В среду», «15 октября» — в зависимости от близости даты.
     func formattedNextDate(_ date: Date) -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()

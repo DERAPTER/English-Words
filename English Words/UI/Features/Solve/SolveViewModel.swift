@@ -37,14 +37,13 @@ final class SolveViewModel {
     var offsetOfCardY: CGFloat = 0
     private(set) var percentageOfMove: Double = 0
     
+    /// Текущая сторона свайпа для отслеживания смены состояния.
+    /// Нужна, чтобы вибро срабатывала при каждом входе в «зелёную»/«красную» зону
+    /// (в том числе при перескоке через центр), а не только один раз за жест.
     private enum SwipeSide {
         case none, left, right
     }
     private var currentSwipeSide: SwipeSide = .none
-    
-    // MARK: - UI state (SRS-режим)
-    
-    var isCardFlipped: Bool = false
     
     // MARK: - Alerts
     
@@ -87,17 +86,7 @@ final class SolveViewModel {
     
     // MARK: - Derived
     
-    var isSRSMode: Bool {
-        if case .srs = key { return true }
-        return false
-    }
-    
-    var groupTitle: String {
-        if isSRSMode {
-            return "srs_review_title".localized()
-        }
-        return title
-    }
+    var groupTitle: String { title }
     
     var state: SolveState {
         if session.totalCount == 0 { return .empty }
@@ -126,7 +115,7 @@ final class SolveViewModel {
             try reloadCards()
             updateCurrentCard()
             
-            if !isSRSMode && session.isUnfinished {
+            if session.isUnfinished {
                 showUnfinishedSessionAlert = true
             }
         } catch {
@@ -134,7 +123,7 @@ final class SolveViewModel {
         }
     }
     
-    // MARK: - Session control (свайп-режим)
+    // MARK: - Session control
     
     func continueSession() {
         showUnfinishedSessionAlert = false
@@ -169,7 +158,7 @@ final class SolveViewModel {
         resetOffsets()
     }
     
-    // MARK: - Swipe handling (не-SRS режим)
+    // MARK: - Swipe handling
     
     func onDragChanged(_ value: DragGesture.Value) {
         offsetOfCardX = value.translation.width
@@ -223,51 +212,6 @@ final class SolveViewModel {
         case .flyRight: await commitCorrect()
         case .reset:    resetOffsets()
         }
-    }
-    
-    // MARK: - SRS handling
-    
-    func intervalPreviews() -> [SRSQuality: Int] {
-        guard let card = currentCard else { return [:] }
-        var result: [SRSQuality: Int] = [:]
-        for q in SRSQuality.allCases {
-            result[q] = SRSAlgorithm.previewIntervalDays(
-                quality: q.rawValue,
-                currentEaseFactor: card.easeFactor,
-                currentIntervalDays: card.intervalDays,
-                currentRepetitions: card.repetitions
-            )
-        }
-        return result
-    }
-    
-    /// Оценка карточки в SRS-режиме.
-    func rateCurrentCard(_ quality: SRSQuality) async {
-        guard let card = currentCard else { return }
-        
-        do {
-            try cardRepository.recordSRSReview(card, quality: quality.rawValue, on: .now)
-            
-            if quality.isCorrect {
-                _ = try statsRepository.recordSolved(on: .now)
-                _ = achievementsService.evaluate()
-            }
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        
-        // Тактильный отклик: успех / ошибка
-        if quality.isCorrect {
-            HapticService.shared.success()
-        } else {
-            HapticService.shared.error()
-        }
-        
-        session = sessionCoordinator.markCorrect(session)
-        
-        try? await Task.sleep(for: .milliseconds(150))
-        isCardFlipped = false
-        updateCurrentCard()
     }
     
     // MARK: - Card favourite
@@ -342,6 +286,8 @@ final class SolveViewModel {
         case .user(let id):
             allCards = try cardRepository.fetch(inGroup: id)
         case .srs:
+            // Fallback: SRS вынесен в SRSViewModel, но на всякий случай
+            // не падаем, если кто-то передаст .srs.
             allCards = try cardRepository.fetchAll()
         }
         cardsByID = Dictionary(uniqueKeysWithValues: allCards.map { ($0.id, $0) })

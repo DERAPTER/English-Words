@@ -130,23 +130,23 @@
 "start_over_button" = "Начать сначала";
 
 /* ============ SRS (Spaced Repetition) ============ */
-"srs_review_title" = "Review";
-"srs_due_count" = "%d cards due";
-"srs_tap_to_reveal" = "Tap to reveal";
-"srs_how_well" = "How well did you remember?";
-"srs_q0" = "Blackout";
-"srs_q1" = "Forgot";
-"srs_q2" = "Almost";
-"srs_q3" = "Hard";
-"srs_q4" = "Good";
-"srs_q5" = "Easy";
-"srs_interval_1d" = "+1d";
-"srs_interval_nd" = "+%dd";
-"srs_result_title" = "Great job!";
-"srs_result_message" = "Reviewed %d cards. Come back tomorrow!";
-"srs_section_title" = "Spaced Repetition";
-"srs_new_cards_limit" = "New cards per day";
-"srs_new_cards_limit_hint" = "How many new cards to introduce daily";
+"srs_review_title" = "Повторение";
+"srs_due_count" = "К повторению: %d";
+"srs_tap_to_reveal" = "Нажмите, чтобы увидеть перевод";
+"srs_how_well" = "Насколько хорошо вы вспомнили?";
+"srs_q0" = "Не помню";
+"srs_q1" = "Забыл";
+"srs_q2" = "Почти";
+"srs_q3" = "Трудно";
+"srs_q4" = "Хорошо";
+"srs_q5" = "Легко";
+"srs_interval_1d" = "+1д";
+"srs_interval_nd" = "+%dд";
+"srs_result_title" = "Отличная работа!";
+"srs_result_message" = "Повторено карточек: %d. Возвращайтесь завтра!";
+"srs_section_title" = "Интервальное повторение";
+"srs_new_cards_limit" = "Новых карточек в день";
+"srs_new_cards_limit_hint" = "Сколько новых карточек добавлять ежедневно";
 
 /* ============ SRS OVERVIEW ============ */
 "srs_overview_subtitle" = "Повторяйте слова через увеличивающиеся интервалы";
@@ -162,6 +162,8 @@
 "srs_overview_how_it_works_desc" = "Слова, которые вы оцениваете хорошо, возвращаются реже. Сложные слова — чаще. Так запоминание становится эффективнее.";
 "srs_overview_tomorrow" = "Завтра";
 "srs_overview_next_short" = "Следующее: %@";
+"srs_streak_label" = "Повторений подряд";
+"srs_streak_empty" = "Разгребите SRS, чтобы начать";
 
 /* ============ EMPTY GROUP ============ */
 "empty_group_title" = "Пустая группа";
@@ -335,6 +337,7 @@
 "current_version" = "Текущая версия";
 "previous_version" = "Предыдущая версия";
 "initial_release" = "Первый релиз";
+"version_2_4_0" = "Версия 2.4.0";
 "version_2_3_0" = "Версия 2.3.0";
 "version_2_2_0" = "Версия 2.2.0";
 "version_2_1_1" = "Версия 2.1.1";
@@ -353,6 +356,10 @@
 "version_1_0_0" = "Версия 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_4_0_1" = "SRS-сессия вынесена в отдельный экран";
+"release_notes_2_4_0_2" = "Добавлен отдельный счётчик серии повторений";
+"release_notes_2_4_0_3" = "Исправлена русская локализация экрана повторения";
+
 "release_notes_2_3_0_1" = "Интервальное повторение вынесено в отдельный таб с собственным экраном";
 "release_notes_2_3_0_2" = "На экране повторения видно, сколько карточек доступно сегодня и когда следующее повторение";
 "release_notes_2_3_0_3" = "Обновлён вид таб-бара";

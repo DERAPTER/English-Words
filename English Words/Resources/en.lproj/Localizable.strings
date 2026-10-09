@@ -162,7 +162,8 @@
 "srs_overview_how_it_works_desc" = "Cards you rate well come back less often. Cards you struggle with come back sooner. This makes learning more effective.";
 "srs_overview_tomorrow" = "Tomorrow";
 "srs_overview_next_short" = "Next: %@";
-
+"srs_streak_label" = "Review streak";
+"srs_streak_empty" = "Clear SRS to start";
 
 /* ============ EMPTY GROUP ============ */
 "empty_group_title" = "Empty Group";
@@ -336,6 +337,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_4_0" = "Version 2.4.0";
 "version_2_3_0" = "Version 2.3.0";
 "version_2_2_0" = "Version 2.2.0";
 "version_2_1_1" = "Version 2.1.1";
@@ -354,6 +356,10 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_4_0_1" = "SRS session moved to its own screen";
+"release_notes_2_4_0_2" = "Added a separate review streak counter";
+"release_notes_2_4_0_3" = "Fixed Russian localization of the review screen";
+
 "release_notes_2_3_0_1" = "Spaced repetition is now a separate tab with its own screen";
 "release_notes_2_3_0_2" = "Review screen shows how many cards are due today and when the next review is";
 "release_notes_2_3_0_3" = "Updated tab bar layout";

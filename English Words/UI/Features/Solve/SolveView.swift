@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SolveView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(TabBarVisibility.self) private var tabBarVisibility
     
     @State private var viewModel: SolveViewModel
     private let container: AppContainer
@@ -35,8 +36,11 @@ struct SolveView: View {
         .navigationTitle(viewModel.groupTitle)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            HapticService.shared.prepare()
+            tabBarVisibility.isVisible = false
             viewModel.onAppear()
+        }
+        .onDisappear {
+            tabBarVisibility.isVisible = true
         }
         .alert(
             "continue_session_question".localized(),
@@ -75,30 +79,19 @@ struct SolveView: View {
             )
             
         case .completedWithoutMistakes, .completedWithMistakes:
-            if viewModel.isSRSMode {
-                SRSResultView(
-                    reviewedCount: viewModel.totalProgress,
-                    onFinish: { dismiss() }
-                )
-            } else {
-                ResultView(
-                    successCount: viewModel.successCount,
-                    failCount: viewModel.failCount,
-                    progressFraction: viewModel.progressFraction,
-                    hasMistakes: viewModel.state == .completedWithMistakes,
-                    onRestart: { viewModel.restartFromResult() },
-                    onRestartMistakes: viewModel.state == .completedWithMistakes
-                        ? { viewModel.restartMistakesFromResult() }
-                        : nil
-                )
-            }
+            ResultView(
+                successCount: viewModel.successCount,
+                failCount: viewModel.failCount,
+                progressFraction: viewModel.progressFraction,
+                hasMistakes: viewModel.state == .completedWithMistakes,
+                onRestart: { viewModel.restartFromResult() },
+                onRestartMistakes: viewModel.state == .completedWithMistakes
+                    ? { viewModel.restartMistakesFromResult() }
+                    : nil
+            )
             
         case .solving:
-            if viewModel.isSRSMode {
-                srsSolvingScreen
-            } else {
-                swipeSolvingScreen
-            }
+            swipeSolvingScreen
         }
     }
     
@@ -172,53 +165,6 @@ struct SolveView: View {
                 viewModel.offsetOfCardY = 0
             }
             Task { await viewModel.commitSwipe(.reset) }
-        }
-    }
-    
-    // MARK: - SRS mode
-    
-    private var srsSolvingScreen: some View {
-        VStack {
-            Text("\(viewModel.currentProgress)/\(viewModel.totalProgress)")
-                .font(.titleCustom)
-                .foregroundColor(.textSecondary)
-                .padding(.top, 20)
-            
-            Spacer()
-            
-            srsCardArea
-            
-            Spacer()
-            
-            srsButtonsArea
-        }
-    }
-    
-    @ViewBuilder
-    private var srsCardArea: some View {
-        if let card = viewModel.currentCard {
-            SRSCardView(
-                card: card,
-                isFlipped: $viewModel.isCardFlipped,
-                onToggleFavourite: { viewModel.toggleFavouriteCurrentCard() }
-            )
-        } else {
-            Color.clear.frame(width: 320, height: 480)
-        }
-    }
-    
-    @ViewBuilder
-    private var srsButtonsArea: some View {
-        if viewModel.isCardFlipped {
-            SRSQualityButtonsView(
-                intervalPreviews: viewModel.intervalPreviews(),
-                onRate: { quality in
-                    Task { await viewModel.rateCurrentCard(quality) }
-                }
-            )
-            .transition(.move(edge: .bottom).combined(with: .opacity))
-        } else {
-            Color.clear.frame(height: 110)
         }
     }
     

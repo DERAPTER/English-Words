@@ -16,6 +16,10 @@ protocol StatsRepository {
     // Recording
     func recordSolved(on date: Date) throws -> StatsChange
     
+    /// Помечает день как «SRS разгребён» и обновляет `srsStreak`.
+    /// Идемпотентно: повторный вызов в тот же день ничего не меняет.
+    func markSRSCleared(on date: Date) throws
+    
     // Activity
     func activity(for date: Date) throws -> DailyStat?
     func activityHistory(monthsBack: Int) throws -> [DailyStat]
