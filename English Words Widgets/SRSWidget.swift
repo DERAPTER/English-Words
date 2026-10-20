@@ -29,5 +29,6 @@ struct SRSWidget: Widget {
             .systemSmall,
             .systemMedium,
         ])
+        .contentMarginsDisabled()
     }
 }
