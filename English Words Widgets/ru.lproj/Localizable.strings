@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  English Words
+
+  Created by Егор Халиков on 09.10.2026.
+  
+*/
+
+"widget_cards_due" = "карточек к повторению";
+"widget_day_streak" = "день подряд";
+"widget_time_to_review" = "Пора повторить";
+"widget_review_streak" = "Серия повторений";
+"widget_card_waiting" = "1 карточка ждёт";
+"widget_cards_waiting" = "Ждут %d карточек";
+"widget_clear_to_start" = "Разгребите SRS";
+"widget_days_in_row" = "дней подряд";

@@ -6,7 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1913E48B30792844004DB8AD /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1913E48A30792844004DB8AD /* WidgetKit.framework */; };
+		1913E48D30792844004DB8AD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1913E48C30792844004DB8AD /* SwiftUI.framework */; };
+		1913E49A30792844004DB8AD /* English Words WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1913E48830792844004DB8AD /* English Words WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		1913E49830792844004DB8AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1996A7D12F7E56E800413906 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1913E48730792844004DB8AD;
+			remoteInfo = "English Words WidgetsExtension";
+		};
 		19DEC46A3073ED0A00D1BFD5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1996A7D12F7E56E800413906 /* Project object */;
@@ -16,14 +29,60 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		1913E49F30792844004DB8AD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1913E49A30792844004DB8AD /* English Words WidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1913E48830792844004DB8AD /* English Words WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "English Words WidgetsExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1913E48A30792844004DB8AD /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		1913E48C30792844004DB8AD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		1913E4A030792877004DB8AD /* English Words WidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "English Words WidgetsExtension.entitlements"; sourceTree = "<group>"; };
 		1996A7D92F7E56E800413906 /* English Words.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "English Words.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19DEC4663073ED0A00D1BFD5 /* English Words Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "English Words Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1913E49B30792844004DB8AD /* Exceptions for "English Words Widgets" folder in "English Words WidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1913E48730792844004DB8AD /* English Words WidgetsExtension */;
+		};
+		1913E4A7307928F7004DB8AD /* Exceptions for "English Words" folder in "English Words WidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				UI/Shared/SRSWidgetSnapshot.swift,
+			);
+			target = 1913E48730792844004DB8AD /* English Words WidgetsExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		1913E48E30792844004DB8AD /* English Words Widgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1913E49B30792844004DB8AD /* Exceptions for "English Words Widgets" folder in "English Words WidgetsExtension" target */,
+			);
+			path = "English Words Widgets";
+			sourceTree = "<group>";
+		};
 		1996A7DB2F7E56E800413906 /* English Words */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1913E4A7307928F7004DB8AD /* Exceptions for "English Words" folder in "English Words WidgetsExtension" target */,
+			);
 			path = "English Words";
 			sourceTree = "<group>";
 		};
@@ -35,6 +94,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1913E48530792844004DB8AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1913E48D30792844004DB8AD /* SwiftUI.framework in Frameworks */,
+				1913E48B30792844004DB8AD /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1996A7D62F7E56E800413906 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,11 +120,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1913E48930792844004DB8AD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1913E48A30792844004DB8AD /* WidgetKit.framework */,
+				1913E48C30792844004DB8AD /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1996A7D02F7E56E800413906 = {
 			isa = PBXGroup;
 			children = (
+				1913E4A030792877004DB8AD /* English Words WidgetsExtension.entitlements */,
 				1996A7DB2F7E56E800413906 /* English Words */,
 				19DEC4673073ED0A00D1BFD5 /* English Words Tests */,
+				1913E48E30792844004DB8AD /* English Words Widgets */,
+				1913E48930792844004DB8AD /* Frameworks */,
 				1996A7DA2F7E56E800413906 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,6 +146,7 @@
 			children = (
 				1996A7D92F7E56E800413906 /* English Words.app */,
 				19DEC4663073ED0A00D1BFD5 /* English Words Tests.xctest */,
+				1913E48830792844004DB8AD /* English Words WidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +154,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1913E48730792844004DB8AD /* English Words WidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1913E49C30792844004DB8AD /* Build configuration list for PBXNativeTarget "English Words WidgetsExtension" */;
+			buildPhases = (
+				1913E48430792844004DB8AD /* Sources */,
+				1913E48530792844004DB8AD /* Frameworks */,
+				1913E48630792844004DB8AD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1913E48E30792844004DB8AD /* English Words Widgets */,
+			);
+			name = "English Words WidgetsExtension";
+			packageProductDependencies = (
+			);
+			productName = "English Words WidgetsExtension";
+			productReference = 1913E48830792844004DB8AD /* English Words WidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1996A7D82F7E56E800413906 /* English Words */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1996A7FA2F7E56EA00413906 /* Build configuration list for PBXNativeTarget "English Words" */;
@@ -80,10 +183,12 @@
 				1996A7D52F7E56E800413906 /* Sources */,
 				1996A7D62F7E56E800413906 /* Frameworks */,
 				1996A7D72F7E56E800413906 /* Resources */,
+				1913E49F30792844004DB8AD /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1913E49930792844004DB8AD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1996A7DB2F7E56E800413906 /* English Words */,
@@ -128,6 +233,9 @@
 				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
+					1913E48730792844004DB8AD = {
+						CreatedOnToolsVersion = 26.4;
+					};
 					1996A7D82F7E56E800413906 = {
 						CreatedOnToolsVersion = 16.4;
 						LastSwiftMigration = 2640;
@@ -155,11 +263,19 @@
 			targets = (
 				1996A7D82F7E56E800413906 /* English Words */,
 				19DEC4653073ED0A00D1BFD5 /* English Words Tests */,
+				1913E48730792844004DB8AD /* English Words WidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1913E48630792844004DB8AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1996A7D72F7E56E800413906 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -177,6 +293,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1913E48430792844004DB8AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1996A7D52F7E56E800413906 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -194,6 +317,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1913E49930792844004DB8AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1913E48730792844004DB8AD /* English Words WidgetsExtension */;
+			targetProxy = 1913E49830792844004DB8AD /* PBXContainerItemProxy */;
+		};
 		19DEC46B3073ED0A00D1BFD5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1996A7D82F7E56E800413906 /* English Words */;
@@ -202,6 +330,70 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		1913E49D30792844004DB8AD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "English Words WidgetsExtension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 259HY3JCU4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "English Words Widgets/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "English Words Widgets";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "DERAPTER.English-Words.English-Words-Widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1913E49E30792844004DB8AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "English Words WidgetsExtension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 259HY3JCU4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "English Words Widgets/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "English Words Widgets";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "DERAPTER.English-Words.English-Words-Widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		1996A7F82F7E56EA00413906 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -329,6 +521,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "English Words/English Words.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 259HY3JCU4;
@@ -343,7 +536,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4.0;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "DERAPTER.English-Words";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -359,6 +552,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "English Words/English Words.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 259HY3JCU4;
@@ -373,7 +567,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4.0;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "DERAPTER.English-Words";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -427,6 +621,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1913E49C30792844004DB8AD /* Build configuration list for PBXNativeTarget "English Words WidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1913E49D30792844004DB8AD /* Debug */,
+				1913E49E30792844004DB8AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1996A7D42F7E56E800413906 /* Build configuration list for PBXProject "English Words" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -1,0 +1,33 @@
+//
+//  SRSWidget.swift
+//  English Words Widgets
+//
+//  Created by Егор Халиков on 09.10.2026.
+//
+
+import WidgetKit
+import SwiftUI
+
+@main
+struct SRSWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        SRSWidget()
+    }
+}
+
+struct SRSWidget: Widget {
+    let kind: String = "SRSWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: SRSWidgetProvider()) { entry in
+            SRSWidgetEntryView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("SRS Review")
+        .description("Track your review streak and due cards.")
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+        ])
+    }
+}

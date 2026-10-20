@@ -11,11 +11,12 @@ import SwiftData
 @main
 struct English_WordsApp: App {
     
+    @Environment(\.scenePhase) private var scenePhase
+    
     private let modelContainer: ModelContainer
     private let appContainer: AppContainer
     
     init() {
-        // 1. Собираем ModelContainer
         let container: ModelContainer
         do {
             container = try ModelContainer(
@@ -29,11 +30,9 @@ struct English_WordsApp: App {
         }
         self.modelContainer = container
         
-        // 2. Миграция из старого JSON (если нужно)
         let migrator = JSONToSwiftDataMigrator(context: container.mainContext)
         migrator.migrateIfNeeded()
         
-        // 3. Собираем DI-контейнер
         self.appContainer = AppContainer.live(container: container)
     }
     
@@ -42,6 +41,41 @@ struct English_WordsApp: App {
             RootView()
                 .environment(appContainer)
                 .modelContainer(modelContainer)
+                .onOpenURL { url in
+                    handleDeepLink(url)
+                }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background || newPhase == .inactive {
+                refreshWidgetSnapshot()
+            }
         }
     }
+    
+    // MARK: - Deep link
+    
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "englishwords" else { return }
+        // В будущем можно открывать конкретный таб.
+        // Пока просто открываем приложение — SRS доступен через таб.
+        // Если захочешь навигировать на SRS-таб — это делается через
+        // отдельный AppStorage-флаг или NotificationCenter.
+        NotificationCenter.default.post(
+            name: .openSRSTab,
+            object: nil
+        )
+    }
+    
+    // MARK: - Widget snapshot
+    
+    private func refreshWidgetSnapshot() {
+        SRSWidgetSnapshotWriter.refresh(
+            cardRepository: appContainer.cardRepository,
+            statsRepository: appContainer.statsRepository
+        )
+    }
+}
+
+extension Notification.Name {
+    static let openSRSTab = Notification.Name("openSRSTab")
 }

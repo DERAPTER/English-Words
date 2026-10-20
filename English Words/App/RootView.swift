@@ -12,7 +12,7 @@ struct RootView: View {
     private let themeManager = ThemeManager.shared
     private let languageManager = LanguageManager.shared
     
-    @State private var selectedTab: TabItem = TabItem(screen: .srsReview)
+    @State private var selectedTab: TabItem = TabItem(screen: .solveCards)
     @State private var refreshTrigger = false
     @State private var tabBarVisibility = TabBarVisibility()
     
@@ -59,6 +59,12 @@ struct RootView: View {
         }
         .overlay(alignment: .top) {
             achievementBanner
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
+            refreshTrigger.toggle()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .openSRSTab)) { _ in
+            selectedTab = TabItem(screen: .srsReview)
         }
     }
     

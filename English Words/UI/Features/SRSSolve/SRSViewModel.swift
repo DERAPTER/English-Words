@@ -119,10 +119,9 @@ final class SRSViewModel {
         
         session = sessionCoordinator.markCorrect(session)
         
-        // Если это последний ответ в сессии — проверить,
-        // не разгрёб ли пользователь всю SRS-очередь.
+        // Если это был последний ответ в сессии — засчитываем день как активный.
         if session.isCompletedWithoutMistakes {
-            tryMarkSRSClearedIfDone()
+            markSRSDayCleared()
         }
         
         try? await Task.sleep(for: .milliseconds(150))
@@ -143,19 +142,18 @@ final class SRSViewModel {
     
     // MARK: - Private
     
-    /// Если все SRS-карточки на сегодня разгребены — помечаем день
-    /// и обновляем `srsStreak`.
-    private func tryMarkSRSClearedIfDone() {
-        let limit = UserDefaults.standard.integer(forKey: "srsNewCardsPerDay")
-        let effectiveLimit = limit > 0 ? limit : 20
+    /// Вызывается сразу после завершения текущей сессии.
+    /// Засчитывает день как «SRS разгребён» и обновляет виджет.
+    private func markSRSDayCleared() {
         do {
-            let overview = try cardRepository.srsOverview(
-                on: .now,
-                newCardsLimit: effectiveLimit
+            // 1. Ставим флаг в базе (srsCleared = true) и обновляем srsStreak
+            try statsRepository.markSRSCleared(on: .now)
+            
+            // 2. Обновляем данные для виджета
+            SRSWidgetSnapshotWriter.refresh(
+                cardRepository: cardRepository,
+                statsRepository: statsRepository
             )
-            if overview.dueToday == 0 {
-                try statsRepository.markSRSCleared(on: .now)
-            }
         } catch {
             errorMessage = error.localizedDescription
         }

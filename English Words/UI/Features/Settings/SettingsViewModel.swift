@@ -59,6 +59,11 @@ final class SettingsViewModel {
             try statsRepository.resetAllStats()
             solveSessionStore.clearAll()
             updateStorageSize()
+            
+            SRSWidgetSnapshotWriter.refresh(
+                cardRepository: cardRepository,
+                statsRepository: statsRepository
+            )
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -88,6 +93,11 @@ final class SettingsViewModel {
             try statsRepository.updateDailyGoal(20)
             
             updateStorageSize()
+            
+            SRSWidgetSnapshotWriter.refresh(
+                cardRepository: cardRepository,
+                statsRepository: statsRepository
+            )
         } catch {
             errorMessage = error.localizedDescription
         }
