@@ -75,13 +75,17 @@ struct SRSOverviewView: View {
     }
     
     private var streakColor: Color {
-        viewModel.srsStreak == 0 ? .gray : .orange
+        viewModel.isSRSClearedToday ? .orange : .gray
     }
     
     private var streakSubtitle: String {
-        viewModel.srsStreak == 0
-            ? "srs_streak_empty".localized()
-            : "days_in_row".localized()
+        if viewModel.srsStreak == 0 {
+            return "srs_streak_empty".localized()
+        }
+        if !viewModel.isSRSClearedToday {
+            return "srs_streak_keep_it_up".localized()
+        }
+        return "days_in_row".localized()
     }
     
     // MARK: - Status

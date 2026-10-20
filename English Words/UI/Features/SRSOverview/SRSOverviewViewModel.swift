@@ -13,6 +13,7 @@ final class SRSOverviewViewModel {
     
     private(set) var overview: SRSOverview?
     private(set) var srsStreak: Int = 0
+    private(set) var isSRSClearedToday: Bool = false
     private(set) var errorMessage: String?
     
     private let cardRepository: CardRepository
@@ -33,7 +34,13 @@ final class SRSOverviewViewModel {
                 on: .now,
                 newCardsLimit: effectiveLimit
             )
-            srsStreak = try statsRepository.settings().srsStreak
+                
+            let settings = try statsRepository.settings()
+            srsStreak = settings.srsStreak
+    
+            // Проверяем, разгребен ли SRS сегодня
+            let todayStat = try statsRepository.activity(for: .now)
+            isSRSClearedToday = todayStat?.srsCleared ?? false
         } catch {
             errorMessage = error.localizedDescription
         }

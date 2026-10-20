@@ -164,6 +164,7 @@
 "srs_overview_next_short" = "Next: %@";
 "srs_streak_label" = "Review streak";
 "srs_streak_empty" = "Clear SRS to start";
+"srs_streak_keep_it_up" = "Review today to continue";
 
 /* ============ EMPTY GROUP ============ */
 "empty_group_title" = "Empty Group";
@@ -337,6 +338,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_5_3" = "Version 2.5.3";
 "version_2_5_2" = "Version 2.5.2";
 "version_2_5_1" = "Version 2.5.1";
 "version_2_5_0" = "Version 2.5.0";
@@ -359,6 +361,9 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_5_3_1" = "Improved review streak counter logic (gray when pending, orange when completed)";
+"release_notes_2_5_3_2" = "Minor UI improvements";
+
 "release_notes_2_5_2_1" = "Fixed widget background to match the app theme";
 "release_notes_2_5_2_2" = "Improved widget color scheme for active and completed states";
 
