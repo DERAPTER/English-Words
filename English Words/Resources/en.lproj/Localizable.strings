@@ -337,6 +337,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_5_2" = "Version 2.5.2";
 "version_2_5_1" = "Version 2.5.1";
 "version_2_5_0" = "Version 2.5.0";
 "version_2_4_0" = "Version 2.4.0";
@@ -358,6 +359,9 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_5_2_1" = "Fixed widget background to match the app theme";
+"release_notes_2_5_2_2" = "Improved widget color scheme for active and completed states";
+
 "release_notes_2_5_1_1" = "Fixed widget data synchronization issue";
 "release_notes_2_5_1_2" = "Improved widget layout and localization";
 

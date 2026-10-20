@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 // Управляет текущей цветовой темой приложения.
 
@@ -18,6 +19,10 @@ final class ThemeManager {
     var currentTheme: AppTheme {
         didSet {
             UserDefaults.standard.set(currentTheme.rawValue, forKey: Self.storageKey)
+            
+            SRSWidgetStore.saveTheme(currentTheme)
+            WidgetCenter.shared.reloadAllTimelines()
+            
             applyNavigationBarAppearance()
             NotificationCenter.default.post(name: .themeChanged, object: nil)
         }

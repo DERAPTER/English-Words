@@ -43,12 +43,12 @@ enum SRSWidgetStore {
     
     static let appGroupID = "group.com.DERAPTER.English-Words"
     private static let key = "srs_widget_snapshot_v1"
+    private static let themeKey = "widget_current_theme"
     
     private static var defaults: UserDefaults? {
         UserDefaults(suiteName: appGroupID)
     }
     
-    /// Записать снимок (вызывается из приложения).
     static func save(_ snapshot: SRSWidgetSnapshot) {
         guard let defaults, let data = try? JSONEncoder().encode(snapshot) else {
             return
@@ -71,4 +71,13 @@ enum SRSWidgetStore {
         
         return snapshot
     }
+    
+    static func saveTheme(_ theme: AppTheme) {
+            defaults?.set(theme.rawValue, forKey: themeKey)
+        }
+        
+        static func loadTheme() -> AppTheme {
+            let raw = defaults?.string(forKey: themeKey) ?? AppTheme.beige.rawValue
+            return AppTheme(rawValue: raw) ?? .beige
+        }
 }

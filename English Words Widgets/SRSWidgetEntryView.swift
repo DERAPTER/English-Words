@@ -17,10 +17,18 @@ struct SRSWidgetEntryView: View {
         entry.snapshot.dueToday > 0
     }
 
-    // MARK: - Colors
+    // MARK: - Theme & Colors
 
-    private var accent: Color {
-        hasDue ? .blue : .orange
+    private var theme: AppTheme {
+        SRSWidgetStore.loadTheme()
+    }
+
+    private var colors: ThemeColors {
+        ThemeColors.forTheme(theme)
+    }
+
+    private var stateColor: Color {
+        hasDue ? colors.accent : .orange
     }
 
     private var iconName: String {
@@ -32,61 +40,60 @@ struct SRSWidgetEntryView: View {
     }
 
     var body: some View {
-        Group {
-            switch family {
-            case .systemSmall:
-                smallView
-            default:
-                mediumView
+        ZStack {
+            colors.background.ignoresSafeArea()
+            Group {
+                switch family {
+                case .systemSmall:
+                    smallView
+                default:
+                    mediumView
+                }
             }
+            .padding(16)
+            .widgetURL(URL(string: "englishwords://srs"))
         }
-        // Задаем стандартный отступ Apple (16pt), так как мы отключили системный
-        .padding(16)
-        .containerBackground(.fill.tertiary, for: .widget)
-        .widgetURL(URL(string: "englishwords://srs"))
     }
 
     // MARK: - Small Widget
     
     private var smallView: some View {
         VStack(spacing: 0) {
-            // Верхний ряд: значок слева, число справа
             HStack(alignment: .center) {
                 ZStack {
                     Circle()
-                        .fill(accent.opacity(0.12))
+                        .fill(stateColor.opacity(0.15))
                         .frame(width: 46, height: 46)
 
                     Image(systemName: iconName)
                         .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(accent)
+                        .foregroundStyle(stateColor)
                 }
 
                 Spacer(minLength: 4)
 
                 Text("\(number)")
                     .font(.system(size: 46, weight: .bold, design: .rounded))
-                    .foregroundStyle(accent)
+                    .foregroundStyle(stateColor)
                     .contentTransition(.numericText())
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .widgetAccentable()
             }
 
-            Spacer(minLength: 8) // Добавили чуть больше воздуха
+            Spacer(minLength: 8)
 
-            // Нижний ряд: подписи слева, индикатор справа
             HStack(alignment: .bottom, spacing: 2) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(hasDue ? "widget_cards_due" : "widget_day_streak")
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(colors.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
 
                     Text(hasDue ? "widget_lets_review" : "widget_keep_it_up")
                         .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(accent)
+                        .foregroundStyle(colors.textSecondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
@@ -95,9 +102,9 @@ struct SRSWidgetEntryView: View {
 
                 Image(systemName: hasDue ? "arrow.up.right" : "checkmark")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(accent)
+                    .foregroundStyle(stateColor)
                     .frame(width: 28, height: 28)
-                    .background(accent.opacity(0.10), in: Circle())
+                    .background(stateColor.opacity(0.15), in: Circle())
             }
         }
     }
@@ -106,31 +113,29 @@ struct SRSWidgetEntryView: View {
 
     private var mediumView: some View {
         HStack(spacing: 16) {
-            // Иконка
             ZStack {
                 Circle()
-                    .fill(accent.opacity(0.12))
+                    .fill(stateColor.opacity(0.15))
 
                 Image(systemName: iconName)
                     .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(accent)
+                    .foregroundStyle(stateColor)
             }
             .frame(width: 60, height: 60)
 
-            // Текстовый блок
             VStack(alignment: .leading, spacing: 0) {
                 Spacer(minLength: 0)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(hasDue ? "widget_time_to_review" : "widget_review_streak")
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Color.primary)
+                        .foregroundStyle(colors.textPrimary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
                     Text(subtitle)
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(colors.textSecondary)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -142,7 +147,7 @@ struct SRSWidgetEntryView: View {
                     Text(hasDue ? "widget_ready_when_you_are" : "widget_all_caught_up")
                 }
                 .font(.system(size: 10, weight: .semibold))
-                .foregroundStyle(accent)
+                .foregroundStyle(stateColor)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             }
@@ -150,10 +155,9 @@ struct SRSWidgetEntryView: View {
 
             Spacer(minLength: 0)
 
-            // Число
             Text("\(number)")
                 .font(.system(size: 42, weight: .bold, design: .rounded))
-                .foregroundStyle(accent)
+                .foregroundStyle(stateColor)
                 .contentTransition(.numericText())
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)

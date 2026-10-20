@@ -23,7 +23,8 @@ enum AppTheme: String, CaseIterable, Codable {
     }
     
     var displayName: String {
-        displayNameKey.localized()
+        //displayNameKey.localized()
+        NSLocalizedString(displayNameKey, comment: "")
     }
     
     var iconName: String {
