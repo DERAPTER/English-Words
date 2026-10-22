@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @Environment(AppContainer.self) private var container
+    @AppStorage("userName") private var userName: String = ""
     @State private var viewModel: ProfileViewModel
     
     init(container: AppContainer) {
@@ -83,7 +84,7 @@ struct ProfileView: View {
             Image(systemName: "person.circle.fill")
                 .font(.system(size: 80))
                 .foregroundColor(.accent)
-            Text("learner".localized())
+            Text(userName.isEmpty ? "learner".localized() : userName)
                 .font(.titleCustom)
                 .foregroundColor(.textPrimary)
         }

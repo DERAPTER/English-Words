@@ -9,32 +9,39 @@ import SwiftUI
 
 struct OnboardingView: View {
     let onFinish: () -> Void
+    
+    @AppStorage("userName") private var savedName: String = ""
+    @State private var nameInput: String = ""
     @State private var currentPage = 0
     
     private let pages: [OnboardingPage] = [
         OnboardingPage(
-            icon: "book.closed.fill",
-            title: "onboarding_1_title".localized(),
-            description: "onboarding_1_desc".localized(),
-            color: .blue
+            icon: "person.fill",
+            title: "onboarding_name_title".localized(),
+            description: "onboarding_name_desc".localized(),
+            color: .blue,
+            isNameEntry: true // <-- Флаг для первого экрана
         ),
         OnboardingPage(
             icon: "rectangle.stack.fill",
             title: "onboarding_2_title".localized(),
             description: "onboarding_2_desc".localized(),
-            color: .green
+            color: .green,
+            isNameEntry: false
         ),
         OnboardingPage(
             icon: "clock.arrow.circlepath",
             title: "onboarding_3_title".localized(),
             description: "onboarding_3_desc".localized(),
-            color: .orange
+            color: .orange,
+            isNameEntry: false
         ),
         OnboardingPage(
             icon: "sparkles",
             title: "onboarding_4_title".localized(),
             description: "onboarding_4_desc".localized(),
-            color: .purple
+            color: .purple,
+            isNameEntry: false
         )
     ]
     
@@ -43,21 +50,25 @@ struct OnboardingView: View {
             Color.appBackground.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Кнопка пропуска (сверху справа)
+                // Кнопка пропуска (не показываем на экране с именем, чтобы он ввел его)
                 HStack {
                     Spacer()
-                    Button {
-                        finishOnboarding()
-                    } label: {
-                        Text("onboarding_skip".localized())
-                            .font(.bodyCustom)
-                            .foregroundColor(.textSecondary)
+                    if currentPage != 0 {
+                        Button {
+                            finishOnboarding()
+                        } label: {
+                            Text("onboarding_skip".localized())
+                                .font(.bodyCustom)
+                                .foregroundColor(.textSecondary)
+                        }
+                        .padding()
+                        .opacity(currentPage == pages.count - 1 ? 0 : 1)
+                    } else {
+                        // Пустое место, чтобы верстка не прыгала
+                        Color.clear.frame(width: 60, height: 40)
                     }
-                    .padding()
-                    .opacity(currentPage == pages.count - 1 ? 0 : 1)
                 }
                 
-                // Свайпающиеся страницы
                 TabView(selection: $currentPage) {
                     ForEach(0..<pages.count, id: \.self) { index in
                         pageView(pages[index])
@@ -66,9 +77,7 @@ struct OnboardingView: View {
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 
-                // Нижняя панель (Индикаторы + Кнопка)
                 VStack(spacing: 24) {
-                    // Точки-индикаторы
                     HStack(spacing: 8) {
                         ForEach(0..<pages.count, id: \.self) { index in
                             Circle()
@@ -79,10 +88,9 @@ struct OnboardingView: View {
                         }
                     }
                     
-                    // Главная кнопка
                     Button {
                         if currentPage == pages.count - 1 {
-                            onFinish()
+                            finishOnboarding()
                         } else {
                             withAnimation {
                                 currentPage += 1
@@ -94,9 +102,10 @@ struct OnboardingView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.accent)
+                            .background(currentPage == 0 && nameInput.trimmingCharacters(in: .whitespaces).isEmpty ? Color.gray : Color.accent)
                             .cornerRadius(16)
                     }
+                    .disabled(currentPage == 0 && nameInput.trimmingCharacters(in: .whitespaces).isEmpty)
                     .padding(.horizontal, 32)
                 }
                 .padding(.bottom, 40)
@@ -133,6 +142,23 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
                     .lineSpacing(4)
+                
+                if page.isNameEntry {
+                    // Поле ввода имени
+                    TextField("onboarding_name_placeholder".localized(), text: $nameInput)
+                        .font(.bodyCustom)
+                        .padding()
+                        .background(Color.cardBackground)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.stroke, lineWidth: 1)
+                        )
+                        .padding(.horizontal, 32)
+                        .padding(.top, 10)
+                        .textInputAutocapitalization(.words)
+                        .autocorrectionDisabled()
+                }
             }
             
             Spacer()
@@ -141,6 +167,11 @@ struct OnboardingView: View {
     }
     
     private func finishOnboarding() {
+        // Сохраняем имя, если оно введено (на всякий случай)
+        let trimmedName = nameInput.trimmingCharacters(in: .whitespaces)
+        if !trimmedName.isEmpty {
+            savedName = trimmedName
+        }
         onFinish()
     }
 }
@@ -152,4 +183,6 @@ struct OnboardingPage {
     let title: String
     let description: String
     let color: Color
+    let isNameEntry: Bool
 }
+

@@ -48,7 +48,6 @@ struct RootView: View {
         ZStack(alignment: .bottom) {
             themeManager.colors.background
                 .ignoresSafeArea()
-                .overlay(BackgroundLines())
             
             Group {
                 switch selectedTab.screen {
