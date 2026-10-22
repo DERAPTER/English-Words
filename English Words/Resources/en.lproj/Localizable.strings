@@ -371,6 +371,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_6_0" = "Version 2.6.0";
 "version_2_5_3" = "Version 2.5.3";
 "version_2_5_2" = "Version 2.5.2";
 "version_2_5_1" = "Version 2.5.1";
@@ -394,6 +395,10 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_6_0_1" = "Added the ability to import groups and cards from JSON";
+"release_notes_2_6_0_2" = "Added a built-in AI prompt and JSON template to quickly generate cards using neural networks";
+"release_notes_2_6_0_3" = "Improved navigation on the Groups screen (moved creation and import to the top menu)";
+
 "release_notes_2_5_3_1" = "Improved review streak counter logic (gray when pending, orange when completed)";
 "release_notes_2_5_3_2" = "Minor UI improvements";
 

@@ -16,10 +16,22 @@ struct ReleaseNotesSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     versionBlock(
-                        versionKey: "version_2_5_3",
+                        versionKey: "version_2_6_0",
                         statusKey: "current_version",
                         icon: "crown.fill",
                         iconColor: .accent,
+                        items: [
+                            "release_notes_2_6_0_1",
+                            "release_notes_2_6_0_2",
+                            "release_notes_2_6_0_3",
+                        ]
+                    )
+                    
+                    versionBlock(
+                        versionKey: "version_2_5_3",
+                        statusKey: "previous_version",
+                        icon: "clock.fill",
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_5_3_1",
                             "release_notes_2_5_3_2",
@@ -30,7 +42,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_5_2",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_5_2_1",
                             "release_notes_2_5_2_2",
@@ -41,7 +53,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_5_1",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_5_1_1",
                             "release_notes_2_5_1_2",
@@ -52,7 +64,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_5_0",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_5_0_1",
                             "release_notes_2_5_0_2",
@@ -63,7 +75,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_4_0",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_4_0_1",
                             "release_notes_2_4_0_2",
@@ -75,7 +87,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_3_0",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_3_0_1",
                             "release_notes_2_3_0_2",
@@ -87,7 +99,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_2_0",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_2_0_1",
                         ]
@@ -97,7 +109,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_1_1",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_1_1_1",
                             "release_notes_2_1_1_2",
@@ -110,7 +122,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_1_0",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_1_0_1",
                             "release_notes_2_1_0_2",
@@ -121,7 +133,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_0_1",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_0_1_1",
                             "release_notes_2_0_1_2",
@@ -132,7 +144,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_2_0_0",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_0_0_1",
                             "release_notes_2_0_0_2",
@@ -143,7 +155,7 @@ struct ReleaseNotesSheet: View {
                         versionKey: "version_1_1_1",
                         statusKey: "previous_version",
                         icon: "clock.fill",
-                        iconColor: .accent,
+                        iconColor: themeManager.colors.textSecondary,
                         items: ["release_notes_1_1_1_1", "release_notes_1_1_1_2"]
                     )
                     
