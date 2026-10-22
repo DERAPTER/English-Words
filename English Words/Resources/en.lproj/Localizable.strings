@@ -100,6 +100,39 @@
 "delete_group_message" = "The group will be deleted forever. Cards will remain in other groups.";
 "delete_group_message_format" = "Delete group \"%@\"? Cards will remain in other groups.";
 
+/* =========== IMPORT DATA ============ */
+"import_groups" = "Import Data";
+"import_title" = "Import";
+"import_select_file" = "Select File";
+"import_or_paste" = "or paste text below";
+"import_btn" = "Import";
+"import_duplicate_title" = "Duplicates found";
+"import_duplicate_message" = "Some groups or cards already exist. Import the rest?";
+"import_success_title" = "Import Successful";
+"import_success_message" = "Imported %d cards.";
+"import_error_format" = "Invalid text format.";
+"import_error_parse" = "Failed to parse JSON. Please check the structure.";
+"import_error_empty" = "No groups found in the file.";
+"import_error_file" = "Failed to read file.";
+"import_error_encoding" = "File is not in UTF-8 format.";
+"import_how_it_works" = "How it works?";
+"import_help_desc" = "You can paste a JSON text or select a .json/.txt file. The data must be an array of groups. Each group has a name and a list of cards. If you don't have a file, you can ask an AI (like ChatGPT) to generate one for you using the template below.";
+"import_help_template_title" = "JSON Template";
+"import_help_template_desc" = "Copy this template and send it to an AI to generate a list of words.";
+"import_copy_template" = "Copy Template";
+"import_copied" = "Copied!";
+"import_copy_template_top" = "Copy JSON Template";
+"import_help_prompt_title" = "AI Prompt Example";
+"import_help_prompt_desc" = "Copy this prompt and send it to ChatGPT or any other AI to generate cards automatically.";
+"import_copy_prompt" = "Copy Prompt";
+"import_paste_from_clipboard" = "Paste from Clipboard";
+"import_pasted_success" = "Text pasted. Ready to import!";
+"import_error_empty_clipboard" = "Clipboard is empty or contains invalid text.";
+"import_or" = "or";
+"import_copy_prompt_top" = "Copy AI Prompt";
+
+"import_ai_prompt_text" = "Please generate a JSON array containing a group of 15 English words on the topic \"Nature\" (B2 level).\n\nRequirements:\n1. For each word, provide the English word and its Russian translation.\n2. By default, leave the description fields (\"originDescription\" and \"translatedDescription\") empty (\"\").\n3. Use exactly the JSON structure below:";
+
 /* ============ CARD SWIPE ============ */
 "delete_from_group" = "Delete from \"%@\" only";
 "delete_completely" = "Delete completely";

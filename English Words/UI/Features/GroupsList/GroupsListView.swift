@@ -12,6 +12,7 @@ struct GroupsListView: View {
     @State private var viewModel: GroupsListViewModel
     
     @State private var showAddGroupSheet = false
+    @State private var showImportSheet = false
     @State private var groupToEdit: CardGroup?
     @State private var cardToEdit: Card?
     @State private var groupToDelete: CardGroup?
@@ -41,21 +42,41 @@ struct GroupsListView: View {
                         )
                         .padding(.horizontal)
                     }
-                    
-                    addGroupButton
-                        .padding(.horizontal)
-                        .padding(.top, 8)
-                        .padding(.bottom, 100)
                 }
                 .padding(.top, 8)
+                .padding(.bottom, 100)
             }
             .background(Color.appBackground.ignoresSafeArea())
             .navigationTitle("groups_title".localized())
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            showAddGroupSheet = true
+                        } label: {
+                            Label("add_new_group".localized(), systemImage: "folder.badge.plus")
+                        }
+                        
+                        Button {
+                            showImportSheet = true
+                        } label: {
+                            Label("import_groups".localized(), systemImage: "square.and.arrow.down")
+                        }
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title3.weight(.semibold))
+                            .foregroundColor(.accent)
+                    }
+                }
+            }
             .task { viewModel.load() }
             .refreshable { viewModel.load() }
             .sheet(isPresented: $showAddGroupSheet) {
                 AddGroupSheet(viewModel: viewModel, isPresented: $showAddGroupSheet)
+            }
+            .sheet(isPresented: $showImportSheet) {
+                ImportDataView(container: container, onComplete: { viewModel.load() })
             }
             .sheet(item: $groupToEdit) { group in
                 EditGroupView(
