@@ -12,16 +12,43 @@ struct RootView: View {
     private let themeManager = ThemeManager.shared
     private let languageManager = LanguageManager.shared
     
-    @State private var selectedTab: TabItem = TabItem(screen: .solveCards)
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    
+    @State private var selectedTab: TabItem = TabItem(screen: .cardsGroups)
     @State private var refreshTrigger = false
     @State private var tabBarVisibility = TabBarVisibility()
     
     private var tabs: [TabItem] { TabItem.all }
     
     var body: some View {
+        ZStack {
+            if !hasCompletedOnboarding {
+                OnboardingView {
+                    withAnimation {
+                        hasCompletedOnboarding = true
+                    }
+                }
+                .transition(.opacity)
+            } else {
+                mainAppContent
+            }
+        }
+        .environment(tabBarVisibility)
+        .preferredColorScheme(themeManager.colorScheme)
+        .tint(themeManager.colors.accent)
+        .onAppear {
+            themeManager.applyNavigationBarAppearance()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
+            refreshTrigger.toggle()
+        }
+    }
+    
+    private var mainAppContent: some View {
         ZStack(alignment: .bottom) {
             themeManager.colors.background
                 .ignoresSafeArea()
+                .overlay(BackgroundLines())
             
             Group {
                 switch selectedTab.screen {
@@ -45,25 +72,13 @@ struct RootView: View {
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .environment(tabBarVisibility)
         .ignoresSafeArea(.container, edges: .bottom)
-        .preferredColorScheme(themeManager.colorScheme)
-        .tint(themeManager.colors.accent)
         .animation(.easeInOut(duration: 0.25), value: tabBarVisibility.isVisible)
-        .onAppear {
-            themeManager.applyNavigationBarAppearance()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
-            refreshTrigger.toggle()
+        .onReceive(NotificationCenter.default.publisher(for: .openSRSTab)) { _ in
+            selectedTab = TabItem(screen: .srsReview)
         }
         .overlay(alignment: .top) {
             achievementBanner
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .languageChanged)) { _ in
-            refreshTrigger.toggle()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .openSRSTab)) { _ in
-            selectedTab = TabItem(screen: .srsReview)
         }
     }
     

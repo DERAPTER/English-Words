@@ -6,6 +6,23 @@
   
 */
 
+/* ============ ONBOARDING ============ */
+"onboarding_skip" = "Skip";
+"onboarding_next" = "Next";
+"onboarding_start" = "Start Learning";
+
+"onboarding_1_title" = "Welcome to English Words";
+"onboarding_1_desc" = "The most effective way to learn English words using flashcards and spaced repetition.";
+
+"onboarding_2_title" = "Cards & Groups";
+"onboarding_2_desc" = "Create your own cards, organize them into groups, and swipe to learn. Don't forget to add descriptions for complex words!";
+
+"onboarding_3_title" = "Smart Repetition (SRS)";
+"onboarding_3_desc" = "Our SM-2 algorithm shows words right before you forget them. Clear your daily SRS queue to build a streak!";
+
+"onboarding_4_title" = "AI & Widgets";
+"onboarding_4_desc" = "Import hundreds of cards in seconds using JSON and AI prompts. Also, add our widget to your Home Screen to stay on track.";
+
 /* ============ TAB BAR ============ */
 "tab_cards" = "Cards";
 "tab_solve" = "Solve";
