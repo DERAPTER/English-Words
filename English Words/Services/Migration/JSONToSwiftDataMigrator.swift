@@ -8,11 +8,7 @@
 import Foundation
 import SwiftData
 
-/// Одноразовая миграция данных из старого JSON-хранилища в SwiftData.
-///
-/// Запускается при старте приложения до показа UI.
-/// После успешного завершения ставит флаг в UserDefaults — повторно не выполняется.
-
+/// Одноразовая миграция данных из старого JSON-хранилища и UserDefaults в SwiftData.
 struct JSONToSwiftDataMigrator {
     private static let completionKey = "swiftdata_migration_v2_completed"
     
@@ -24,26 +20,165 @@ struct JSONToSwiftDataMigrator {
         do {
             try migrate()
             UserDefaults.standard.set(true, forKey: Self.completionKey)
+            print("✅ Миграция данных успешно завершена.")
         } catch {
-            // Не помечаем как завершённую — попробуем при следующем запуске.
             print("⚠️ Миграция не удалась: \(error.localizedDescription)")
         }
     }
     
+    // MARK: - Private
+    
     private func migrate() throws {
-        // Файл старого формата может не существовать (новый пользователь) — это норма.
-        guard let legacyDataURL = legacyFileURL,
-              FileManager.default.fileExists(atPath: legacyDataURL.path) else {
-            return
+        // 1. Миграция карточек и групп из старого JSON
+        if let legacyDataURL = legacyFileURL,
+           FileManager.default.fileExists(atPath: legacyDataURL.path) {
+            try migrateCards(from: legacyDataURL)
         }
         
-        // Пока данных нет — оставляем заглушку.
-        // Полная реализация добавления сущностей будет после того,
-        // как все фичи будут готовы, чтобы не тащить legacy-типы в проект.
-        //
-        // На данном этапе миграция просто помечает себя завершённой,
-        // если файла нет. Если файл есть — ставим метку и позволяем пользователю
-        // вручную восстановить данные через будущий импорт.
+        // 2. Миграция статистики и достижений из UserDefaults
+        try migrateStatsAndAchievements()
+        
+        try context.save()
+    }
+    
+    // MARK: - JSON Migration (Cards & Groups)
+    
+    private func migrateCards(from url: URL) throws {
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        
+        // ВАЖНО: Старый DataManager использовал ISO8601 для дат!
+        decoder.dateDecodingStrategy = .iso8601
+        
+        let legacyGroups = try decoder.decode([LegacyCardsGroup].self, from: data)
+        
+        // 1. Собираем уникальные карточки.
+        // Так как в старом коде карточка дублировалась в разных группах,
+        // используем словарь [UUID: LegacyCard], чтобы оставить каждую только один раз.
+        var uniqueCards: [UUID: LegacyCard] = [:]
+        for group in legacyGroups {
+            for card in group.cards.cardsArr {
+                uniqueCards[card.id] = card
+            }
+        }
+        
+        // 2. Собираем все уникальные пользовательские группы.
+        var uniqueGroupNames: Set<String> = []
+        for card in uniqueCards.values {
+            for groupName in card.groups {
+                if groupName != "All Cards" && groupName != "Favourites" {
+                    uniqueGroupNames.insert(groupName)
+                }
+            }
+        }
+        
+        // 3. Создаём новые CardGroup
+        var groupMap: [String: CardGroup] = [:]
+        var orderIndex = 0
+        for name in uniqueGroupNames {
+            let newGroup = CardGroup(name: name, orderIndex: orderIndex)
+            context.insert(newGroup)
+            groupMap[name] = newGroup
+            orderIndex += 1
+        }
+        
+        // 4. Создаём новые Card и восстанавливаем связи
+        for legacyCard in uniqueCards.values {
+            let newCard = Card(
+                origin: legacyCard.originWord,
+                translated: legacyCard.translatedWord,
+                dateAdded: legacyCard.dateAdded
+            )
+            
+            // Восстанавливаем счетчики и избранное
+            newCard.correctCount = legacyCard.correctCount
+            newCard.wrongCount = legacyCard.wrongCount
+            newCard.isFavourite = legacyCard.groups.contains("Favourites")
+            
+            // Привязываем к группам
+            var attachedGroups: [CardGroup] = []
+            for groupName in legacyCard.groups {
+                if let group = groupMap[groupName] {
+                    attachedGroups.append(group)
+                }
+            }
+            newCard.groups = attachedGroups
+            
+            context.insert(newCard)
+        }
+        
+        print("📦 Мигрировано карточек: \(uniqueCards.count), групп: \(groupMap.count)")
+    }
+    
+    // MARK: - UserDefaults Migration (Stats & Achievements)
+    
+    private func migrateStatsAndAchievements() throws {
+        let defaults = UserDefaults.standard
+        let settings = try fetchOrCreateSettings()
+        
+        // 1. Статистика
+        let oldStreak = defaults.integer(forKey: "streak")
+        if oldStreak > 0 { settings.streak = oldStreak }
+        
+        let oldGoal = defaults.integer(forKey: "dailyGoal")
+        if oldGoal > 0 { settings.dailyGoal = oldGoal }
+        
+        let oldTotalSolved = defaults.integer(forKey: "totalSolved")
+        if oldTotalSolved > 0 { settings.totalSolved = oldTotalSolved }
+        
+        // 2. История активности
+        // В старом DataManager это сохранялось как Data (через JSONEncoder)
+        if let historyData = defaults.data(forKey: "activityHistory"),
+           let historyDict = try? JSONDecoder().decode([String: Bool].self, from: historyData) {
+            
+            for (dateString, isCompleted) in historyDict {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                formatter.timeZone = .current
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                
+                if let date = formatter.date(from: dateString) {
+                    let stat = DailyStat(
+                        date: date,
+                        solvedCount: isCompleted ? settings.dailyGoal : 0,
+                        goalCompleted: isCompleted,
+                        srsCleared: false // SRS появился только в новой версии
+                    )
+                    context.insert(stat)
+                }
+            }
+            print("📅 Мигрировано дней активности: \(historyDict.count)")
+        }
+        
+        // 3. Достижения
+        if let achievementsData = defaults.data(forKey: "achievements"),
+           let legacyAchievements = try? JSONDecoder().decode([LegacyAchievement].self, from: achievementsData) {
+            
+            var unlockedCount = 0
+            for legacy in legacyAchievements where legacy.isUnlocked {
+                // Ищем новое достижение по совпадению titleKey
+                if let newAchievement = AchievementsCatalog.all.first(where: { $0.titleKey == legacy.titleKey }) {
+                    settings.unlock(newAchievement.id, on: legacy.unlockedDate ?? .now)
+                    unlockedCount += 1
+                }
+            }
+            print("🏆 Мигрировано достижений: \(unlockedCount)")
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private func fetchOrCreateSettings() throws -> UserSettings {
+        let predicate = #Predicate<UserSettings> { $0.id == "singleton" }
+        let descriptor = FetchDescriptor<UserSettings>(predicate: predicate)
+        
+        if let existing = try context.fetch(descriptor).first {
+            return existing
+        }
+        
+        let newSettings = UserSettings()
+        context.insert(newSettings)
+        return newSettings
     }
     
     private var legacyFileURL: URL? {
@@ -52,4 +187,31 @@ struct JSONToSwiftDataMigrator {
             .first?
             .appendingPathComponent("english_words_data.json")
     }
+}
+
+// MARK: - Legacy Models (для парсинга старого JSON)
+
+private struct LegacyCardsGroup: Codable {
+    let name: String
+    let cards: LegacyCards
+}
+
+private struct LegacyCards: Codable {
+    let cardsArr: [LegacyCard]
+}
+
+private struct LegacyCard: Codable {
+    let id: UUID
+    let originWord: String
+    let translatedWord: String
+    let groups: [String]
+    let dateAdded: Date
+    let correctCount: Int
+    let wrongCount: Int
+}
+
+private struct LegacyAchievement: Codable {
+    let titleKey: String
+    let isUnlocked: Bool
+    let unlockedDate: Date?
 }
