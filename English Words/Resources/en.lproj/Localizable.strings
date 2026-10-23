@@ -211,6 +211,7 @@
 "srs_section_title" = "Spaced Repetition";
 "srs_new_cards_limit" = "New cards per day";
 "srs_new_cards_limit_hint" = "How many new cards to introduce daily";
+"srs_reverse_mode" = "Обратный режим";
 
 /* ============ SRS OVERVIEW ============ */
 "srs_overview_subtitle" = "Review words at increasing intervals";
@@ -402,6 +403,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_8_0" = "Version 2.8.0";
 "version_2_7_0" = "Version 2.7.0";
 "version_2_6_0" = "Version 2.6.0";
 "version_2_5_3" = "Version 2.5.3";
@@ -427,6 +429,10 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_8_0_1" = "Added reverse card mode (learning from translation to original word)";
+"release_notes_2_8_0_2" = "Added local notifications to remind you about due SRS cards";
+"release_notes_2_8_0_3" = "The app now automatically selects English or Russian based on your system language on first launch";
+
 "release_notes_2_7_0_1" = "Added a new onboarding flow with personalization (name input)";
 "release_notes_2_7_0_2" = "Added a greeting screen on app launch based on time of day";
 "release_notes_2_7_0_3" = "Implemented data migration from previous versions of the app";

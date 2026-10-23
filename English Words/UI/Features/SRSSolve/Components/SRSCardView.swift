@@ -16,10 +16,20 @@ import SwiftUI
 struct SRSCardView: View {
     @Bindable var card: Card
     @Binding var isFlipped: Bool
+    let isReversed: Bool
     let onToggleFavourite: () -> Void
     
     private let cardWidth: CGFloat = 320
     private let cardHeight: CGFloat = 480
+    
+    private var frontWord: String { isReversed ? card.translatedWord : card.originWord }
+    private var frontDesc: String { isReversed ? card.translatedDescription : card.originDescription }
+    private var frontLang: AppLanguage { isReversed ? .russian : .english }
+        
+    private var backWordSmall: String { isReversed ? card.translatedWord : card.originWord }
+    private var backWordLarge: String { isReversed ? card.originWord : card.translatedWord }
+    private var backDesc: String { isReversed ? card.originDescription : card.translatedDescription }
+    private var backLang: AppLanguage { isReversed ? .english : .russian }
     
     var body: some View {
         ZStack {
@@ -41,6 +51,9 @@ struct SRSCardView: View {
             isFlipped = false
             PronunciationService.shared.stop()
         }
+        .onChange(of: isReversed) { _, _ in
+            isFlipped = false
+        }
         .onDisappear {
             PronunciationService.shared.stop()
         }
@@ -50,8 +63,8 @@ struct SRSCardView: View {
     
     private var frontSide: some View {
         cardBase(
-            speechText: card.originWord,
-            speechLanguage: .english
+            speechText: frontWord,
+            speechLanguage: frontLang
         ) {
             VStack(spacing: 0) {
                 Text("srs_tap_to_reveal".localized())
@@ -62,7 +75,7 @@ struct SRSCardView: View {
                 Spacer()
                 
                 VStack(spacing: 12) {
-                    Text(card.originWord)
+                    Text(frontWord)
                         .font(.largeTitleCustom)
                         .foregroundColor(.textPrimary)
                         .multilineTextAlignment(.center)
@@ -71,8 +84,8 @@ struct SRSCardView: View {
                         .padding(.horizontal, 20)
                         .frame(maxWidth: 280)
                     
-                    if card.hasOriginDescription {
-                        Text(card.originDescription)
+                    if !frontDesc.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Text(frontDesc)
                             .font(.bodyCustom)
                             .foregroundColor(.textSecondary)
                             .multilineTextAlignment(.center)
@@ -90,14 +103,14 @@ struct SRSCardView: View {
     
     private var backSide: some View {
         cardBase(
-            speechText: card.translatedWord,
-            speechLanguage: .russian
+            speechText: backWordLarge,
+            speechLanguage: backLang
         ) {
             VStack(spacing: 0) {
                 Spacer()
                 
                 VStack(spacing: 12) {
-                    Text(card.originWord)
+                    Text(backWordSmall)
                         .font(.title2)
                         .foregroundColor(.textSecondary)
                         .multilineTextAlignment(.center)
@@ -109,7 +122,7 @@ struct SRSCardView: View {
                         .background(Color.stroke)
                         .padding(.horizontal, 40)
                     
-                    Text(card.translatedWord)
+                    Text(backWordLarge)
                         .font(.largeTitleCustom)
                         .foregroundColor(.textPrimary)
                         .multilineTextAlignment(.center)
@@ -118,8 +131,8 @@ struct SRSCardView: View {
                         .padding(.horizontal, 20)
                         .frame(maxWidth: 280)
                     
-                    if card.hasTranslatedDescription {
-                        Text(card.translatedDescription)
+                    if backDesc.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Text(backDesc)
                             .font(.bodyCustom)
                             .foregroundColor(.textSecondary)
                             .multilineTextAlignment(.center)

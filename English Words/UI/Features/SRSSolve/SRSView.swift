@@ -11,6 +11,8 @@ struct SRSView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(TabBarVisibility.self) private var tabBarVisibility
     
+    @AppStorage("isReverseCardMode") private var isReverseMode: Bool = false
+    
     @State private var viewModel: SRSViewModel
     
     init(container: AppContainer) {
@@ -29,6 +31,17 @@ struct SRSView: View {
         }
         .navigationTitle("srs_review_title".localized())
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    isReverseMode.toggle()
+                    HapticService.shared.lightImpact()
+                } label: {
+                    Image(systemName: "arrow.left.arrow.right")
+                        .foregroundColor(isReverseMode ? .accent : .textSecondary)
+                }
+            }
+        }
         .onAppear {
             tabBarVisibility.isVisible = false
             viewModel.onAppear()
@@ -104,6 +117,7 @@ struct SRSView: View {
             SRSCardView(
                 card: card,
                 isFlipped: $viewModel.isCardFlipped,
+                isReversed: isReverseMode,
                 onToggleFavourite: { viewModel.toggleFavouriteCurrentCard() }
             )
         } else {

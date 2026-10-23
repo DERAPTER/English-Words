@@ -10,12 +10,21 @@ import SwiftUI
 struct SwipeableCardView: View {
     @Bindable var card: Card
     let percentageOfMove: Double
+    let isReversed: Bool
     let onToggleFavourite: () -> Void
     
     @State private var isFlipped = false
     
     private let cardWidth: CGFloat = 320
     private let cardHeight: CGFloat = 480
+    
+    private var frontWord: String { isReversed ? card.translatedWord : card.originWord }
+    private var frontDesc: String { isReversed ? card.translatedDescription : card.originDescription }
+    private var frontLang: AppLanguage { isReversed ? .russian : .english }
+        
+    private var backWord: String { isReversed ? card.originWord : card.translatedWord }
+    private var backDesc: String { isReversed ? card.originDescription : card.translatedDescription }
+    private var backLang: AppLanguage { isReversed ? .english : .russian }
     
     var body: some View {
         ZStack {
@@ -37,6 +46,9 @@ struct SwipeableCardView: View {
             isFlipped = false
             PronunciationService.shared.stop()
         }
+        .onChange(of: isReversed) { _, _ in
+            isFlipped = false
+        }
         .onDisappear {
             PronunciationService.shared.stop()
         }
@@ -46,8 +58,8 @@ struct SwipeableCardView: View {
     
     private var frontSide: some View {
         cardBase(
-            speechText: card.originWord,
-            speechLanguage: .english
+            speechText: frontWord,
+            speechLanguage: frontLang
         ) {
             VStack(spacing: 0) {
                 swipeHintView
@@ -55,8 +67,8 @@ struct SwipeableCardView: View {
                 Spacer()
                 
                 VStack(spacing: 12) {
-                    cardWord(card.originWord)
-                    cardDescription(card.originDescription)
+                    cardWord(frontWord)
+                    cardDescription(frontDesc)
                 }
                 
                 Spacer()
@@ -68,8 +80,8 @@ struct SwipeableCardView: View {
     
     private var backSide: some View {
         cardBase(
-            speechText: card.translatedWord,
-            speechLanguage: .russian
+            speechText: backWord,
+            speechLanguage: backLang
         ) {
             VStack(spacing: 0) {
                 swipeHintView
@@ -77,8 +89,8 @@ struct SwipeableCardView: View {
                 Spacer()
                 
                 VStack(spacing: 12) {
-                    cardWord(card.translatedWord)
-                    cardDescription(card.translatedDescription)
+                    cardWord(backWord)
+                    cardDescription(backDesc)
                 }
                 
                 Spacer()

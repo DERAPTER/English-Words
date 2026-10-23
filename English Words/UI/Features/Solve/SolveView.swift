@@ -11,6 +11,8 @@ struct SolveView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(TabBarVisibility.self) private var tabBarVisibility
     
+    @AppStorage("isReverseCardMode") private var isReverseMode: Bool = false
+    
     @State private var viewModel: SolveViewModel
     private let container: AppContainer
     
@@ -35,6 +37,17 @@ struct SolveView: View {
         }
         .navigationTitle(viewModel.groupTitle)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    isReverseMode.toggle()
+                    HapticService.shared.lightImpact()
+                } label: {
+                    Image(systemName: "arrow.left.arrow.right")
+                        .foregroundColor(isReverseMode ? .accent : .textSecondary)
+                }
+            }
+        }
         .onAppear {
             tabBarVisibility.isVisible = false
             viewModel.onAppear()
@@ -127,6 +140,7 @@ struct SolveView: View {
             SwipeableCardView(
                 card: card,
                 percentageOfMove: viewModel.percentageOfMove,
+                isReversed: isReverseMode,
                 onToggleFavourite: { viewModel.toggleFavouriteCurrentCard() }
             )
             .offset(x: viewModel.offsetOfCardX, y: viewModel.offsetOfCardY)
