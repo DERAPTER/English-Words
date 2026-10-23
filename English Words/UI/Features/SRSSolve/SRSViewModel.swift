@@ -149,7 +149,10 @@ final class SRSViewModel {
             // 1. Ставим флаг в базе (srsCleared = true) и обновляем srsStreak
             try statsRepository.markSRSCleared(on: .now)
             
-            // 2. Обновляем данные для виджета
+            // 2. Отменяем запланированное уведомление
+            NotificationService.shared.cancelSRSReminder()
+            
+            // 3. Обновляем данные для виджета
             SRSWidgetSnapshotWriter.refresh(
                 cardRepository: cardRepository,
                 statsRepository: statsRepository

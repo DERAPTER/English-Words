@@ -33,6 +33,10 @@
 "greeting_evening" = "Добрый вечер";
 "greeting_night" = "Доброй ночи";
 
+/* ============ NOTIFICATIONS ============ */
+"notification_srs_title" = "Время повторять!";
+"notification_srs_body" = "У вас есть карточки для повторения. Поддержите серию и разгребите их!";
+
 /* ============ TAB BAR ============ */
 "tab_cards" = "Карточки";
 "tab_solve" = "Изучение";

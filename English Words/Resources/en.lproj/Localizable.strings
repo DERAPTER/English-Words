@@ -33,6 +33,10 @@
 "greeting_evening" = "Good evening";
 "greeting_night" = "Good night";
 
+/* ============ NOTIFICATIONS ============ */
+"notification_srs_title" = "Time to Review!";
+"notification_srs_body" = "You have SRS cards waiting. Keep your streak alive and clear them now!";
+
 /* ============ TAB BAR ============ */
 "tab_cards" = "Cards";
 "tab_solve" = "Solve";
