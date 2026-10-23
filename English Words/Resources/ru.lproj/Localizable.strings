@@ -296,6 +296,17 @@
 "release_notes" = "История изменений";
 "release_notes_description" = "Что нового в каждой версии";
 
+/* ============= BACKUP ============= */
+"backup_export" = "Экспорт данных";
+"backup_export_desc" = "Сохранить все данные в Файлы";
+"backup_import" = "Восстановление";
+"backup_import_desc" = "Загрузить данные из файла бэкапа";
+"backup_restore_warning_title" = "Восстановить данные?";
+"backup_restore_warning_message" = "Это ПОЛНОСТЬЮ ЗАМЕНИТ текущие данные (карточки, группы, статистику) данными из файла. Отменить это будет невозможно.";
+"backup_restore_confirm" = "Заменить и восстановить";
+"backup_success_title" = "Успешно";
+"backup_restore_success" = "Данные успешно восстановлены!";
+
 /* ============ FEEDBACK ============ */
 "feedback_section" = "Отклик";
 "haptics_enabled" = "Тактильный отклик";

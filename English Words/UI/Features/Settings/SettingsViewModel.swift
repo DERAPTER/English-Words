@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+import SwiftData
 
 @MainActor
 @Observable
@@ -22,6 +24,16 @@ final class SettingsViewModel {
     var showLanguageChangeAlert = false
     
     var pendingLanguage: AppLanguage?
+    
+    // Состояния для бэкапа
+    var backupDocument: BackupDocument?
+    var isExportingBackup = false
+    var isImportingBackup = false
+    var showRestoreConfirmation = false
+    var backupError: String?
+    var showBackupSuccessAlert = false
+    
+    private var pendingRestoreData: Data?
     
     // MARK: - Dependencies
     
@@ -60,6 +72,7 @@ final class SettingsViewModel {
             solveSessionStore.clearAll()
             updateStorageSize()
             
+            // Обновляем виджет после сброса
             SRSWidgetSnapshotWriter.refresh(
                 cardRepository: cardRepository,
                 statsRepository: statsRepository
@@ -73,27 +86,24 @@ final class SettingsViewModel {
     
     func deleteAllData() {
         do {
-            // Удаляем все карточки
             let cards = try cardRepository.fetchAll()
             for card in cards {
                 try cardRepository.delete(card)
             }
             
-            // Удаляем все пользовательские группы
             let groups = try groupRepository.fetchUserGroups()
             for group in groups {
                 try groupRepository.delete(group)
             }
             
-            // Сбрасываем статистику и сессии
             try statsRepository.resetAllStats()
             solveSessionStore.clearAll()
             
-            // Сбрасываем dailyGoal к дефолту
             try statsRepository.updateDailyGoal(20)
             
             updateStorageSize()
             
+            // Обновляем виджет после удаления
             SRSWidgetSnapshotWriter.refresh(
                 cardRepository: cardRepository,
                 statsRepository: statsRepository
@@ -118,5 +128,49 @@ final class SettingsViewModel {
     
     func cancelLanguageChange() {
         pendingLanguage = nil
+    }
+    
+    // MARK: - Backup Actions
+    
+    func prepareExport(context: ModelContext) {
+        do {
+            let data = try BackupService.createBackup(context: context)
+            self.backupDocument = BackupDocument(data: data)
+            self.isExportingBackup = true
+        } catch {
+            self.backupError = error.localizedDescription
+        }
+    }
+    
+    func handleImportFile(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let url = urls.first else { return }
+            
+            let didStartAccessing = url.startAccessingSecurityScopedResource()
+            defer { if didStartAccessing { url.stopAccessingSecurityScopedResource() } }
+            
+            do {
+                let data = try Data(contentsOf: url)
+                self.pendingRestoreData = data
+                self.showRestoreConfirmation = true
+            } catch {
+                self.backupError = error.localizedDescription
+            }
+        case .failure(let error):
+            self.backupError = error.localizedDescription
+        }
+    }
+    
+    func confirmRestore(context: ModelContext) {
+        guard let data = pendingRestoreData else { return }
+        do {
+            try BackupService.restoreBackup(from: data, context: context)
+            showBackupSuccessAlert = true
+            updateStorageSize()
+            pendingRestoreData = nil
+        } catch {
+            self.backupError = error.localizedDescription
+        }
     }
 }

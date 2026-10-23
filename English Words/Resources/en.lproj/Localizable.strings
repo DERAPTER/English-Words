@@ -296,6 +296,17 @@
 "release_notes" = "Release Notes";
 "release_notes_description" = "What's new in each version";
 
+/* ============= BACKUP ============= */
+"backup_export" = "Export Backup";
+"backup_export_desc" = "Save all your data to Files";
+"backup_import" = "Restore from Backup";
+"backup_import_desc" = "Load data from a backup file";
+"backup_restore_warning_title" = "Restore Data?";
+"backup_restore_warning_message" = "This will COMPLETELY REPLACE your current data (cards, groups, stats) with the data from the backup file. This cannot be undone.";
+"backup_restore_confirm" = "Replace and Restore";
+"backup_success_title" = "Success";
+"backup_restore_success" = "Data restored successfully!";
+
 /* ============ FEEDBACK ============ */
 "feedback_section" = "Feedback";
 "haptics_enabled" = "Haptic feedback";

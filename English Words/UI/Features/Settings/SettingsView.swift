@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
     @Environment(AppContainer.self) private var container
+    @Environment(\.modelContext) private var modelContext
     
     private let themeManager = ThemeManager.shared
     private let languageManager = LanguageManager.shared
@@ -28,6 +30,23 @@ struct SettingsView: View {
     }
     
     var body: some View {
+        mainContent
+            .navigationTitle("settings_title".localized())
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                viewModel.updateStorageSize()
+            }
+            .sheet(isPresented: $viewModel.showReleaseNotesSheet) {
+                ReleaseNotesSheet()
+            }
+            .applyDataAlerts(viewModel: viewModel)
+            .applyBackupAlerts(viewModel: viewModel, modelContext: modelContext)
+            .applyLanguageAlerts(viewModel: viewModel)
+    }
+    
+    // MARK: - Main Content
+    
+    private var mainContent: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
                 header
@@ -59,62 +78,6 @@ struct SettingsView: View {
             .padding(.bottom, 100)
         }
         .background(themeManager.colors.background.ignoresSafeArea())
-        .navigationTitle("settings_title".localized())
-        .navigationBarTitleDisplayMode(.inline)
-        .refreshable {
-            viewModel.updateStorageSize()
-        }
-        .onAppear {
-            viewModel.updateStorageSize()
-        }
-        .sheet(isPresented: $viewModel.showReleaseNotesSheet) {
-            ReleaseNotesSheet()
-        }
-        .alert(
-            "reset_statistics_alert_title".localized(),
-            isPresented: $viewModel.showResetStatsAlert
-        ) {
-            Button("cancel_button".localized(), role: .cancel) { }
-            Button("reset".localized(), role: .destructive) {
-                viewModel.resetStatistics()
-            }
-        } message: {
-            Text("reset_statistics_alert_message".localized())
-        }
-        .alert(
-            "delete_all_alert_title".localized(),
-            isPresented: $viewModel.showDeleteAllAlert
-        ) {
-            Button("cancel_button".localized(), role: .cancel) { }
-            Button("delete_button".localized(), role: .destructive) {
-                viewModel.deleteAllData()
-            }
-        } message: {
-            Text("delete_all_alert_message".localized())
-        }
-        .alert(
-            "change_language_title".localized(),
-            isPresented: $viewModel.showLanguageChangeAlert
-        ) {
-            Button("cancel_button".localized(), role: .cancel) {
-                viewModel.cancelLanguageChange()
-            }
-            Button("change".localized(), role: .destructive) {
-                viewModel.confirmLanguageChange()
-            }
-        } message: {
-            Text("change_language_message".localized())
-        }
-        .alert(
-            "error_title".localized(),
-            isPresented: .constant(viewModel.errorMessage != nil)
-        ) {
-            Button("ok".localized(), role: .cancel) { }
-        } message: {
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-            }
-        }
     }
     
     // MARK: - Sections
@@ -202,8 +165,6 @@ struct SettingsView: View {
                     .labelsHidden()
                     .tint(.accent)
                     .onChange(of: hapticsEnabled) { _, isOn in
-                        // Дать пользователю почувствовать эффект при включении.
-                        // При выключении отклик уже отключён — тишина.
                         if isOn {
                             HapticService.shared.lightImpact()
                         }
@@ -253,6 +214,24 @@ struct SettingsView: View {
                 title: "storage_size".localized(),
                 value: viewModel.storageSize
             )
+            
+            SettingsRow(
+                icon: "arrow.up.doc",
+                title: "backup_export".localized(),
+                description: "backup_export_desc".localized(),
+                color: .blue
+            ) {
+                viewModel.prepareExport(context: modelContext)
+            }
+            
+            SettingsRow(
+                icon: "arrow.down.doc",
+                title: "backup_import".localized(),
+                description: "backup_import_desc".localized(),
+                color: .blue
+            ) {
+                viewModel.isImportingBackup = true
+            }
             
             SettingsRow(
                 icon: "arrow.counterclockwise",
@@ -316,5 +295,109 @@ struct SettingsView: View {
     
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1.1"
+    }
+}
+
+// MARK: - View Extensions for Alerts
+// Разбиваем алерты на группы, чтобы помочь компилятору.
+
+extension View {
+    func applyDataAlerts(viewModel: SettingsViewModel) -> some View {
+        self
+            .alert(Text(verbatim: "reset_statistics_alert_title".localized()), isPresented: Binding(
+                get: { viewModel.showResetStatsAlert },
+                set: { viewModel.showResetStatsAlert = $0 }
+            )) {
+                Button("cancel_button".localized(), role: .cancel) { }
+                Button("reset".localized(), role: .destructive) {
+                    viewModel.resetStatistics()
+                }
+            } message: {
+                Text(verbatim: "reset_statistics_alert_message".localized())
+            }
+            .alert(Text(verbatim: "delete_all_alert_title".localized()), isPresented: Binding(
+                get: { viewModel.showDeleteAllAlert },
+                set: { viewModel.showDeleteAllAlert = $0 }
+            )) {
+                Button("cancel_button".localized(), role: .cancel) { }
+                Button("delete_button".localized(), role: .destructive) {
+                    viewModel.deleteAllData()
+                }
+            } message: {
+                Text(verbatim: "delete_all_alert_message".localized())
+            }
+    }
+    
+    func applyBackupAlerts(viewModel: SettingsViewModel, modelContext: ModelContext) -> some View {
+        self
+            .fileExporter(
+                isPresented: Binding(
+                    get: { viewModel.isExportingBackup },
+                    set: { viewModel.isExportingBackup = $0 }
+                ),
+                document: viewModel.backupDocument,
+                contentType: .json,
+                defaultFilename: "EnglishWords_Backup_\(Date().formatted(date: .numeric, time: .omitted).replacingOccurrences(of: "/", with: "-"))"
+            ) { result in
+                if case .failure(let error) = result {
+                    viewModel.backupError = error.localizedDescription
+                }
+            }
+            .fileImporter(
+                isPresented: Binding(
+                    get: { viewModel.isImportingBackup },
+                    set: { viewModel.isImportingBackup = $0 }
+                ),
+                allowedContentTypes: [.json],
+                allowsMultipleSelection: false
+            ) { result in
+                viewModel.handleImportFile(result)
+            }
+            .alert(Text(verbatim: "backup_restore_warning_title".localized()), isPresented: Binding(
+                get: { viewModel.showRestoreConfirmation },
+                set: { viewModel.showRestoreConfirmation = $0 }
+            )) {
+                Button("cancel".localized(), role: .cancel) { }
+                Button("backup_restore_confirm".localized(), role: .destructive) {
+                    viewModel.confirmRestore(context: modelContext)
+                }
+            } message: {
+                Text(verbatim: "backup_restore_warning_message".localized())
+            }
+            .alert(Text(verbatim: "backup_success_title".localized()), isPresented: Binding(
+                get: { viewModel.showBackupSuccessAlert },
+                set: { viewModel.showBackupSuccessAlert = $0 }
+            )) {
+                Button("ok".localized()) { }
+            } message: {
+                Text(verbatim: "backup_restore_success".localized())
+            }
+            .alert(Text(verbatim: "error_title".localized()), isPresented: Binding(
+                get: { viewModel.backupError != nil },
+                set: { if !$0 { viewModel.backupError = nil } }
+            )) {
+                Button("ok".localized()) { viewModel.backupError = nil }
+            } message: {
+                if let error = viewModel.backupError {
+                    Text(verbatim: error)
+                }
+            }
+    }
+    
+    func applyLanguageAlerts(viewModel: SettingsViewModel) -> some View {
+        self
+            .alert(Text(verbatim: "change_language_title".localized()), isPresented: Binding(
+                get: { viewModel.showLanguageChangeAlert },
+                set: { viewModel.showLanguageChangeAlert = $0 }
+            )) {
+                Button("cancel_button".localized(), role: .cancel) {
+                    viewModel.cancelLanguageChange()
+                }
+                Button("change".localized(), role: .destructive) {
+                    viewModel.confirmLanguageChange()
+                }
+            } message: {
+                Text(verbatim: "change_language_message".localized())
+            }
     }
 }
