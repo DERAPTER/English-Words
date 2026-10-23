@@ -63,6 +63,9 @@ struct SRSView: View {
         case .completed:
             SRSResultView(
                 reviewedCount: viewModel.reviewedCount,
+                qualityCounts: viewModel.qualityCounts,
+                nextReviewDate: viewModel.nextReviewDate,
+                nextReviewCount: viewModel.nextReviewCount,
                 onFinish: { dismiss() }
             )
             

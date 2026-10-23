@@ -16,10 +16,24 @@ struct ReleaseNotesSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     versionBlock(
-                        versionKey: "version_2_8_0",
+                        versionKey: "version_2_9_0",
                         statusKey: "current_version",
                         icon: "crown.fill",
                         iconColor: .accent,
+                        items: [
+                            "release_notes_2_9_0_1",
+                            "release_notes_2_9_0_2",
+                            "release_notes_2_9_0_3",
+                            "release_notes_2_9_0_4",
+                            "release_notes_2_9_0_5",
+                        ]
+                    )
+                    
+                    versionBlock(
+                        versionKey: "version_2_8_0",
+                        statusKey: "previous_version",
+                        icon: "clock.fill",
+                        iconColor: themeManager.colors.textSecondary,
                         items: [
                             "release_notes_2_8_0_1",
                             "release_notes_2_8_0_2",

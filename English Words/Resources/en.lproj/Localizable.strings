@@ -212,6 +212,7 @@
 "srs_new_cards_limit" = "New cards per day";
 "srs_new_cards_limit_hint" = "How many new cards to introduce daily";
 "srs_reverse_mode" = "Обратный режим";
+"srs_result_breakdown" = "Your answers";
 
 /* ============ SRS OVERVIEW ============ */
 "srs_overview_subtitle" = "Review words at increasing intervals";
@@ -414,6 +415,7 @@
 "current_version" = "Current version";
 "previous_version" = "Previous version";
 "initial_release" = "Initial release";
+"version_2_9_0" = "Version 2.9.0";
 "version_2_8_0" = "Version 2.8.0";
 "version_2_7_0" = "Version 2.7.0";
 "version_2_6_0" = "Version 2.6.0";
@@ -440,6 +442,12 @@
 "version_1_0_0" = "Version 1.0.0";
 
 /* ============ RELEASE NOTES - CONTENT ============ */
+"release_notes_2_9_0_1" = "Added data backup and restore via the Files app";
+"release_notes_2_9_0_2" = "Added reverse card mode (learning from translation to word)";
+"release_notes_2_9_0_3" = "Added local notifications to remind you about due SRS cards";
+"release_notes_2_9_0_4" = "App now automatically selects English or Russian based on system language";
+"release_notes_2_9_0_5" = "Improved SRS session results screen with detailed statistics and next review info";
+
 "release_notes_2_8_0_1" = "Added reverse card mode (learning from translation to original word)";
 "release_notes_2_8_0_2" = "Added local notifications to remind you about due SRS cards";
 "release_notes_2_8_0_3" = "The app now automatically selects English or Russian based on your system language on first launch";

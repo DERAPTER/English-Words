@@ -24,6 +24,11 @@ final class SRSViewModel {
     private(set) var currentCard: Card?
     private var cardsByID: [UUID: Card] = [:]
     
+    // MARK: - Results State
+    private(set) var qualityCounts: [SRSQuality: Int] = [:]
+    private(set) var nextReviewDate: Date? = nil
+    private(set) var nextReviewCount: Int = 0
+    
     // MARK: - UI state
     
     var isCardFlipped: Bool = false
@@ -100,6 +105,8 @@ final class SRSViewModel {
     func rateCurrentCard(_ quality: SRSQuality) async {
         guard let card = currentCard else { return }
         
+        qualityCounts[quality, default: 0] += 1
+        
         do {
             try cardRepository.recordSRSReview(card, quality: quality.rawValue, on: .now)
             
@@ -159,6 +166,16 @@ final class SRSViewModel {
             )
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+    
+    private func calculateNextReview() {
+        let limit = UserDefaults.standard.integer(forKey: "srsNewCardsPerDay")
+        let effectiveLimit = limit > 0 ? limit : 20
+            
+        if let overview = try? cardRepository.srsOverview(on: .now, newCardsLimit: effectiveLimit) {
+            self.nextReviewDate = overview.nextReviewDate
+            self.nextReviewCount = overview.nextReviewCount
         }
     }
     
